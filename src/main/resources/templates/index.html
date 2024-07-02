@@ -6,6 +6,7 @@
 </head>
 <body>
     <div class="container">
+        <div th:insert="~{navbar}"></div>
         <div class="row" th:unless="${hasCandidate}">
             <div class="col-md-12">
                 <p>No candidate</p>
