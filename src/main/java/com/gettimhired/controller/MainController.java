@@ -36,7 +36,7 @@ public class MainController {
     }
 
     @PostMapping("/api")
-    public String getCredentials(Model model) {
+    public String createCredentials(Model model) {
         //create a user
         var user = userService.createUser();
         //put credentials in model to view them
