@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <title>Get Tim Hired</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row" th:unless="${hasCandidate}">
+            <div class="col-md-12">
+                <p>No candidate</p>
+                <p>
+                    <a th:href="@{/(candidateId=asdf)}">Link</a>
+                </p>
+            </div>
+        </div>
+        <div class="row" th:if="${hasCandidate}">
+            <div class="col-md-12">
+                <p>With candidate</p>
+                <p>
+                    <a th:href="@{/}">Home</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
