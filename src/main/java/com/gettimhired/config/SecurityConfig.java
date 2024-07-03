@@ -25,10 +25,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(basic -> {
-                    basic.init(http);
-
-                })
+                .httpBasic(basic -> basic.init(http))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .requiresChannel(channel ->
@@ -46,10 +43,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChainLocal(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(basic -> {
-                    basic.init(http);
-
-                })
+                .httpBasic(basic -> basic.init(http))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> {
