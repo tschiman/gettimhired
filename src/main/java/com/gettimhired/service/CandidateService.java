@@ -75,4 +75,14 @@ public class CandidateService {
             throw new CandidateUpdateException(HttpStatus.NOT_FOUND);
         }
     }
+
+    public boolean deleteCandidate(String id, String userId) {
+        try {
+            candidateRepository.deleteByIdAndUserId(id, userId);
+            return true;
+        } catch (Exception e) {
+            //log
+            return false;
+        }
+    }
 }

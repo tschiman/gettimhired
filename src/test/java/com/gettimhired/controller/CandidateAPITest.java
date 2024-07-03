@@ -178,4 +178,29 @@ class CandidateAPITest {
         assertNull(result.getBody());
     }
 
+    @Test
+    public void testDeleteCandidateHappy() {
+        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+        when(candidateService.deleteCandidate("BARK_ID", "BARK_USER_ID")).thenReturn(true);
+
+        var result = candidateAPI.deleteCandidate(userDetails, "BARK_ID");
+
+        verify(userDetails, times(1)).getUsername();
+        verify(candidateService, times(1)).deleteCandidate("BARK_ID", "BARK_USER_ID");
+        assertNotNull(result);
+        assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteCandidateServiceReturnsFalse() {
+        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+        when(candidateService.deleteCandidate("BARK_ID", "BARK_USER_ID")).thenReturn(false);
+
+        var result = candidateAPI.deleteCandidate(userDetails, "BARK_ID");
+
+        verify(userDetails, times(1)).getUsername();
+        verify(candidateService, times(1)).deleteCandidate("BARK_ID", "BARK_USER_ID");
+        assertNotNull(result);
+        assertEquals(HttpStatusCode.valueOf(500), result.getStatusCode());
+    }
 }

@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface CandidateRepository extends MongoRepository<Candidate, String> {
     List<Candidate> findAllByUserIdOrderByLastName(String username);
     Optional<Candidate> findCandidateByUserIdAndId(String userId, String id);
+    void deleteByIdAndUserId(String id, String userId);
 }

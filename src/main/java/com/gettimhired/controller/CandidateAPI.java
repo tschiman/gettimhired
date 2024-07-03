@@ -70,5 +70,17 @@ public class CandidateAPI {
             return ResponseEntity.status(e.getHttpStatus()).build();
         }
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity deleteCandidate(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable String id
+    ) {
+        boolean result = candidateService.deleteCandidate(id, userDetails.getUsername());
+        return result ?
+                ResponseEntity.ok().build() :
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 //    @DeleteMapping("/{id}")
 }

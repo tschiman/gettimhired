@@ -189,5 +189,22 @@ class CandidateServiceTest {
         assertEquals(HttpStatus.NOT_FOUND, ex.getHttpStatus());
     }
 
+    @Test
+    public void testDeleteCandidateHappy() {
+        doNothing().when(candidateRepository).deleteByIdAndUserId("BARK_ID", "BARK_USER_ID");
+
+        var result = candidateService.deleteCandidate("BARK_ID", "BARK_USER_ID");
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void testDeleteCandidateTHrowsException() {
+        doThrow(new RuntimeException()).when(candidateRepository).deleteByIdAndUserId("BARK_ID", "BARK_USER_ID");
+
+        var result = candidateService.deleteCandidate("BARK_ID", "BARK_USER_ID");
+
+        assertFalse(result);
+    }
 
 }
