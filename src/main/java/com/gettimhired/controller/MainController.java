@@ -1,14 +1,11 @@
 package com.gettimhired.controller;
 
-import com.gettimhired.model.mongo.User;
 import com.gettimhired.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.UUID;
 
 @Controller
 public class MainController {
@@ -30,18 +27,18 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping("/api")
+    @GetMapping("/credentials")
     public String api() {
-        return "api";
+        return "credentials";
     }
 
-    @PostMapping("/api")
+    @PostMapping("/credentials")
     public String createCredentials(Model model) {
         //create a user
         var user = userService.createUser();
         //put credentials in model to view them
         model.addAttribute("user", user.id());
         model.addAttribute("password", user.password());
-        return "api";
+        return "credentials";
     }
 }

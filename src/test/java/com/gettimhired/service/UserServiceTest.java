@@ -5,6 +5,8 @@ import com.gettimhired.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,11 +17,12 @@ class UserServiceTest {
     private UserService userService;
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @BeforeEach
     public void init() {
         userRepository = Mockito.mock(UserRepository.class);
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, passwordEncoder);
     }
 
     @Test

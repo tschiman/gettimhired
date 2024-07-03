@@ -20,7 +20,7 @@ public class CandidateAPI {
         this.candidateService = candidateService;
     }
 
-    @GetMapping()
+    @GetMapping
     @PreAuthorize("isAuthenticated()")
     public List<CandidateDTO> getAllCandidates(@AuthenticationPrincipal UserDetails userDetails) {
         return candidateService.findAllCandidatesForUser(userDetails.getUsername());
