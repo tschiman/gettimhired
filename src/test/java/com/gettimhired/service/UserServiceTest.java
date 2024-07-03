@@ -8,9 +8,12 @@ import org.mockito.Mockito;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 
 class UserServiceTest {
 
@@ -34,6 +37,16 @@ class UserServiceTest {
         assertNotNull(user.id());
         assertNotNull(user.password());
         Mockito.verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    public void testFindUserByUsername() {
+        when(userRepository.findById("BARK")).thenReturn(Optional.of(new User("BARK_ID", "BARK_PASSWORD")));
+
+        var userOpt = userService.findUserByUsername("BARK");
+
+        verify(userRepository, times(1)).findById("BARK");
+        assertTrue(userOpt.isPresent());
     }
 
 }

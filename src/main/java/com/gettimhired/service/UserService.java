@@ -26,7 +26,7 @@ public class UserService {
         return new User(user.id(), password);
     }
 
-    public Optional<User> findUserByUsername(String id) {
-        return userRepository.findById(id);
+    public Optional<User> findUserByUsername(String username) {
+        return userRepository.findById(username);
     }
 }
