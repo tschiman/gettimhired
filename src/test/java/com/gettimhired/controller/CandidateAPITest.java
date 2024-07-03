@@ -7,11 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -68,6 +70,45 @@ class CandidateAPITest {
         assertNotNull(response);
         assertEquals(HttpStatusCode.valueOf(404) ,response.getStatusCode());
         assertNull(response.getBody());
+    }
+
+    @Test
+    public void testCreateCandidateHappy() {
+
+        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark");
+        var candidateDtoOutOpt = Optional.of(
+                new CandidateDTO(
+                        UUID.randomUUID().toString(),
+                        UUID.randomUUID().toString(),
+                        "Bark",
+                        "McBarkson",
+                        "Summary Bark"
+                )
+        );
+        when(candidateService.createCandidate("BARK_USER_ID", candidateDtoIn)).thenReturn(candidateDtoOutOpt);
+        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+
+        var result = candidateAPI.createCandidate(userDetails, candidateDtoIn);
+
+        verify(candidateService, times(1)).createCandidate("BARK_USER_ID", candidateDtoIn);
+        verify(userDetails, times(1)).getUsername();
+        assertNotNull(result);
+        assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
+    }
+
+    @Test
+    public void testCreateCandidateFailedToSave() {
+
+        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark");
+        when(candidateService.createCandidate("BARK_USER_ID", candidateDtoIn)).thenReturn(Optional.empty());
+        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+
+        var result = candidateAPI.createCandidate(userDetails, candidateDtoIn);
+
+        verify(candidateService, times(1)).createCandidate("BARK_USER_ID", candidateDtoIn);
+        verify(userDetails, times(1)).getUsername();
+        assertNotNull(result);
+        assertEquals(HttpStatusCode.valueOf(500), result.getStatusCode());
     }
 
 }

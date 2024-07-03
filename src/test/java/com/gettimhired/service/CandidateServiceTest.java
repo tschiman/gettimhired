@@ -62,5 +62,35 @@ class CandidateServiceTest {
         assertFalse(result.isPresent());
     }
 
+    @Test
+    public void testCreateCandidateHappy() {
+        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark");
+        var candidateOut = new Candidate("BARK_USER_ID", candidateDtoIn);
+        when(candidateRepository.save(any(Candidate.class))).thenReturn(candidateOut);
+
+        var candidateDtoOpt = candidateService.createCandidate("BARK_USER_ID", candidateDtoIn);
+
+        verify(candidateRepository, times(1)).save(any(Candidate.class));
+        assertTrue(candidateDtoOpt.isPresent());
+        assertNotNull(candidateDtoOpt.get().id());
+        assertNotNull(candidateDtoOpt.get().userId());
+        assertEquals("BARK_USER_ID", candidateDtoOpt.get().userId());
+        assertNotNull(candidateDtoOpt.get().firstName());
+        assertNotNull(candidateDtoOpt.get().lastName());
+        assertNotNull(candidateDtoOpt.get().summary());
+    }
+
+    @Test
+    public void testCreateCandidateThrowsException() {
+        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark");
+        var candidateOut = new Candidate("BARK_USER_ID", candidateDtoIn);
+        when(candidateRepository.save(any(Candidate.class))).thenThrow(new RuntimeException());
+
+        var candidateDtoOpt = candidateService.createCandidate("BARK_USER_ID", candidateDtoIn);
+
+        verify(candidateRepository, times(1)).save(any(Candidate.class));
+        assertFalse(candidateDtoOpt.isPresent());
+    }
+
 
 }
