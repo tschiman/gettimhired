@@ -5,6 +5,7 @@ import com.gettimhired.repository.CandidateRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CandidateService {
@@ -19,5 +20,9 @@ public class CandidateService {
         return candidateRepository.findAllByUserIdOrderByLastName(username).stream()
                 .map(CandidateDTO::new)
                 .toList();
+    }
+
+    public Optional<CandidateDTO> findCandidateByUserIdAndId(String userId, String id) {
+        return candidateRepository.findCandidateByUserIdAndId(userId, id).map(CandidateDTO::new);
     }
 }
