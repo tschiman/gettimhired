@@ -1,10 +1,14 @@
 package com.gettimhired.service;
 
+import com.gettimhired.error.CandidateUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
+import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.model.mongo.Candidate;
 import com.gettimhired.repository.CandidateRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.AdditionalAnswers;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +94,99 @@ class CandidateServiceTest {
 
         verify(candidateRepository, times(1)).save(any(Candidate.class));
         assertFalse(candidateDtoOpt.isPresent());
+    }
+
+    @Test
+    public void testUpdateCandidateHappy() {
+        var candidateUpdateDto = new CandidateUpdateDTO(
+                "BARK_FNAME_UPDATE",
+                "BARK_LNAME_UPDATE",
+                "BARK_SUMMARY_UPDATE"
+        );
+        var candidate = new Candidate(
+                "BARK_ID",
+                "BARK_USER_ID",
+                "BARK_FNAME",
+                "BARK_LNAME",
+                "BARK_SUMMARY"
+        );
+        when(candidateRepository.findById("BARK_ID")).thenReturn(Optional.of(candidate));
+        when(candidateRepository.save(any(Candidate.class))).then(AdditionalAnswers.returnsFirstArg());
+
+        var candidateDtoOpt = candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto);
+
+        verify(candidateRepository, times(1)).findById("BARK_ID");
+        verify(candidateRepository, times(1)).save(any(Candidate.class));
+        assertTrue(candidateDtoOpt.isPresent());
+        assertEquals("BARK_ID", candidateDtoOpt.get().id());
+        assertEquals("BARK_USER_ID", candidateDtoOpt.get().userId());
+        assertEquals("BARK_FNAME_UPDATE", candidateDtoOpt.get().firstName());
+        assertEquals("BARK_LNAME_UPDATE", candidateDtoOpt.get().lastName());
+        assertEquals("BARK_SUMMARY_UPDATE", candidateDtoOpt.get().summary());
+    }
+
+    @Test
+    public void testUpdateCandidateDbErrorReturnOptionalEmpty() {
+        var candidateUpdateDto = new CandidateUpdateDTO(
+                "BARK_FNAME_UPDATE",
+                "BARK_LNAME_UPDATE",
+                "BARK_SUMMARY_UPDATE"
+        );
+        var candidate = new Candidate(
+                "BARK_ID",
+                "BARK_USER_ID",
+                "BARK_FNAME",
+                "BARK_LNAME",
+                "BARK_SUMMARY"
+        );
+        when(candidateRepository.findById("BARK_ID")).thenReturn(Optional.of(candidate));
+        when(candidateRepository.save(any(Candidate.class))).thenThrow(new RuntimeException());
+
+        var candidateDtoOpt = candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto);
+
+        verify(candidateRepository, times(1)).findById("BARK_ID");
+        verify(candidateRepository, times(1)).save(any(Candidate.class));
+
+        assertFalse(candidateDtoOpt.isPresent());
+    }
+
+    @Test
+    public void testUpdateCandidateUserIdDoesNotMatch() {
+        var candidateUpdateDto = new CandidateUpdateDTO(
+                "BARK_FNAME_UPDATE",
+                "BARK_LNAME_UPDATE",
+                "BARK_SUMMARY_UPDATE"
+        );
+        var candidate = new Candidate(
+                "BARK_ID",
+                "BARK_USER_ID_MISMATCH",
+                "BARK_FNAME",
+                "BARK_LNAME",
+                "BARK_SUMMARY"
+        );
+        when(candidateRepository.findById("BARK_ID")).thenReturn(Optional.of(candidate));
+
+        var ex = assertThrows(CandidateUpdateException.class, () -> candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto));
+
+        verify(candidateRepository, times(1)).findById("BARK_ID");
+        verify(candidateRepository, times(0)).save(any(Candidate.class));
+        assertEquals(HttpStatus.FORBIDDEN, ex.getHttpStatus());
+    }
+
+    @Test
+    public void testUpdateCandidateNotFound() {
+        var candidateUpdateDto = new CandidateUpdateDTO(
+                "BARK_FNAME_UPDATE",
+                "BARK_LNAME_UPDATE",
+                "BARK_SUMMARY_UPDATE"
+        );
+        when(candidateRepository.findById("BARK_ID")).thenReturn(Optional.empty());
+
+        var ex = assertThrows(CandidateUpdateException.class, () -> candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto));
+
+        verify(candidateRepository, times(1)).findById("BARK_ID");
+        verify(candidateRepository, times(0)).save(any(Candidate.class));
+        assertEquals(HttpStatus.NOT_FOUND, ex.getHttpStatus());
     }
 
 

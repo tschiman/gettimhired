@@ -1,6 +1,8 @@
 package com.gettimhired.controller;
 
+import com.gettimhired.error.CandidateUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
+import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.service.CandidateService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -51,6 +53,22 @@ public class CandidateAPI {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
-//    @PutMapping("/{id}")
+
+    @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<CandidateDTO> updateCandidate(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody @Valid CandidateUpdateDTO candidateUpdateDTO,
+            @PathVariable String id
+    ) {
+        try {
+            var candidateDtoOpt = candidateService.updateCandidate(id, userDetails.getUsername(), candidateUpdateDTO);
+            return candidateDtoOpt
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+        } catch (CandidateUpdateException e) {
+            return ResponseEntity.status(e.getHttpStatus()).build();
+        }
+    }
 //    @DeleteMapping("/{id}")
 }

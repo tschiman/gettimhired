@@ -1,7 +1,10 @@
 package com.gettimhired.controller;
 
+import com.gettimhired.error.CandidateUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
+import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.service.CandidateService;
+import jakarta.validation.Valid;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -109,6 +112,70 @@ class CandidateAPITest {
         verify(userDetails, times(1)).getUsername();
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(500), result.getStatusCode());
+    }
+
+    @Test
+    public void testUpdateCandidateHappy() {
+        var candidateUpdateDto = new CandidateUpdateDTO(
+                "BARK_FNAME_UPDATE",
+                "BARK_LNAME_UPDATE",
+                "BARK_SUMMARY_UPDATE"
+        );
+        CandidateDTO candidateDto = new CandidateDTO(
+                "BARK_ID",
+                "BARK_USER_ID",
+                "BARK_FNAME",
+                "BARK_LNAME",
+                "BARK_SUMMARY"
+        );
+        when(candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto)).thenReturn(Optional.of(candidateDto));
+        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+
+        var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, "BARK_ID");
+
+        verify(candidateService, times(1)).updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto);
+        verify(userDetails, times(1)).getUsername();
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertNotNull(result.getBody());
+    }
+
+    @Test
+    public void testUpdateCandidateReturnsEmpty() {
+        var candidateUpdateDto = new CandidateUpdateDTO(
+                "BARK_FNAME_UPDATE",
+                "BARK_LNAME_UPDATE",
+                "BARK_SUMMARY_UPDATE"
+        );
+        when(candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto)).thenReturn(Optional.empty());
+        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+
+        var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, "BARK_ID");
+
+        verify(candidateService, times(1)).updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto);
+        verify(userDetails, times(1)).getUsername();
+        assertNotNull(result);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
+        assertNull(result.getBody());
+    }
+
+    @Test
+    public void testUpdateCandidateThrowsCandidateUpdateException() {
+        var candidateUpdateDto = new CandidateUpdateDTO(
+                "BARK_FNAME_UPDATE",
+                "BARK_LNAME_UPDATE",
+                "BARK_SUMMARY_UPDATE"
+        );
+        when(candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto)).thenThrow(new CandidateUpdateException(HttpStatus.NOT_FOUND));
+        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+
+        var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, "BARK_ID");
+
+        verify(candidateService, times(1)).updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto);
+        verify(userDetails, times(1)).getUsername();
+        assertNotNull(result);
+        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+        assertNull(result.getBody());
     }
 
 }
