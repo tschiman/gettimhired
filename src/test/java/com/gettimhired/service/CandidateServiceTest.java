@@ -1,6 +1,6 @@
 package com.gettimhired.service;
 
-import com.gettimhired.error.CandidateUpdateException;
+import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.model.mongo.Candidate;
@@ -11,7 +11,6 @@ import org.mockito.AdditionalAnswers;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -166,7 +165,7 @@ class CandidateServiceTest {
         );
         when(candidateRepository.findById("BARK_ID")).thenReturn(Optional.of(candidate));
 
-        var ex = assertThrows(CandidateUpdateException.class, () -> candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto));
+        var ex = assertThrows(APIUpdateException.class, () -> candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto));
 
         verify(candidateRepository, times(1)).findById("BARK_ID");
         verify(candidateRepository, times(0)).save(any(Candidate.class));
@@ -182,7 +181,7 @@ class CandidateServiceTest {
         );
         when(candidateRepository.findById("BARK_ID")).thenReturn(Optional.empty());
 
-        var ex = assertThrows(CandidateUpdateException.class, () -> candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto));
+        var ex = assertThrows(APIUpdateException.class, () -> candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto));
 
         verify(candidateRepository, times(1)).findById("BARK_ID");
         verify(candidateRepository, times(0)).save(any(Candidate.class));

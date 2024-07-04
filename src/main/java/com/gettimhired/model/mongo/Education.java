@@ -1,8 +1,11 @@
 package com.gettimhired.model.mongo;
 
+import com.gettimhired.model.dto.CandidateDTO;
+import com.gettimhired.model.dto.EducationDTO;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record Education(
         @Id String id,
@@ -15,4 +18,17 @@ public record Education(
         String areaOfStudy,
         EducationLevel levelOfEducation
 ) {
+    public Education(String userId, String candidateId, EducationDTO educationDTO) {
+        this(
+                UUID.randomUUID().toString(),
+                userId,
+                candidateId,
+                educationDTO.name(),
+                educationDTO.startDate(),
+                educationDTO.endDate(),
+                educationDTO.graduated(),
+                educationDTO.areaOfStudy(),
+                educationDTO.levelOfEducation()
+        );
+    }
 }

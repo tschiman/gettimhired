@@ -1,6 +1,6 @@
 package com.gettimhired.controller;
 
-import com.gettimhired.error.CandidateUpdateException;
+import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.service.CandidateService;
@@ -66,7 +66,7 @@ public class CandidateAPI {
             return candidateDtoOpt
                     .map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
-        } catch (CandidateUpdateException e) {
+        } catch (APIUpdateException e) {
             return ResponseEntity.status(e.getHttpStatus()).build();
         }
     }
@@ -82,5 +82,4 @@ public class CandidateAPI {
                 ResponseEntity.ok().build() :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-//    @DeleteMapping("/{id}")
 }

@@ -1,6 +1,6 @@
 package com.gettimhired.service;
 
-import com.gettimhired.error.CandidateUpdateException;
+import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.model.mongo.Candidate;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CandidateService {
@@ -68,11 +67,11 @@ public class CandidateService {
                 return Optional.of(candidateDto);
             } else {
                 //userId does not match (403)
-                throw new CandidateUpdateException(HttpStatus.FORBIDDEN);
+                throw new APIUpdateException(HttpStatus.FORBIDDEN);
             }
         } else {
             //CandidateId not found(404)
-            throw new CandidateUpdateException(HttpStatus.NOT_FOUND);
+            throw new APIUpdateException(HttpStatus.NOT_FOUND);
         }
     }
 

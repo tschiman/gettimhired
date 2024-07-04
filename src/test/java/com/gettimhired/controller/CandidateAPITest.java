@@ -1,20 +1,16 @@
 package com.gettimhired.controller;
 
-import com.gettimhired.error.CandidateUpdateException;
+import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.service.CandidateService;
-import jakarta.validation.Valid;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -166,7 +162,7 @@ class CandidateAPITest {
                 "BARK_LNAME_UPDATE",
                 "BARK_SUMMARY_UPDATE"
         );
-        when(candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto)).thenThrow(new CandidateUpdateException(HttpStatus.NOT_FOUND));
+        when(candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto)).thenThrow(new APIUpdateException(HttpStatus.NOT_FOUND));
         when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
 
         var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, "BARK_ID");
