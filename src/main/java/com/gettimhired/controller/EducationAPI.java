@@ -25,11 +25,15 @@ public class EducationAPI {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public List<EducationDTO> getAllCandidates(
+    public List<EducationDTO> getAllEducations(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String candidateId
     ) {
-        return educationService.findAllEducationsForUserAndCandidateId(userDetails.getUsername(), candidateId);
+        return educationService
+                .findAllEducationsForUserAndCandidateId(
+                        userDetails.getUsername(),
+                        candidateId
+                );
     }
     //GET /{id} - one education
     //POST - create education for candidate
