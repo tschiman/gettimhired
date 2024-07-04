@@ -1,6 +1,8 @@
 package com.gettimhired.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gettimhired.model.mongo.Candidate;
+import com.gettimhired.model.mongo.Education;
 import com.gettimhired.model.mongo.EducationLevel;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -23,4 +25,17 @@ public record EducationDTO(
         String areaOfStudy,
         EducationLevel levelOfEducation
 ) {
+        public EducationDTO(Education education) {
+                this(
+                        education.id(),
+                        education.userId(),
+                        education.candidateId(),
+                        education.name(),
+                        education.startDate(),
+                        education.endDate(),
+                        education.graduated(),
+                        education.areaOfStudy(),
+                        education.levelOfEducation()
+                );
+        }
 }
