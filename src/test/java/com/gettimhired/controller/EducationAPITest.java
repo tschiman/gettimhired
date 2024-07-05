@@ -1,6 +1,5 @@
 package com.gettimhired.controller;
 
-import com.gettimhired.TestHelper;
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.EducationDTO;
 import com.gettimhired.model.dto.EducationUpdateDTO;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.gettimhired.TestHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -25,10 +25,6 @@ class EducationAPITest {
     private EducationAPI educationAPI;
     private EducationService educationService;
     private UserDetails userDetails;
-
-    private String ID = TestHelper.ID;
-    private String USER_ID = TestHelper.USER_ID;
-    private String CANDIDATE_ID = TestHelper.CANDIDATE_ID;
 
     @BeforeEach
     public void init() {

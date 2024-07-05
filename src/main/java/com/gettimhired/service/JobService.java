@@ -45,7 +45,7 @@ public class JobService {
     }
 
     public Optional<JobDTO> updateJob(String id, String userId, String candidateId, JobUpdateDTO jobUpdateDTO) {
-        //get education from db
+        //get job from db
         Optional<Job> jobOpt = jobRepository.findById(id);
         if (jobOpt.isPresent()) {
             //check if the username matches
@@ -87,7 +87,7 @@ public class JobService {
         }
     }
 
-    public boolean deleteEducation(String id, String userId, String candidateId) {
+    public boolean deleteJob(String id, String userId, String candidateId) {
         try {
             jobRepository.deleteByIdAndUserIdAndCandidateId(id, userId, candidateId);
             return true;

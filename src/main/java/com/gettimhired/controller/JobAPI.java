@@ -44,8 +44,8 @@ public class JobAPI {
             @PathVariable String id,
             @PathVariable String candidateId
     ) {
-        var educationOpt = jobService.findJobByUserIdAndCandidateIdAndId(userDetails.getUsername(), candidateId, id);
-        return educationOpt
+        var jobOpt = jobService.findJobByUserIdAndCandidateIdAndId(userDetails.getUsername(), candidateId, id);
+        return jobOpt
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
@@ -54,26 +54,26 @@ public class JobAPI {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<JobDTO> createJob(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody @Valid JobDTO educationDTO,
+            @RequestBody @Valid JobDTO jobDTO,
             @PathVariable String candidateId
     ) {
-        var educationDtoOpt = jobService.createJob(userDetails.getUsername(), candidateId, educationDTO);
-        return educationDtoOpt
+        var jobDtoOpt = jobService.createJob(userDetails.getUsername(), candidateId, jobDTO);
+        return jobDtoOpt
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<JobDTO> updateEducation(
+    public ResponseEntity<JobDTO> updateJob(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody @Valid JobUpdateDTO educationUpdateDTO,
+            @RequestBody @Valid JobUpdateDTO jobUpdateDTO,
             @PathVariable String id,
             @PathVariable String candidateId
     ) {
         try {
-            var educationDtoOpt = jobService.updateJob(id, userDetails.getUsername(), candidateId, educationUpdateDTO);
-            return educationDtoOpt
+            var jobDtoOpt = jobService.updateJob(id, userDetails.getUsername(), candidateId, jobUpdateDTO);
+            return jobDtoOpt
                     .map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         } catch (APIUpdateException e) {
@@ -83,12 +83,12 @@ public class JobAPI {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity deleteEducation(
+    public ResponseEntity deleteJob(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String id,
             @PathVariable String candidateId
     ) {
-        boolean result = jobService.deleteEducation(id, userDetails.getUsername(), candidateId);
+        boolean result = jobService.deleteJob(id, userDetails.getUsername(), candidateId);
         return result ?
                 ResponseEntity.ok().build() :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
