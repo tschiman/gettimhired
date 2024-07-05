@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface JobRepository extends MongoRepository<Job, String> {
-    List<Job> findAllJobsForUserIdAndCandidateId(String userId, String candidateId);
+    List<Job> findAllByUserIdAndCandidateId(String userId, String candidateId);
 
     Optional<Job> findJobByUserIdAndCandidateIdAndId(String userId, String candidateId, String id);
 

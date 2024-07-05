@@ -39,11 +39,11 @@ class JobServiceTest {
         var e1 = getJob("BARK_NAME");
         var e2 = getJob("BARK_NAME_TWO");
         var jobs = List.of(e1, e2);
-        when(jobRepository.findAllJobsForUserIdAndCandidateId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID)).thenReturn(jobs);
+        when(jobRepository.findAllByUserIdAndCandidateId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID)).thenReturn(jobs);
 
         var result = jobService.findAllJobsForUserAndCandidateId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
 
-        verify(jobRepository, times(1)).findAllJobsForUserIdAndCandidateId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
+        verify(jobRepository, times(1)).findAllByUserIdAndCandidateId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
         assertNotNull(result);
         assertEquals(2, result.size());
     }

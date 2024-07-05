@@ -22,7 +22,7 @@ public class JobService {
     }
 
     public List<JobDTO> findAllJobsForUserAndCandidateId(String userId, String candidateId) {
-        return jobRepository.findAllJobsForUserIdAndCandidateId(userId, candidateId).stream()
+        return jobRepository.findAllByUserIdAndCandidateId(userId, candidateId).stream()
                 .map(JobDTO::new)
                 .toList();
     }
