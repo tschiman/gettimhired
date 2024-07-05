@@ -1,9 +1,11 @@
 package com.gettimhired.model.mongo;
 
+import com.gettimhired.model.dto.JobDTO;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public record Job(
     @Id String id,
@@ -18,4 +20,18 @@ public record Job(
     Boolean currentlyWorking
 
 ) {
+    public Job(String userId, String candidateId, JobDTO jobDto) {
+        this(
+                UUID.randomUUID().toString(),
+                userId,
+                candidateId,
+                jobDto.companyName(),
+                jobDto.title(),
+                jobDto.startDate(),
+                jobDto.endDate(),
+                jobDto.skills(),
+                jobDto.achievements(),
+                jobDto.currentlyWorking()
+        );
+    }
 }
