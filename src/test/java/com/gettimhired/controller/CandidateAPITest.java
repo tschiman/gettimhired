@@ -1,5 +1,6 @@
 package com.gettimhired.controller;
 
+import com.gettimhired.TestHelper;
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.CandidateUpdateDTO;
@@ -44,13 +45,13 @@ class CandidateAPITest {
 
     @Test
     public void testGetCandidateByUserIdAndIdHappy() {
-        var candidateDto = new CandidateDTO("BARK_ID", "BARK_USER_ID", "BARK_FNAME", "BARK_LNAME", "BARK_SUMMARY");
-        when(candidateService.findCandidateByUserIdAndId("BARK_USER_ID", "BARK_ID")).thenReturn(Optional.of(candidateDto));
-        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+        var candidateDto = new CandidateDTO(TestHelper.ID, TestHelper.USER_ID, "BARK_FNAME", "BARK_LNAME", "BARK_SUMMARY");
+        when(candidateService.findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID)).thenReturn(Optional.of(candidateDto));
+        when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
 
-        var response = candidateAPI.getCandidateById(userDetails, "BARK_ID");
+        var response = candidateAPI.getCandidateById(userDetails, TestHelper.ID);
 
-        verify(candidateService, times(1)).findCandidateByUserIdAndId("BARK_USER_ID", "BARK_ID");
+        verify(candidateService, times(1)).findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID);
         verify(userDetails, times(1)).getUsername();
         assertNotNull(response);
         assertEquals(HttpStatusCode.valueOf(200) ,response.getStatusCode());
@@ -59,12 +60,12 @@ class CandidateAPITest {
 
     @Test
     public void testGetCandidateByUserIdAndId404() {
-        when(candidateService.findCandidateByUserIdAndId("BARK_USER_ID", "BARK_ID")).thenReturn(Optional.empty());
-        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+        when(candidateService.findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID)).thenReturn(Optional.empty());
+        when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
 
-        var response = candidateAPI.getCandidateById(userDetails, "BARK_ID");
+        var response = candidateAPI.getCandidateById(userDetails, TestHelper.ID);
 
-        verify(candidateService, times(1)).findCandidateByUserIdAndId("BARK_USER_ID", "BARK_ID");
+        verify(candidateService, times(1)).findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID);
         verify(userDetails, times(1)).getUsername();
         assertNotNull(response);
         assertEquals(HttpStatusCode.valueOf(404) ,response.getStatusCode());
@@ -84,12 +85,12 @@ class CandidateAPITest {
                         "Summary Bark"
                 )
         );
-        when(candidateService.createCandidate("BARK_USER_ID", candidateDtoIn)).thenReturn(candidateDtoOutOpt);
-        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+        when(candidateService.createCandidate(TestHelper.USER_ID, candidateDtoIn)).thenReturn(candidateDtoOutOpt);
+        when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
 
         var result = candidateAPI.createCandidate(userDetails, candidateDtoIn);
 
-        verify(candidateService, times(1)).createCandidate("BARK_USER_ID", candidateDtoIn);
+        verify(candidateService, times(1)).createCandidate(TestHelper.USER_ID, candidateDtoIn);
         verify(userDetails, times(1)).getUsername();
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
@@ -99,12 +100,12 @@ class CandidateAPITest {
     public void testCreateCandidateFailedToSave() {
 
         var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark");
-        when(candidateService.createCandidate("BARK_USER_ID", candidateDtoIn)).thenReturn(Optional.empty());
-        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+        when(candidateService.createCandidate(TestHelper.USER_ID, candidateDtoIn)).thenReturn(Optional.empty());
+        when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
 
         var result = candidateAPI.createCandidate(userDetails, candidateDtoIn);
 
-        verify(candidateService, times(1)).createCandidate("BARK_USER_ID", candidateDtoIn);
+        verify(candidateService, times(1)).createCandidate(TestHelper.USER_ID, candidateDtoIn);
         verify(userDetails, times(1)).getUsername();
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(500), result.getStatusCode());
@@ -118,18 +119,18 @@ class CandidateAPITest {
                 "BARK_SUMMARY_UPDATE"
         );
         CandidateDTO candidateDto = new CandidateDTO(
-                "BARK_ID",
-                "BARK_USER_ID",
+                TestHelper.ID,
+                TestHelper.USER_ID,
                 "BARK_FNAME",
                 "BARK_LNAME",
                 "BARK_SUMMARY"
         );
-        when(candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto)).thenReturn(Optional.of(candidateDto));
-        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+        when(candidateService.updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto)).thenReturn(Optional.of(candidateDto));
+        when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
 
-        var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, "BARK_ID");
+        var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, TestHelper.ID);
 
-        verify(candidateService, times(1)).updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto);
+        verify(candidateService, times(1)).updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto);
         verify(userDetails, times(1)).getUsername();
         assertNotNull(result);
         assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -143,12 +144,12 @@ class CandidateAPITest {
                 "BARK_LNAME_UPDATE",
                 "BARK_SUMMARY_UPDATE"
         );
-        when(candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto)).thenReturn(Optional.empty());
-        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+        when(candidateService.updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto)).thenReturn(Optional.empty());
+        when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
 
-        var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, "BARK_ID");
+        var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, TestHelper.ID);
 
-        verify(candidateService, times(1)).updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto);
+        verify(candidateService, times(1)).updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto);
         verify(userDetails, times(1)).getUsername();
         assertNotNull(result);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
@@ -162,12 +163,12 @@ class CandidateAPITest {
                 "BARK_LNAME_UPDATE",
                 "BARK_SUMMARY_UPDATE"
         );
-        when(candidateService.updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto)).thenThrow(new APIUpdateException(HttpStatus.NOT_FOUND));
-        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
+        when(candidateService.updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto)).thenThrow(new APIUpdateException(HttpStatus.NOT_FOUND));
+        when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
 
-        var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, "BARK_ID");
+        var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, TestHelper.ID);
 
-        verify(candidateService, times(1)).updateCandidate("BARK_ID", "BARK_USER_ID", candidateUpdateDto);
+        verify(candidateService, times(1)).updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto);
         verify(userDetails, times(1)).getUsername();
         assertNotNull(result);
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
@@ -176,26 +177,26 @@ class CandidateAPITest {
 
     @Test
     public void testDeleteCandidateHappy() {
-        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
-        when(candidateService.deleteCandidate("BARK_ID", "BARK_USER_ID")).thenReturn(true);
+        when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
+        when(candidateService.deleteCandidate(TestHelper.ID, TestHelper.USER_ID)).thenReturn(true);
 
-        var result = candidateAPI.deleteCandidate(userDetails, "BARK_ID");
+        var result = candidateAPI.deleteCandidate(userDetails, TestHelper.ID);
 
         verify(userDetails, times(1)).getUsername();
-        verify(candidateService, times(1)).deleteCandidate("BARK_ID", "BARK_USER_ID");
+        verify(candidateService, times(1)).deleteCandidate(TestHelper.ID, TestHelper.USER_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
     }
 
     @Test
     public void testDeleteCandidateServiceReturnsFalse() {
-        when(userDetails.getUsername()).thenReturn("BARK_USER_ID");
-        when(candidateService.deleteCandidate("BARK_ID", "BARK_USER_ID")).thenReturn(false);
+        when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
+        when(candidateService.deleteCandidate(TestHelper.ID, TestHelper.USER_ID)).thenReturn(false);
 
-        var result = candidateAPI.deleteCandidate(userDetails, "BARK_ID");
+        var result = candidateAPI.deleteCandidate(userDetails, TestHelper.ID);
 
         verify(userDetails, times(1)).getUsername();
-        verify(candidateService, times(1)).deleteCandidate("BARK_ID", "BARK_USER_ID");
+        verify(candidateService, times(1)).deleteCandidate(TestHelper.ID, TestHelper.USER_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(500), result.getStatusCode());
     }

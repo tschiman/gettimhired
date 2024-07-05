@@ -1,11 +1,8 @@
 package com.gettimhired.service;
 
 import com.gettimhired.error.APIUpdateException;
-import com.gettimhired.model.dto.CandidateDTO;
-import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.model.dto.EducationDTO;
 import com.gettimhired.model.dto.EducationUpdateDTO;
-import com.gettimhired.model.mongo.Candidate;
 import com.gettimhired.model.mongo.Education;
 import com.gettimhired.repository.EducationRepository;
 import org.springframework.http.HttpStatus;

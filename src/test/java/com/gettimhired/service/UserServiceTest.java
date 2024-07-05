@@ -1,5 +1,6 @@
 package com.gettimhired.service;
 
+import com.gettimhired.TestHelper;
 import com.gettimhired.model.mongo.User;
 import com.gettimhired.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +42,7 @@ class UserServiceTest {
 
     @Test
     public void testFindUserByUsername() {
-        when(userRepository.findById("BARK")).thenReturn(Optional.of(new User("BARK_ID", "BARK_PASSWORD")));
+        when(userRepository.findById("BARK")).thenReturn(Optional.of(new User(TestHelper.ID, "BARK_PASSWORD")));
 
         var userOpt = userService.findUserByUsername("BARK");
 
