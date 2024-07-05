@@ -93,4 +93,8 @@ public class EducationService {
             return false;
         }
     }
+
+    public List<EducationDTO> findAllEducationsByCandidateId(String candidateId) {
+        return educationRepository.findAllByCandidateId(candidateId);
+    }
 }

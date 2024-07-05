@@ -7,20 +7,23 @@
 <body>
     <div class="container">
         <div th:insert="~{navbar}"></div>
-        <div class="row" th:unless="${hasCandidate}">
-            <div class="col-md-12">
-                <p>No candidate</p>
-                <p>
-                    <a th:href="@{/(candidateId=asdf)}">Link</a>
-                </p>
+        <div th:unless="${hasCandidate}">
+            <div class="row" th:each="candidate : ${candidates}">
+                <div class="col-md-12">
+                    <p>
+                        <a th:href="@{/(candidateId=${candidate.id})}" th:text="${candidate.firstName() + ' ' + candidate.lastName() }">Link</a>
+                    </p>
+                </div>
             </div>
         </div>
-        <div class="row" th:if="${hasCandidate}">
-            <div class="col-md-12">
-                <p>With candidate</p>
-                <p>
-                    <a th:href="@{/}">Home</a>
-                </p>
+        <div th:if="${hasCandidate}">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>With candidate</p>
+                    <p>
+                        <a th:href="@{/}">Home</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>

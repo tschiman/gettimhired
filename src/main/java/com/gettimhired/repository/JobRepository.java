@@ -1,5 +1,6 @@
 package com.gettimhired.repository;
 
+import com.gettimhired.model.dto.JobDTO;
 import com.gettimhired.model.mongo.Job;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -12,4 +13,6 @@ public interface JobRepository extends MongoRepository<Job, String> {
     Optional<Job> findJobByUserIdAndCandidateIdAndId(String userId, String candidateId, String id);
 
     void deleteByIdAndUserIdAndCandidateId(String id, String userId, String candidateId);
+
+    List<JobDTO> findAllByCandidateId(String candidateId);
 }

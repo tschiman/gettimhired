@@ -84,4 +84,15 @@ public class CandidateService {
             return false;
         }
     }
+
+    public List<CandidateDTO> findAllCandidates() {
+        return candidateRepository.findAll().stream()
+                .map(CandidateDTO::new)
+                .toList();
+    }
+
+    public Optional<CandidateDTO> findCandidateById(String candidateId) {
+        return candidateRepository.findById(candidateId)
+                .map(CandidateDTO::new);
+    }
 }

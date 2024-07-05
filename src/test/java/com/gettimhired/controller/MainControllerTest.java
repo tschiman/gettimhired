@@ -1,14 +1,16 @@
 package com.gettimhired.controller;
 
 import com.gettimhired.model.mongo.User;
+import com.gettimhired.service.CandidateService;
+import com.gettimhired.service.EducationService;
+import com.gettimhired.service.JobService;
 import com.gettimhired.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.ui.Model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class MainControllerTest {
@@ -16,26 +18,42 @@ class MainControllerTest {
     private MainController mainController;
     private UserService userService;
     private Model model;
+    private CandidateService candidateService;
+    private EducationService educationService;
+    private JobService jobService;
 
     @BeforeEach
     public void init() {
         userService = mock(UserService.class);
         model = mock(Model.class);
-        mainController = new MainController(userService);
+        candidateService = mock(CandidateService.class);
+        educationService = mock(EducationService.class);
+        jobService = mock(JobService.class);
+        mainController = new MainController(userService, candidateService, educationService, jobService);
     }
 
     @Test
     public void testThatRootRouteReturnsTheIndexPage() {
-        assertEquals("index", mainController.index());
+        when(model.addAttribute(Mockito.anyString(), Mockito.anyList())).thenReturn(model);
+
+        assertEquals("index", mainController.index(model));
+
+        verify(model, times(1)).addAttribute(Mockito.anyString(), Mockito.anyList());
     }
 
     @Test
     public void testThatRootRouteWithCandidateReturnsTheIndex() {
         when(model.addAttribute(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(model);
+        when(model.addAttribute(Mockito.anyString(), Mockito.any())).thenReturn(model);
+        when(model.addAttribute(Mockito.anyString(), Mockito.anyList())).thenReturn(model);
+        when(model.addAttribute(Mockito.anyString(), Mockito.anyList())).thenReturn(model);
 
         assertEquals("index", mainController.index("BARK", model));
 
         Mockito.verify(model, times(1)).addAttribute(Mockito.anyString(), Mockito.anyBoolean());
+        Mockito.verify(model, times(1)).addAttribute(Mockito.anyString(), Mockito.any());
+        Mockito.verify(model, times(1)).addAttribute(Mockito.anyString(), Mockito.anyList());
+        Mockito.verify(model, times(1)).addAttribute(Mockito.anyString(), Mockito.anyList());
     }
 
     @Test

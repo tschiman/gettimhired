@@ -96,4 +96,8 @@ public class JobService {
             return false;
         }
     }
+
+    public List<JobDTO> findAllJobsByCandidateId(String candidateId) {
+        return jobRepository.findAllByCandidateId(candidateId);
+    }
 }
