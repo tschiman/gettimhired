@@ -58,12 +58,12 @@ class EducationAPITest {
     public void testGetEducationByIdHappy() {
         var educationDto = getEducationDto();
         when(userDetails.getUsername()).thenReturn(USER_ID);
-        when(educationService.findEducationByUserIdAndCandidateIdAndId(USER_ID, CANDIDATE_ID, ID)).thenReturn(Optional.of(educationDto));
+        when(educationService.findEducationByIdAndUserId(ID, USER_ID)).thenReturn(Optional.of(educationDto));
 
         var result = educationAPI.getEducationById(userDetails, ID, CANDIDATE_ID);
 
         verify(userDetails, times(1)).getUsername();
-        verify(educationService, times(1)).findEducationByUserIdAndCandidateIdAndId(USER_ID, CANDIDATE_ID, ID);
+        verify(educationService, times(1)).findEducationByIdAndUserId(ID, USER_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
         assertEquals(educationDto, result.getBody());
@@ -72,12 +72,12 @@ class EducationAPITest {
     @Test
     public void testGetEducationByIdNOtFound() {
         when(userDetails.getUsername()).thenReturn(USER_ID);
-        when(educationService.findEducationByUserIdAndCandidateIdAndId(USER_ID, CANDIDATE_ID, ID)).thenReturn(Optional.empty());
+        when(educationService.findEducationByIdAndUserId(ID, USER_ID)).thenReturn(Optional.empty());
 
         var result = educationAPI.getEducationById(userDetails, ID, CANDIDATE_ID);
 
         verify(userDetails, times(1)).getUsername();
-        verify(educationService, times(1)).findEducationByUserIdAndCandidateIdAndId(USER_ID, CANDIDATE_ID, ID);
+        verify(educationService, times(1)).findEducationByIdAndUserId(ID, USER_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(404), result.getStatusCode());
     }

@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface EducationRepository extends MongoRepository<Education, String> {
     List<Education> findAllByUserIdAndCandidateIdOrderByEndDate(String userId, String candidateId);
 
-    Optional<Education> findEducationByUserIdAndCandidateIdAndId(String userId, String candidateId, String id);
+    Optional<Education> findEducationByIdAndUserId(String id, String userId);
 
     void deleteByIdAndUserIdAndCandidateId(String id, String userId, String candidateId);
 

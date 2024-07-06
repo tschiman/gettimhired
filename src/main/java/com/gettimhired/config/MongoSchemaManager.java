@@ -1,6 +1,7 @@
 package com.gettimhired.config;
 
 import com.gettimhired.model.mongo.ChangeSet;
+import com.gettimhired.model.mongo.Education;
 import com.gettimhired.repository.ChangeSetRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.data.domain.Sort;
@@ -23,12 +24,33 @@ public class MongoSchemaManager {
         doChangeSet(
                 "changeset-001",
                 "tim.schimandle",
-                "add index to users email and make email unique",
+                "add index to Education userId and candidateId",
                 () -> {
-                    var uniqueIndex = new Index().on("email", Sort.Direction.ASC).unique().background();
-//                    mongoTemplate.indexOps(User.class).ensureIndex(uniqueIndex);
+                    var index = new Index()
+                            .on("userId", Sort.Direction.ASC).on("candidateId", Sort.Direction.ASC).background();
+                    mongoTemplate.indexOps(Education.class).ensureIndex(index);
                     }
                 );
+        doChangeSet(
+                "changeset-002",
+                "tim.schimandle",
+                "add index to candidateId",
+                () -> {
+                    var index = new Index()
+                            .on("candidateId", Sort.Direction.ASC).background();
+                    mongoTemplate.indexOps(Education.class).ensureIndex(index);
+                }
+        );
+        doChangeSet(
+                "changeset-003",
+                "tim.schimandle",
+                "add index to userId",
+                () -> {
+                    var index = new Index()
+                            .on("userId", Sort.Direction.ASC).background();
+                    mongoTemplate.indexOps(Education.class).ensureIndex(index);
+                }
+        );
     }
 
     private void doChangeSet(String id, String author, String description, Runnable change) {

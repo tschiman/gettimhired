@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.gettimhired.TestHelper.ID;
+import static com.gettimhired.TestHelper.USER_ID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -48,11 +50,11 @@ class EducationServiceTest {
         
         var education = getEducation("BARK_NAME");
         var expectedEducationDTO = new EducationDTO(education);
-        when(educationRepository.findEducationByUserIdAndCandidateIdAndId(anyString(), anyString(), anyString()))
+        when(educationRepository.findEducationByIdAndUserId(anyString(), anyString()))
                 .thenReturn(Optional.of(education));
 
         
-        Optional<EducationDTO> result = educationService.findEducationByUserIdAndCandidateIdAndId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID, TestHelper.ID);
+        Optional<EducationDTO> result = educationService.findEducationByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
 
         
         assertTrue(result.isPresent());
@@ -62,13 +64,13 @@ class EducationServiceTest {
     @Test
     public void testFindEducationByUserIdAndCandidateIdAndId_NotFound() {
         
-        when(educationRepository.findEducationByUserIdAndCandidateIdAndId(anyString(), anyString(), anyString()))
+        when(educationRepository.findEducationByIdAndUserId(anyString(), anyString()))
                 .thenReturn(Optional.empty());
 
         
-        Optional<EducationDTO> result = educationService.findEducationByUserIdAndCandidateIdAndId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID, TestHelper.ID);
+        Optional<EducationDTO> result = educationService.findEducationByIdAndUserId(ID, USER_ID);
 
-        
+
         assertFalse(result.isPresent());
     }
 

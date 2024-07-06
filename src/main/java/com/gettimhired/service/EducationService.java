@@ -26,8 +26,8 @@ public class EducationService {
                 .toList();
     }
 
-    public Optional<EducationDTO> findEducationByUserIdAndCandidateIdAndId(String userId, String candidateId, String id) {
-        return educationRepository.findEducationByUserIdAndCandidateIdAndId(userId, candidateId, id).map(EducationDTO::new);
+    public Optional<EducationDTO> findEducationByIdAndUserId(String id, String userId) {
+        return educationRepository.findEducationByIdAndUserId(id, userId).map(EducationDTO::new);
     }
 
     public Optional<EducationDTO> createEducation(String userId, String candidateId, EducationDTO educationDTO) {

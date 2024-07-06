@@ -44,7 +44,7 @@ public class EducationAPI {
             @PathVariable String id,
             @PathVariable String candidateId
     ) {
-        var educationOpt = educationService.findEducationByUserIdAndCandidateIdAndId(userDetails.getUsername(), candidateId, id);
+        var educationOpt = educationService.findEducationByIdAndUserId(id, userDetails.getUsername());
         return educationOpt
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
