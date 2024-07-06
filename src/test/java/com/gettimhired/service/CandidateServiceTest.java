@@ -6,6 +6,8 @@ import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.model.mongo.Candidate;
 import com.gettimhired.repository.CandidateRepository;
+import com.gettimhired.repository.EducationRepository;
+import com.gettimhired.repository.JobRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.AdditionalAnswers;
@@ -21,11 +23,15 @@ class CandidateServiceTest {
 
     private CandidateService candidateService;
     private CandidateRepository candidateRepository;
+    private JobRepository jobRepository;
+    private EducationRepository educationRepository;
 
     @BeforeEach
     public void init() {
         candidateRepository = mock(CandidateRepository.class);
-        candidateService = new CandidateService(candidateRepository);
+        jobRepository = mock(JobRepository.class);
+        educationRepository = mock(EducationRepository.class);
+        candidateService = new CandidateService(candidateRepository, jobRepository, educationRepository);
     }
 
     @Test
@@ -192,9 +198,14 @@ class CandidateServiceTest {
     @Test
     public void testDeleteCandidateHappy() {
         doNothing().when(candidateRepository).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
+        doNothing().when(jobRepository).deleteByUserId(TestHelper.USER_ID);
+        doNothing().when(educationRepository).deleteByUserId(TestHelper.USER_ID);
 
         var result = candidateService.deleteCandidate(TestHelper.ID, TestHelper.USER_ID);
 
+        verify(candidateRepository, times(1)).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
+        verify(jobRepository, times(1)).deleteByUserId(TestHelper.USER_ID);
+        verify(educationRepository, times(1)).deleteByUserId(TestHelper.USER_ID);
         assertTrue(result);
     }
 

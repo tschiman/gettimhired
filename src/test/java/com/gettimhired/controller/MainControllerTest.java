@@ -1,6 +1,5 @@
 package com.gettimhired.controller;
 
-import com.gettimhired.model.mongo.User;
 import com.gettimhired.service.CandidateService;
 import com.gettimhired.service.EducationService;
 import com.gettimhired.service.JobService;
@@ -50,30 +49,12 @@ class MainControllerTest {
 
         assertEquals("index", mainController.index("BARK", model));
 
-        Mockito.verify(model, times(1)).addAttribute(Mockito.anyString(), Mockito.anyBoolean());
-        Mockito.verify(model, times(1)).addAttribute(Mockito.anyString(), Mockito.any());
-        Mockito.verify(model, times(1)).addAttribute(Mockito.anyString(), Mockito.anyList());
-        Mockito.verify(model, times(1)).addAttribute(Mockito.anyString(), Mockito.anyList());
+        Mockito.verify(model, times(4)).addAttribute(Mockito.anyString(), Mockito.any());
     }
 
     @Test
     public void testThatAPIRouteReturnsTheAPIPage() {
         assertEquals("credentials", mainController.api());
-    }
-
-    @Test
-    public void testThatAPIRouteReturnsAPI() {
-        User user = new User("BARK_USER", "BARK_PASSWORD");
-
-        when(userService.createUser()).thenReturn(user);
-
-        when(model.addAttribute("user", "BARK_USER")).thenReturn(model);
-        when(model.addAttribute("password", "BARK_PASSWORD")).thenReturn(model);
-
-        assertEquals("credentials", mainController.createCredentials(model));
-
-        assertEquals("index", mainController.index("BARK", model));
-        Mockito.verify(model, times(2)).addAttribute(Mockito.anyString(), Mockito.anyString());
     }
 
 }

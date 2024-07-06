@@ -5,6 +5,8 @@ import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.model.mongo.Candidate;
 import com.gettimhired.repository.CandidateRepository;
+import com.gettimhired.repository.EducationRepository;
+import com.gettimhired.repository.JobRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,13 @@ import java.util.Optional;
 public class CandidateService {
 
     private final CandidateRepository candidateRepository;
+    private final JobRepository jobRepository;
+    private final EducationRepository educationRepository;
 
-    public CandidateService(CandidateRepository candidateRepository) {
+    public CandidateService(CandidateRepository candidateRepository, JobRepository jobRepository, EducationRepository educationRepository) {
         this.candidateRepository = candidateRepository;
+        this.jobRepository = jobRepository;
+        this.educationRepository = educationRepository;
     }
 
     public List<CandidateDTO> findAllCandidatesForUser(String username) {
@@ -78,6 +84,8 @@ public class CandidateService {
     public boolean deleteCandidate(String id, String userId) {
         try {
             candidateRepository.deleteByIdAndUserId(id, userId);
+            jobRepository.deleteByUserId(userId);
+            educationRepository.deleteByUserId(userId);
             return true;
         } catch (Exception e) {
             //log
