@@ -14,5 +14,5 @@ public interface EducationRepository extends MongoRepository<Education, String> 
 
     void deleteByIdAndUserIdAndCandidateId(String id, String userId, String candidateId);
 
-    List<EducationDTO> findAllByCandidateId(String candidateId);
+    List<EducationDTO> findAllByCandidateIdOrderByEndDateDesc(String candidateId);
 }

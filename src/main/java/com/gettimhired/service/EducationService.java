@@ -95,6 +95,6 @@ public class EducationService {
     }
 
     public List<EducationDTO> findAllEducationsByCandidateId(String candidateId) {
-        return educationRepository.findAllByCandidateId(candidateId);
+        return educationRepository.findAllByCandidateIdOrderByEndDateDesc(candidateId);
     }
 }

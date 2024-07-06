@@ -19,7 +19,7 @@
             </div>
         </div>
         <div th:if="${hasCandidate}">
-            <div th:if="${candidate != null}">
+            <div class="border" th:if="${candidate != null}">
                 <div class="row">
                     <div class="col-md-12">
                         <h1 class="text-center" th:text="${candidate.firstName() + ' ' + candidate.lastName()}"></h1>
@@ -31,49 +31,80 @@
                     </div>
                 </div>
             </div>
-            <div th:if="${jobs.size() > 0}">
+            <div class="border" th:if="${jobs.size() > 0}">
                 <div class="row">
                     <div class="col-md-12">
                         <h2 class="text-center">Job History</h2>
                     </div>
                 </div>
-                <div th:each="job : ${jobs}">
+                <div class="border-dashed" th:each="job : ${jobs}">
                     <div class="row">
                         <div class="col-md-4">
-                            <p th:text="${job.companyName()}"></p>
+                            <h4 class="text-center" th:text="${job.companyName()}"></h4>
                         </div>
                         <div class="col-md-4">
-                            <p th:text="${job.title()}"></p>
+                            <h4 class="text-center" th:text="${job.title()}"></h4>
                         </div>
                         <div class="col-md-4">
-                            <p th:text="${'From: ' + job.startDate() + ' To: ' + (job.currentlyWorking() ? 'Present' : job.endDate())}"></p>
+                            <p class="text-center" th:text="${'From: ' + job.startDate() + ' To: ' + (job.currentlyWorking() ? 'Present' : job.endDate())}"></p>
                         </div>
                     </div>
-                    <div class="row" th:if="${job.skills().size() > 0}">
-                        <div class="col-md-12">
-                            <h3 class="text-center">Skills</h3>
+                    <div class="row" th:if="${job.skills().size() > 0 || job.achievements().size() > 0}">
+                        <div class="col-md-6 border-dotted">
+                            <h3 class="text-center" th:if="${job.skills().size() > 0}">Skills</h3>
                         </div>
-                        <div class="col-md-12">
-                            <table class="table table-striped">
+                        <div class="col-md-6 border-dotted">
+                            <h3 class="text-center" th:if="${job.achievements().size() > 0}">Achievements</h3>
+                        </div>
+                    </div>
+                    <div class="row" th:if="${job.skills().size() > 0 || job.achievements().size() > 0}">
+                        <div class="col-md-6 border-dotted">
+                            <table class="table table-striped" th:if="${job.skills().size() > 0}">
                                 <tbody>
                                     <tr th:each="i : ${#numbers.sequence(0, job.skills().size() / 5)}">
                                         <td th:text="${job.skills().get(i*5)}"></td>
+
                                         <td th:if="${i*5 + 1 < job.skills().size()}" th:text="${job.skills().get(i*5 + 1)}"></td>
+                                        <td th:if="${i*5 + 1 >= job.skills().size()}"> </td>
+
                                         <td th:if="${i*5 + 2 < job.skills().size()}" th:text="${job.skills().get(i*5 + 2)}"></td>
+                                        <td th:if="${i*5 + 2 >= job.skills().size()}"> </td>
+
                                         <td th:if="${i*5 + 3 < job.skills().size()}" th:text="${job.skills().get(i*5 + 3)}"></td>
+                                        <td th:if="${i*5 + 3 >= job.skills().size()}"> </td>
+
                                         <td th:if="${i*5 + 4 < job.skills().size()}" th:text="${job.skills().get(i*5 + 4)}"></td>
+                                        <td th:if="${i*5 + 4 >= job.skills().size()}"> </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                    <div class="row" th:if="${job.achievements().size() > 0}">
-                        //achievements
+                        <div class="col-md-6 border-dotted">
+                            <ul th:if="${job.achievements().size() > 0}">
+                                <li th:each="achievement : ${job.achievements()}" th:text="${achievement}"></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div th:if="${educations.size() > 0}">
-                Educations
+            <div class="border" th:if="${educations.size() > 0}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="text-center">Education</h2>
+                    </div>
+                </div>
+                <div class="row border-dashed" th:each="education : ${educations}">
+                    <div class="col-md-4 text-center" th:text="${education.name()}"></div>
+                    <div class="col-md-4 text-center" th:text="${education.areaOfStudy()}"></div>
+                    <div class="col-md-4 text-center" th:text="${education.levelOfEducation()}"></div>
+                    <div class="col-md-4 text-center" th:text="${education.graduated() ? 'Graduated' : 'Incomplete'}"></div>
+                    <div class="col-md-4 text-center"
+                         th:text="${
+                         education.startDate() != null && education.endDate() != null ?
+                         education.startDate() + ' to ' + education.endDate() :
+                         ''}">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
