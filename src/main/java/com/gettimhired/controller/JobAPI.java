@@ -44,7 +44,7 @@ public class JobAPI {
             @PathVariable String id,
             @PathVariable String candidateId
     ) {
-        var jobOpt = jobService.findJobByUserIdAndCandidateIdAndId(userDetails.getUsername(), candidateId, id);
+        var jobOpt = jobService.findJobByIdAndUserId(id, userDetails.getUsername());
         return jobOpt
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -88,7 +88,7 @@ public class JobAPI {
             @PathVariable String id,
             @PathVariable String candidateId
     ) {
-        boolean result = jobService.deleteJob(id, userDetails.getUsername(), candidateId);
+        boolean result = jobService.deleteJob(id, userDetails.getUsername());
         return result ?
                 ResponseEntity.ok().build() :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -27,8 +27,8 @@ public class JobService {
                 .toList();
     }
 
-    public Optional<JobDTO> findJobByUserIdAndCandidateIdAndId(String userId, String candidateId, String id) {
-        return jobRepository.findJobByUserIdAndCandidateIdAndId(userId, candidateId, id)
+    public Optional<JobDTO> findJobByIdAndUserId(String id, String userId) {
+        return jobRepository.findJobByIdAndUserId(id, userId)
                 .map(JobDTO::new);
     }
 
@@ -87,9 +87,9 @@ public class JobService {
         }
     }
 
-    public boolean deleteJob(String id, String userId, String candidateId) {
+    public boolean deleteJob(String id, String userId) {
         try {
-            jobRepository.deleteByIdAndUserIdAndCandidateId(id, userId, candidateId);
+            jobRepository.deleteByIdAndUserId(id, userId);
             return true;
         } catch (Exception e) {
             //log

@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.gettimhired.TestHelper.CANDIDATE_ID;
-import static com.gettimhired.TestHelper.USER_ID;
+import static com.gettimhired.TestHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -53,12 +52,10 @@ class JobServiceTest {
 
         var job = getJob("BARK_NAME");
         var expectedJobDTO = new JobDTO(job);
-        when(jobRepository.findJobByUserIdAndCandidateIdAndId(anyString(), anyString(), anyString()))
+        when(jobRepository.findJobByIdAndUserId(anyString(), anyString()))
                 .thenReturn(Optional.of(job));
 
-
-        Optional<JobDTO> result = jobService.findJobByUserIdAndCandidateIdAndId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID, TestHelper.ID);
-
+        Optional<JobDTO> result = jobService.findJobByIdAndUserId(ID, USER_ID);
 
         assertTrue(result.isPresent());
         assertEquals(expectedJobDTO, result.get());
@@ -67,12 +64,10 @@ class JobServiceTest {
     @Test
     public void testFindJobByUserIdAndCandidateIdAndId_NotFound() {
 
-        when(jobRepository.findJobByUserIdAndCandidateIdAndId(anyString(), anyString(), anyString()))
+        when(jobRepository.findJobByIdAndUserId(anyString(), anyString()))
                 .thenReturn(Optional.empty());
 
-
-        Optional<JobDTO> result = jobService.findJobByUserIdAndCandidateIdAndId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID, TestHelper.ID);
-
+        Optional<JobDTO> result = jobService.findJobByIdAndUserId(ID, USER_ID);
 
         assertFalse(result.isPresent());
     }
@@ -177,18 +172,18 @@ class JobServiceTest {
 
     @Test
     public void testDeleteJob_Success() {
-        doNothing().when(jobRepository).deleteByIdAndUserIdAndCandidateId(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
+        doNothing().when(jobRepository).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
 
-        boolean result = jobService.deleteJob(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
+        boolean result = jobService.deleteJob(TestHelper.ID, TestHelper.USER_ID);
 
         assertTrue(result);
     }
 
     @Test
     public void testDeleteJob_Failure() {
-        doThrow(new RuntimeException("Database error")).when(jobRepository).deleteByIdAndUserIdAndCandidateId(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
+        doThrow(new RuntimeException("Database error")).when(jobRepository).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
 
-        boolean result = jobService.deleteJob(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
+        boolean result = jobService.deleteJob(TestHelper.ID, TestHelper.USER_ID);
 
         assertFalse(result);
     }
