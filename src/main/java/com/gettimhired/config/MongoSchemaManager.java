@@ -1,5 +1,6 @@
 package com.gettimhired.config;
 
+import com.gettimhired.model.mongo.Candidate;
 import com.gettimhired.model.mongo.ChangeSet;
 import com.gettimhired.model.mongo.Education;
 import com.gettimhired.model.mongo.Job;
@@ -80,6 +81,16 @@ public class MongoSchemaManager {
                     var index = new Index()
                             .on("userId", Sort.Direction.ASC).background();
                     mongoTemplate.indexOps(Job.class).ensureIndex(index);
+                }
+        );
+        doChangeSet(
+                "changeset-007",
+                "tim.schimandle",
+                "add candidate index to userId",
+                () -> {
+                    var index = new Index()
+                            .on("userId", Sort.Direction.ASC).background();
+                    mongoTemplate.indexOps(Candidate.class).ensureIndex(index);
                 }
         );
     }
