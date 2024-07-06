@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface CandidateRepository extends MongoRepository<Candidate, String> {
     List<Candidate> findAllByUserIdOrderByLastName(String username);
-    Optional<Candidate> findCandidateByUserIdAndId(String userId, String id);
+    Optional<Candidate> findCandidateByIdAndUserId(String id, String userId);
     void deleteByIdAndUserId(String id, String userId);
 }

@@ -47,11 +47,11 @@ class CandidateServiceTest {
     @Test
     public void testFindCandidateByIdHappy() {
         var candidate = new Candidate(TestHelper.ID, TestHelper.USER_ID, "BARK_FNAME", "BARK_LNAME", "BARK_SUMMARY");
-        when(candidateRepository.findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID)).thenReturn(Optional.of(candidate));
+        when(candidateRepository.findCandidateByIdAndUserId(TestHelper.ID, TestHelper.USER_ID)).thenReturn(Optional.of(candidate));
 
         var result = candidateService.findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID);
 
-        verify(candidateRepository, times(1)).findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID);
+        verify(candidateRepository, times(1)).findCandidateByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
         assertNotNull(result);
         assertTrue(result.isPresent());
         assertEquals(TestHelper.ID, result.get().id());
@@ -63,11 +63,11 @@ class CandidateServiceTest {
 
     @Test
     public void testFindCandidateByIdNoCandidate() {
-        when(candidateRepository.findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID)).thenReturn(Optional.empty());
+        when(candidateRepository.findCandidateByIdAndUserId(TestHelper.ID, TestHelper.USER_ID)).thenReturn(Optional.empty());
 
         var result = candidateService.findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID);
 
-        verify(candidateRepository, times(1)).findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID);
+        verify(candidateRepository, times(1)).findCandidateByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
         assertNotNull(result);
         assertFalse(result.isPresent());
     }

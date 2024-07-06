@@ -33,7 +33,7 @@ public class CandidateService {
     }
 
     public Optional<CandidateDTO> findCandidateByUserIdAndId(String userId, String id) {
-        return candidateRepository.findCandidateByUserIdAndId(userId, id).map(CandidateDTO::new);
+        return candidateRepository.findCandidateByIdAndUserId(id, userId).map(CandidateDTO::new);
     }
 
     public Optional<CandidateDTO> createCandidate(String userId, CandidateDTO candidateDTO) {
