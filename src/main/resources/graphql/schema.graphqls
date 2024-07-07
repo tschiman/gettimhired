@@ -9,6 +9,14 @@ type Query {
     getEducationById(id: ID!): Education
 }
 
+type Mutation {
+    createCandidate(candidate: CandidateInput): Candidate
+
+    createJob(job: JobInput): Job
+
+    createEducation(education: EducationInput): Education
+}
+
 type Education {
     id: ID!
     userId: String!
@@ -17,6 +25,18 @@ type Education {
     startDate: String
     endDate: String
     graduated: Boolean
+    areaOfStudy: String
+    levelOfEducation: String
+}
+input EducationInput {
+    id: ID
+    userId: String
+    candidateId: String!
+    name: String!
+    startDate: String
+    endDate: String
+    graduated: Boolean
+    areaOfStudy: String!
     levelOfEducation: String
 }
 
@@ -27,10 +47,29 @@ type Candidate {
     lastName: String!
     summary: String
 }
+input CandidateInput {
+    id: String
+    userId: String
+    firstName: String!
+    lastName: String!
+    summary: String
+}
 
 type Job {
     id: ID!
     userId: String!
+    candidateId: String!
+    companyName: String
+    title: String
+    startDate: String
+    endDate: String
+    skills: [String]
+    achievements: [String]
+    currentlyWorking: Boolean
+}
+input JobInput {
+    id: ID
+    userId: String
     candidateId: String!
     companyName: String
     title: String

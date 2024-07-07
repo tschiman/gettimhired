@@ -7,7 +7,10 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-public record JobUpdateDTO(
+public record JobInput(
+        String id,
+        String userId,
+        String candidateId,
         @NotBlank(message = "Company name cannot be blank")
         @Size(min = 1, max = 256, message = "Company name must be between 1 and 256 characters")
         String companyName,

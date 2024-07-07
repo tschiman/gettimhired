@@ -1,10 +1,13 @@
 package com.gettimhired.resolver;
 
 import com.gettimhired.model.dto.JobDTO;
+import com.gettimhired.model.dto.JobInput;
 import com.gettimhired.service.JobService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,5 +38,12 @@ public class JobResolver {
     public JobDTO getJobById(@AuthenticationPrincipal UserDetails userDetails, @Argument String id) {
         log.info("GQL getJobById userId={} id={}", userDetails.getUsername(), id);
         return jobService.findJobByIdAndUserId(id, userDetails.getUsername()).orElse(null);
+    }
+
+    @MutationMapping
+    @PreAuthorize("isAuthenticated()")
+    public JobDTO createJob(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid JobInput job) {
+        log.info("GQL createJob userId={} candidateId={}", userDetails.getUsername(), job.candidateId());
+        return jobService.createJob(userDetails.getUsername(), job.candidateId(), new JobDTO(job)).orElse(null);
     }
 }

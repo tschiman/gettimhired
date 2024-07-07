@@ -1,12 +1,11 @@
 package com.gettimhired.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gettimhired.model.mongo.Candidate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record CandidateDTO(
+public record CandidateInput(
         String id,
         String userId,
         @NotBlank(message = "First name cannot be blank")
@@ -18,23 +17,4 @@ public record CandidateDTO(
         @Size(max = 4000)
         String summary
 ) {
-    public CandidateDTO(Candidate candidate) {
-        this(
-                candidate.id(),
-                candidate.userId(),
-                candidate.firstName(),
-                candidate.lastName(),
-                candidate.summary()
-        );
-    }
-
-    public CandidateDTO(CandidateInput candidate) {
-        this (
-                candidate.id(),
-                candidate.userId(),
-                candidate.firstName(),
-                candidate.lastName(),
-                candidate.summary()
-        );
-    }
 }

@@ -1,10 +1,13 @@
 package com.gettimhired.resolver;
 
 import com.gettimhired.model.dto.EducationDTO;
+import com.gettimhired.model.dto.EducationInput;
 import com.gettimhired.service.EducationService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,5 +39,12 @@ public class EducationResolver {
     public EducationDTO getEducationById(@AuthenticationPrincipal UserDetails userDetails, @Argument String id) {
         log.info("GQL getEducationById userId={} id={}", userDetails.getUsername(), id);
         return educationService.findEducationByIdAndUserId(id, userDetails.getUsername()).orElse(null);
+    }
+
+    @MutationMapping
+    @PreAuthorize("isAuthenticated()")
+    public EducationDTO createEducation(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid EducationInput education) {
+        log.info("GQL createEducation userId={} candidateId={}", userDetails.getUsername(), education.candidateId());
+        return educationService.createEducation(userDetails.getUsername(), education.candidateId(), new EducationDTO(education)).orElse(null);
     }
 }

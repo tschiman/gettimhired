@@ -38,4 +38,18 @@ public record EducationDTO(
                         education.levelOfEducation()
                 );
         }
+
+        public EducationDTO(EducationInput education) {
+                this(
+                        education.id(),
+                        education.userId(),
+                        education.candidateId(),
+                        education.name(),
+                        education.startDate(),
+                        education.endDate(),
+                        education.graduated(),
+                        education.areaOfStudy(),
+                        education.levelOfEducation()
+                );
+        }
 }
