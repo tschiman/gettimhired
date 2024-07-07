@@ -4,6 +4,7 @@ import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.service.CandidateService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@SecurityRequirement(name = "basicAuth")
 @RestController
 @RequestMapping("/api/candidates")
 public class CandidateAPI {
