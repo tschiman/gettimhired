@@ -1,7 +1,6 @@
 package com.gettimhired.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gettimhired.model.mongo.Candidate;
 import com.gettimhired.model.mongo.Education;
 import com.gettimhired.model.mongo.EducationLevel;
 import jakarta.validation.constraints.NotBlank;
@@ -23,6 +22,7 @@ public record EducationDTO(
         @NotBlank(message = "Area of Study cannot be blank")
         @Size(min = 1, max = 256, message = "Area of Study can be between 1 and 256 characters")
         String areaOfStudy,
+        //TODO: Rename to educationLevel
         EducationLevel levelOfEducation
 ) {
         public EducationDTO(Education education) {

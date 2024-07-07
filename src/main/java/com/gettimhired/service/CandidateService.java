@@ -29,8 +29,8 @@ public class CandidateService {
         this.educationRepository = educationRepository;
     }
 
-    public List<CandidateDTO> findAllCandidatesForUser(String username) {
-        return candidateRepository.findAllByUserIdOrderByLastName(username).stream()
+    public List<CandidateDTO> findAllCandidatesForUser(String userId) {
+        return candidateRepository.findAllByUserIdOrderByLastName(userId).stream()
                 .map(CandidateDTO::new)
                 .toList();
     }
