@@ -5,6 +5,8 @@ import com.gettimhired.model.dto.EducationDTO;
 import com.gettimhired.model.dto.EducationUpdateDTO;
 import com.gettimhired.service.EducationService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequestMapping("/api/candidates/{candidateId}/educations")
 public class EducationAPI {
 
+    Logger log = LoggerFactory.getLogger(EducationAPI.class);
     private final EducationService educationService;
 
     public EducationAPI(EducationService educationService) {
@@ -30,6 +33,7 @@ public class EducationAPI {
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String candidateId
     ) {
+        log.info("GET /api/candidates/{candidateId}/educations getAllEducations userId={} candidateId={}", userDetails.getUsername(), candidateId);
         return educationService
                 .findAllEducationsForUserAndCandidateId(
                         userDetails.getUsername(),
@@ -44,6 +48,7 @@ public class EducationAPI {
             @PathVariable String id,
             @PathVariable String candidateId
     ) {
+        log.info("GET /api/candidates/{candidateId}/educations/{id} getEducationById userId={} candidateId={} id={}", userDetails.getUsername(), candidateId, id);
         var educationOpt = educationService.findEducationByIdAndUserId(id, userDetails.getUsername());
         return educationOpt
                 .map(ResponseEntity::ok)
@@ -57,6 +62,7 @@ public class EducationAPI {
             @RequestBody @Valid EducationDTO educationDTO,
             @PathVariable String candidateId
     ) {
+        log.info("POST /api/candidates/{candidateId}/educations createEducation userId={} candidateId={}", userDetails.getUsername(), candidateId);
         var educationDtoOpt = educationService.createEducation(userDetails.getUsername(), candidateId, educationDTO);
         return educationDtoOpt
                 .map(ResponseEntity::ok)
@@ -71,6 +77,7 @@ public class EducationAPI {
             @PathVariable String id,
             @PathVariable String candidateId
     ) {
+        log.info("PUT /api/candidates/{candidateId}/educations/{id} updateEducation userId={} candidateId={} id={}", userDetails.getUsername(), candidateId, id);
         try {
             var educationDtoOpt = educationService.updateEducation(id, userDetails.getUsername(), candidateId, educationUpdateDTO);
             return educationDtoOpt
@@ -88,6 +95,7 @@ public class EducationAPI {
             @PathVariable String id,
             @PathVariable String candidateId
     ) {
+        log.info("DELETE /api/candidates/{candidateId}/educations/{id} deleteEducation userId={} candidateId={} id={}", userDetails.getUsername(), candidateId, id);
         boolean result = educationService.deleteEducation(id, userDetails.getUsername(), candidateId);
         return result ?
                 ResponseEntity.ok().build() :

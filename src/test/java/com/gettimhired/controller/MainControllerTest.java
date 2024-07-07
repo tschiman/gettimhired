@@ -55,7 +55,7 @@ class MainControllerTest {
 
     @Test
     public void testThatAPIRouteReturnsTheAPIPage() {
-        assertEquals("credentials", mainController.api());
+        assertEquals("credentials", mainController.credentials());
     }
 
     @Test

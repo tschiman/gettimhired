@@ -5,6 +5,8 @@ import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.service.CandidateService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequestMapping("/api/candidates")
 public class CandidateAPI {
 
+    Logger log = LoggerFactory.getLogger(CandidateAPI.class);
     private final CandidateService candidateService;
 
     public CandidateAPI(CandidateService candidateService) {
@@ -27,6 +30,7 @@ public class CandidateAPI {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public List<CandidateDTO> getAllCandidates(@AuthenticationPrincipal UserDetails userDetails) {
+        log.info("GET /api/candidates getAllCandidates userId={}", userDetails.getUsername());
         return candidateService.findAllCandidatesForUser(userDetails.getUsername());
     }
 
@@ -36,6 +40,7 @@ public class CandidateAPI {
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String id
     ) {
+        log.info("GET /api/candidates/{id} getCandidateById userId={} id={}", userDetails.getUsername(), id);
         var candidateOpt = candidateService.findCandidateByUserIdAndId(userDetails.getUsername(), id);
         return candidateOpt
                 .map(ResponseEntity::ok)
@@ -48,6 +53,7 @@ public class CandidateAPI {
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody @Valid CandidateDTO candidateDTO
     ) {
+        log.info("POST /api/candidates createCandidate userId={}", userDetails.getUsername());
         var candidateDtoOpt = candidateService.createCandidate(userDetails.getUsername(), candidateDTO);
         return candidateDtoOpt
                 .map(ResponseEntity::ok)
@@ -61,6 +67,7 @@ public class CandidateAPI {
             @RequestBody @Valid CandidateUpdateDTO candidateUpdateDTO,
             @PathVariable String id
     ) {
+        log.info("PUT /api/candidates/{id} updateCandidate userId={} id={}", userDetails.getUsername(), id);
         try {
             var candidateDtoOpt = candidateService.updateCandidate(id, userDetails.getUsername(), candidateUpdateDTO);
             return candidateDtoOpt
@@ -77,6 +84,7 @@ public class CandidateAPI {
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable String id
     ) {
+        log.info("DELETE /api/candidates/{id} deleteCandidate userId={} id={}", userDetails.getUsername(), id);
         boolean result = candidateService.deleteCandidate(id, userDetails.getUsername());
         return result ?
                 ResponseEntity.ok().build() :
