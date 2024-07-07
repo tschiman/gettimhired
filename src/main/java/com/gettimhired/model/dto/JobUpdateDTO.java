@@ -22,4 +22,15 @@ public record JobUpdateDTO(
         @NotNull
         Boolean currentlyWorking
 ) {
+    public JobUpdateDTO(JobInput job) {
+        this(
+                job.companyName(),
+                job.title(),
+                job.startDate(),
+                job.endDate(),
+                job.skills(),
+                job.achievements(),
+                job.currentlyWorking()
+        );
+    }
 }

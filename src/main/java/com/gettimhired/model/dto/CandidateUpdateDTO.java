@@ -23,4 +23,12 @@ public record CandidateUpdateDTO(
                 candidate.summary()
         );
     }
+
+    public CandidateUpdateDTO(CandidateInput candidate) {
+        this(
+                candidate.firstName(),
+                candidate.lastName(),
+                candidate.summary()
+        );
+    }
 }

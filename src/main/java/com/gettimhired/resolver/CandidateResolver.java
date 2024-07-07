@@ -2,6 +2,7 @@ package com.gettimhired.resolver;
 
 import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.CandidateInput;
+import com.gettimhired.model.dto.CandidateUpdateDTO;
 import com.gettimhired.service.CandidateService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -42,8 +43,15 @@ public class CandidateResolver {
 
     @MutationMapping
     @PreAuthorize("isAuthenticated()")
-    public CandidateDTO createCandidate(@AuthenticationPrincipal UserDetails userDetails, @Argument("candidate") @Valid CandidateInput candidate) {
+    public CandidateDTO createCandidate(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid CandidateInput candidate) {
         log.info("GQL createCandidate userId={} id={}", userDetails.getUsername());
         return candidateService.createCandidate(userDetails.getUsername(), new CandidateDTO(candidate)).orElse(null);
+    }
+
+    @MutationMapping
+    @PreAuthorize("isAuthenticated()")
+    public CandidateDTO updateCandidate(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid CandidateInput candidate) {
+        log.info("GQL updateCandidate userId={} id={}", userDetails.getUsername());
+        return candidateService.updateCandidate(candidate.id(), userDetails.getUsername(), new CandidateUpdateDTO(candidate)).orElse(null);
     }
 }

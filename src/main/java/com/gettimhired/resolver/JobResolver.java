@@ -2,6 +2,7 @@ package com.gettimhired.resolver;
 
 import com.gettimhired.model.dto.JobDTO;
 import com.gettimhired.model.dto.JobInput;
+import com.gettimhired.model.dto.JobUpdateDTO;
 import com.gettimhired.service.JobService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -45,5 +46,12 @@ public class JobResolver {
     public JobDTO createJob(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid JobInput job) {
         log.info("GQL createJob userId={} candidateId={}", userDetails.getUsername(), job.candidateId());
         return jobService.createJob(userDetails.getUsername(), job.candidateId(), new JobDTO(job)).orElse(null);
+    }
+
+    @MutationMapping
+    @PreAuthorize("isAuthenticated()")
+    public JobDTO updateJob(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid JobInput job) {
+        log.info("GQL updateJob userId={} candidateId={}", userDetails.getUsername(), job.candidateId());
+        return jobService.updateJob(job.id(), userDetails.getUsername(), job.candidateId(), new JobUpdateDTO(job)).orElse(null);
     }
 }

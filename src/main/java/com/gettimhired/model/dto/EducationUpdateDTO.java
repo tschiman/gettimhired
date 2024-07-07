@@ -15,4 +15,14 @@ public record EducationUpdateDTO(
         String areaOfStudy,
         EducationLevel levelOfEducation
 ) {
+    public EducationUpdateDTO(EducationInput education) {
+        this(
+                education.name(),
+                education.startDate(),
+                education.endDate(),
+                education.graduated(),
+                education.areaOfStudy(),
+                education.levelOfEducation()
+        );
+    }
 }

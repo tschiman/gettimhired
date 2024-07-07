@@ -11,10 +11,13 @@ type Query {
 
 type Mutation {
     createCandidate(candidate: CandidateInput): Candidate
+    updateCandidate(candidate: CandidateInput): Candidate
 
     createJob(job: JobInput): Job
+    updateJob(job: JobInput): Job
 
     createEducation(education: EducationInput): Education
+    updateEducation(education: EducationInput): Education
 }
 
 type Education {
