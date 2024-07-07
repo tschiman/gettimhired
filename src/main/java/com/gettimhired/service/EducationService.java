@@ -5,6 +5,8 @@ import com.gettimhired.model.dto.EducationDTO;
 import com.gettimhired.model.dto.EducationUpdateDTO;
 import com.gettimhired.model.mongo.Education;
 import com.gettimhired.repository.EducationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.util.Optional;
 @Service
 public class EducationService {
 
+    Logger log = LoggerFactory.getLogger(EducationService.class);
     private final EducationRepository educationRepository;
 
     public EducationService(EducationRepository educationRepository) {
@@ -37,7 +40,7 @@ public class EducationService {
             var educationDtoFromDatabase = new EducationDTO(educationFromDb);
             return Optional.of(educationDtoFromDatabase);
         } catch (Exception e) {
-            //add logging here
+            log.error("createEducation userId={}", userId, e);
             return Optional.empty();
         }
     }
@@ -66,7 +69,7 @@ public class EducationService {
                     try {
                         educationToReturn = educationRepository.save(educationToSave);
                     } catch (Exception e) {
-                        //log
+                        log.error("updateEducation userId={} id={} candidateId={}", userId, id, candidateId, e);
                         return Optional.empty();
                     }
                     var educationDTO = new EducationDTO(educationToReturn);
@@ -89,7 +92,7 @@ public class EducationService {
             educationRepository.deleteByIdAndUserIdAndCandidateId(id, userId, candidateId);
             return true;
         } catch (Exception e) {
-            //log
+            log.error("deleteEducation userId={} id={} candidateId={}", userId, id, candidateId, e);
             return false;
         }
     }

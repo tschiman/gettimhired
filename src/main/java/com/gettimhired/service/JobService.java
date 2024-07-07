@@ -6,6 +6,8 @@ import com.gettimhired.model.dto.JobDTO;
 import com.gettimhired.model.dto.JobUpdateDTO;
 import com.gettimhired.model.mongo.Job;
 import com.gettimhired.repository.JobRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.util.Optional;
 @Service
 public class JobService {
 
+    Logger log = LoggerFactory.getLogger(JobService.class);
     private final JobRepository jobRepository;
 
     public JobService(JobRepository jobRepository) {
@@ -39,7 +42,7 @@ public class JobService {
             var jobFromDatabase = new JobDTO(jobFromDb);
             return Optional.of(jobFromDatabase);
         } catch (Exception e) {
-            //add logging here
+            log.error("createJob userId={} candidateId={}", userId, candidateId, e);
             return Optional.empty();
         }
     }
@@ -69,7 +72,7 @@ public class JobService {
                     try {
                         jobToReturn = jobRepository.save(jobToSave);
                     } catch (Exception e) {
-                        //log
+                        log.error("updateJob userId={} id={} candidateId={}", userId, id, candidateId, e);
                         return Optional.empty();
                     }
                     var jobDto = new JobDTO(jobToReturn);
@@ -92,7 +95,7 @@ public class JobService {
             jobRepository.deleteByIdAndUserId(id, userId);
             return true;
         } catch (Exception e) {
-            //log
+            log.error("deleteJob userId={} id={}", userId, id, e);
             return false;
         }
     }
