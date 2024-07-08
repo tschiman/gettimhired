@@ -52,7 +52,7 @@ class JobServiceTest {
 
         var job = getJob("BARK_NAME");
         var expectedJobDTO = new JobDTO(job);
-        when(jobRepository.findJobByIdAndUserIdOrderByEndDate(anyString(), anyString()))
+        when(jobRepository.findJobByIdAndUserId(anyString(), anyString()))
                 .thenReturn(Optional.of(job));
 
         Optional<JobDTO> result = jobService.findJobByIdAndUserId(ID, USER_ID);
@@ -64,7 +64,7 @@ class JobServiceTest {
     @Test
     public void testFindJobByUserIdAndCandidateIdAndId_NotFound() {
 
-        when(jobRepository.findJobByIdAndUserIdOrderByEndDate(anyString(), anyString()))
+        when(jobRepository.findJobByIdAndUserId(anyString(), anyString()))
                 .thenReturn(Optional.empty());
 
         Optional<JobDTO> result = jobService.findJobByIdAndUserId(ID, USER_ID);
@@ -158,19 +158,6 @@ class JobServiceTest {
         assertTrue(result.isPresent());
     }
 
-    private JobUpdateDTO getJobUpdate() {
-        return new JobUpdateDTO(
-                "BARK_NAME",
-                "BARK_TITLE",
-                LocalDate.now(),
-                LocalDate.now(),
-                new ArrayList<>(),
-                new ArrayList<>(),
-                true,
-                "BARK_LEAVE"
-        );
-    }
-
     @Test
     public void testDeleteJob_Success() {
         doNothing().when(jobRepository).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
@@ -189,12 +176,42 @@ class JobServiceTest {
         assertFalse(result);
     }
 
+    @Test
+    public void testFindAllJobsByCandidateId_Sorting() {
+
+        var j1 = new JobDTO(null,null,null,null,null,null,LocalDate.of(2000,1,1),null,null,null,null);
+        var j2 = new JobDTO(null,null,null,null,null,null,LocalDate.of(2020,1,1),null,null,null,null);
+        var j3 = new JobDTO(null,null,null,null,null,null,null,null,null,null,null);
+        var jobs = List.of(j1, j2, j3);
+        when(jobRepository.findAllByCandidateId(CANDIDATE_ID)).thenReturn(jobs);
+
+        var result = jobService.findAllJobsByCandidateId(CANDIDATE_ID);
+
+        assertEquals(3, result.size());
+        assertEquals(j3, result.get(0));
+        assertEquals(j2, result.get(1));
+        assertEquals(j1, result.get(2));
+    }
+
     private static Job getJob(String name) {
         return new Job(
                 UUID.randomUUID().toString(),
                 USER_ID,
                 CANDIDATE_ID,
                 name,
+                "BARK_TITLE",
+                LocalDate.now(),
+                LocalDate.now(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                true,
+                "BARK_LEAVE"
+        );
+    }
+
+    private JobUpdateDTO getJobUpdate() {
+        return new JobUpdateDTO(
+                "BARK_NAME",
                 "BARK_TITLE",
                 LocalDate.now(),
                 LocalDate.now(),

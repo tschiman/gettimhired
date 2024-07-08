@@ -31,7 +31,7 @@ public class JobService {
     }
 
     public Optional<JobDTO> findJobByIdAndUserId(String id, String userId) {
-        return jobRepository.findJobByIdAndUserIdOrderByEndDate(id, userId)
+        return jobRepository.findJobByIdAndUserId(id, userId)
                 .map(JobDTO::new);
     }
 
@@ -102,6 +102,18 @@ public class JobService {
     }
 
     public List<JobDTO> findAllJobsByCandidateId(String candidateId) {
-        return jobRepository.findAllByCandidateId(candidateId);
+        return jobRepository.findAllByCandidateId(candidateId)
+                .stream().sorted((j1, j2) -> {
+                    if (j1.endDate() == null && j2.endDate() == null) {
+                        return 0;
+                    }
+                    if (j1.endDate() == null) {
+                        return -1;
+                    }
+                    if (j2.endDate() == null) {
+                        return 1;
+                    }
+                    return j2.endDate().compareTo(j1.endDate());
+                }).toList();
     }
 }

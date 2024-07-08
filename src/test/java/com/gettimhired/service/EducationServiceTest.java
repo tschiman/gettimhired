@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.gettimhired.TestHelper.ID;
-import static com.gettimhired.TestHelper.USER_ID;
+import static com.gettimhired.TestHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -160,17 +159,6 @@ class EducationServiceTest {
         assertTrue(result.isPresent());
     }
 
-    private EducationUpdateDTO getEducationUpdate() {
-        return new EducationUpdateDTO(
-                "BARK_NAME",
-                LocalDate.now(),
-                LocalDate.now(),
-                true,
-                "Computer Science",
-                EducationLevel.BACHELORS
-        );
-    }
-
     @Test
     public void testDeleteEducation_Success() {
         doNothing().when(educationRepository).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
@@ -189,12 +177,40 @@ class EducationServiceTest {
         assertFalse(result);
     }
 
+    @Test
+    public void testFindAllEducationsByCandidateId_Sorting() {
+
+        var e1 = new EducationDTO(null,null,null,null,null,LocalDate.of(2000,1,1),null,null,null);
+        var e2 = new EducationDTO(null,null,null,null,null,LocalDate.of(2020,1,1),null,null,null);
+        var e3 = new EducationDTO(null,null,null,null,null,null,null,null,null);
+        var educations = List.of(e1, e2, e3);
+        when(educationRepository.findAllByCandidateId(CANDIDATE_ID)).thenReturn(educations);
+
+        var result = educationService.findAllEducationsByCandidateId(CANDIDATE_ID);
+
+        assertEquals(3, result.size());
+        assertEquals(e3, result.get(0));
+        assertEquals(e2, result.get(1));
+        assertEquals(e1, result.get(2));
+    }
+
     private static Education getEducation(String name) {
         return new Education(
                 UUID.randomUUID().toString(),
                 TestHelper.USER_ID,
                 TestHelper.CANDIDATE_ID,
                 name,
+                LocalDate.now(),
+                LocalDate.now(),
+                true,
+                "Computer Science",
+                EducationLevel.BACHELORS
+        );
+    }
+
+    private EducationUpdateDTO getEducationUpdate() {
+        return new EducationUpdateDTO(
+                "BARK_NAME",
                 LocalDate.now(),
                 LocalDate.now(),
                 true,

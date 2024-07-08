@@ -98,6 +98,18 @@ public class EducationService {
     }
 
     public List<EducationDTO> findAllEducationsByCandidateId(String candidateId) {
-        return educationRepository.findAllByCandidateIdOrderByEndDateDesc(candidateId);
+        return educationRepository.findAllByCandidateId(candidateId)
+                .stream().sorted((e1, e2) -> {
+                    if (e1.endDate() == null && e2.endDate() == null) {
+                        return 0;
+                    }
+                    if (e1.endDate() == null) {
+                        return -1;
+                    }
+                    if (e2.endDate() == null) {
+                        return 1;
+                    }
+                    return e2.endDate().compareTo(e1.endDate());
+                }).toList();
     }
 }
