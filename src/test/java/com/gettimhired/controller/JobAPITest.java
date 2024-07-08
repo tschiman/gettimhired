@@ -2,7 +2,7 @@ package com.gettimhired.controller;
 
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.JobDTO;
-import com.gettimhired.model.dto.JobUpdateDTO;
+import com.gettimhired.model.dto.update.JobUpdateDTO;
 import com.gettimhired.service.JobService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

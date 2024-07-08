@@ -1,5 +1,6 @@
-package com.gettimhired.model.dto;
+package com.gettimhired.model.dto.update;
 
+import com.gettimhired.model.dto.input.EducationInputDTO;
 import com.gettimhired.model.mongo.EducationLevel;
 import jakarta.validation.constraints.Size;
 
@@ -15,7 +16,7 @@ public record EducationUpdateDTO(
         String areaOfStudy,
         EducationLevel educationLevel
 ) {
-    public EducationUpdateDTO(EducationInput education) {
+    public EducationUpdateDTO(EducationInputDTO education) {
         this(
                 education.name(),
                 education.startDate(),

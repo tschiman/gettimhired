@@ -3,7 +3,7 @@ package com.gettimhired.service;
 import com.gettimhired.TestHelper;
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
-import com.gettimhired.model.dto.CandidateUpdateDTO;
+import com.gettimhired.model.dto.update.CandidateUpdateDTO;
 import com.gettimhired.model.mongo.Candidate;
 import com.gettimhired.repository.CandidateRepository;
 import com.gettimhired.repository.EducationRepository;

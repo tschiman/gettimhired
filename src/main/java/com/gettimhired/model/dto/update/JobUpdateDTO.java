@@ -1,5 +1,6 @@
-package com.gettimhired.model.dto;
+package com.gettimhired.model.dto.update;
 
+import com.gettimhired.model.dto.input.JobInputDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,7 +23,7 @@ public record JobUpdateDTO(
         @NotNull
         Boolean currentlyWorking
 ) {
-    public JobUpdateDTO(JobInput job) {
+    public JobUpdateDTO(JobInputDTO job) {
         this(
                 job.companyName(),
                 job.title(),

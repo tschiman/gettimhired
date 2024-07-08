@@ -1,8 +1,8 @@
 package com.gettimhired.resolver;
 
 import com.gettimhired.model.dto.JobDTO;
-import com.gettimhired.model.dto.JobInput;
-import com.gettimhired.model.dto.JobUpdateDTO;
+import com.gettimhired.model.dto.input.JobInputDTO;
+import com.gettimhired.model.dto.update.JobUpdateDTO;
 import com.gettimhired.service.JobService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,12 +67,12 @@ class JobResolverTest {
 
     @Test
     void testCreateJob() {
-        JobInput jobInput = new JobInput("1", "userId1", "candidateId1", "Company", "title", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), Collections.emptyList(), Collections.emptyList(), true);
-        JobDTO jobDTO = new JobDTO(jobInput);
+        JobInputDTO jobInputDTO = new JobInputDTO("1", "userId1", "candidateId1", "Company", "title", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), Collections.emptyList(), Collections.emptyList(), true);
+        JobDTO jobDTO = new JobDTO(jobInputDTO);
         when(userDetails.getUsername()).thenReturn("userId1");
         when(jobService.createJob("userId1", "candidateId1", jobDTO)).thenReturn(Optional.of(jobDTO));
 
-        JobDTO result = jobResolver.createJob(userDetails, jobInput);
+        JobDTO result = jobResolver.createJob(userDetails, jobInputDTO);
 
         assertEquals(jobDTO, result);
 
@@ -88,13 +88,13 @@ class JobResolverTest {
 
     @Test
     void testUpdateJob() {
-        JobInput jobInput = new JobInput("1", "userId1", "candidateId1", "Company", "title", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), Collections.emptyList(), Collections.emptyList(), true);
-        JobUpdateDTO jobUpdateDTO = new JobUpdateDTO(jobInput);
-        JobDTO jobDTO = new JobDTO(jobInput);
+        JobInputDTO jobInputDTO = new JobInputDTO("1", "userId1", "candidateId1", "Company", "title", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), Collections.emptyList(), Collections.emptyList(), true);
+        JobUpdateDTO jobUpdateDTO = new JobUpdateDTO(jobInputDTO);
+        JobDTO jobDTO = new JobDTO(jobInputDTO);
         when(userDetails.getUsername()).thenReturn("userId1");
         when(jobService.updateJob("1", "userId1", "candidateId1", jobUpdateDTO)).thenReturn(Optional.of(jobDTO));
 
-        JobDTO result = jobResolver.updateJob(userDetails, jobInput);
+        JobDTO result = jobResolver.updateJob(userDetails, jobInputDTO);
 
         assertEquals(jobDTO, result);
 

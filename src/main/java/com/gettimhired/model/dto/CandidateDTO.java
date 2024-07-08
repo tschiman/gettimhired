@@ -1,6 +1,7 @@
 package com.gettimhired.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gettimhired.model.dto.input.CandidateInputDTO;
 import com.gettimhired.model.mongo.Candidate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,7 +29,7 @@ public record CandidateDTO(
         );
     }
 
-    public CandidateDTO(CandidateInput candidate) {
+    public CandidateDTO(CandidateInputDTO candidate) {
         this (
                 candidate.id(),
                 candidate.userId(),

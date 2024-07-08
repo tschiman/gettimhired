@@ -2,7 +2,7 @@ package com.gettimhired.service;
 
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.EducationDTO;
-import com.gettimhired.model.dto.EducationUpdateDTO;
+import com.gettimhired.model.dto.update.EducationUpdateDTO;
 import com.gettimhired.model.mongo.Education;
 import com.gettimhired.repository.EducationRepository;
 import org.slf4j.Logger;

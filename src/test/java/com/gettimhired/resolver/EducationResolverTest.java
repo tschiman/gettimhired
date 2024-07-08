@@ -1,8 +1,8 @@
 package com.gettimhired.resolver;
 
 import com.gettimhired.model.dto.EducationDTO;
-import com.gettimhired.model.dto.EducationInput;
-import com.gettimhired.model.dto.EducationUpdateDTO;
+import com.gettimhired.model.dto.input.EducationInputDTO;
+import com.gettimhired.model.dto.update.EducationUpdateDTO;
 import com.gettimhired.model.mongo.EducationLevel;
 import com.gettimhired.service.EducationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,12 +68,12 @@ class EducationResolverTest {
 
     @Test
     void testCreateEducation() {
-        EducationInput educationInput = new EducationInput("1", "user1", "candidate1", "School", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), true, "BACHELORS", EducationLevel.DIPLOMA);
-        EducationDTO educationDTO = new EducationDTO(educationInput);
+        EducationInputDTO educationInputDTO = new EducationInputDTO("1", "user1", "candidate1", "School", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), true, "BACHELORS", EducationLevel.DIPLOMA);
+        EducationDTO educationDTO = new EducationDTO(educationInputDTO);
         when(userDetails.getUsername()).thenReturn("user1");
         when(educationService.createEducation("user1", "candidate1", educationDTO)).thenReturn(Optional.of(educationDTO));
 
-        EducationDTO result = educationResolver.createEducation(userDetails, educationInput);
+        EducationDTO result = educationResolver.createEducation(userDetails, educationInputDTO);
 
         assertEquals(educationDTO, result);
 
@@ -89,13 +89,13 @@ class EducationResolverTest {
 
     @Test
     void testUpdateEducation() {
-        EducationInput educationInput = new EducationInput("1", "user1", "candidate1", "School", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), true, "BACHELORS", EducationLevel.DIPLOMA);
-        EducationUpdateDTO educationUpdateDTO = new EducationUpdateDTO(educationInput);
-        EducationDTO educationDTO = new EducationDTO(educationInput);
+        EducationInputDTO educationInputDTO = new EducationInputDTO("1", "user1", "candidate1", "School", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), true, "BACHELORS", EducationLevel.DIPLOMA);
+        EducationUpdateDTO educationUpdateDTO = new EducationUpdateDTO(educationInputDTO);
+        EducationDTO educationDTO = new EducationDTO(educationInputDTO);
         when(userDetails.getUsername()).thenReturn("user1");
         when(educationService.updateEducation("1", "user1", "candidate1", educationUpdateDTO)).thenReturn(Optional.of(educationDTO));
 
-        EducationDTO result = educationResolver.updateEducation(userDetails, educationInput);
+        EducationDTO result = educationResolver.updateEducation(userDetails, educationInputDTO);
 
         assertEquals(educationDTO, result);
 

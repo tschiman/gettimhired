@@ -1,8 +1,8 @@
 package com.gettimhired.resolver;
 
 import com.gettimhired.model.dto.EducationDTO;
-import com.gettimhired.model.dto.EducationInput;
-import com.gettimhired.model.dto.EducationUpdateDTO;
+import com.gettimhired.model.dto.input.EducationInputDTO;
+import com.gettimhired.model.dto.update.EducationUpdateDTO;
 import com.gettimhired.service.EducationService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -44,13 +44,13 @@ public class EducationResolver {
 
     @MutationMapping
     @PreAuthorize("isAuthenticated()")
-    public EducationDTO createEducation(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid EducationInput education) {
+    public EducationDTO createEducation(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid EducationInputDTO education) {
         log.info("GQL createEducation userId={} candidateId={}", userDetails.getUsername(), education.candidateId());
         return educationService.createEducation(userDetails.getUsername(), education.candidateId(), new EducationDTO(education)).orElse(null);
     }
     @MutationMapping
     @PreAuthorize("isAuthenticated()")
-    public EducationDTO updateEducation(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid EducationInput education) {
+    public EducationDTO updateEducation(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid EducationInputDTO education) {
         log.info("GQL updateEducation userId={} candidateId={}", userDetails.getUsername(), education.candidateId());
         return educationService.updateEducation(education.id(), userDetails.getUsername(), education.candidateId(), new EducationUpdateDTO(education)).orElse(null);
     }

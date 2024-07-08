@@ -1,8 +1,8 @@
 package com.gettimhired.resolver;
 
 import com.gettimhired.model.dto.CandidateDTO;
-import com.gettimhired.model.dto.CandidateInput;
-import com.gettimhired.model.dto.CandidateUpdateDTO;
+import com.gettimhired.model.dto.input.CandidateInputDTO;
+import com.gettimhired.model.dto.update.CandidateUpdateDTO;
 import com.gettimhired.service.CandidateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,12 +65,12 @@ class CandidateResolverTest {
 
     @Test
     void testCreateCandidate() {
-        CandidateInput candidateInput = new CandidateInput("id","1", "John", "Doe", "Summary");
-        CandidateDTO candidateDTO = new CandidateDTO(candidateInput);
+        CandidateInputDTO candidateInputDTO = new CandidateInputDTO("id","1", "John", "Doe", "Summary");
+        CandidateDTO candidateDTO = new CandidateDTO(candidateInputDTO);
         when(userDetails.getUsername()).thenReturn("user1");
         when(candidateService.createCandidate("user1", candidateDTO)).thenReturn(Optional.of(candidateDTO));
 
-        CandidateDTO result = candidateResolver.createCandidate(userDetails, candidateInput);
+        CandidateDTO result = candidateResolver.createCandidate(userDetails, candidateInputDTO);
 
         assertEquals(candidateDTO, result);
 
@@ -84,13 +84,13 @@ class CandidateResolverTest {
 
     @Test
     void testUpdateCandidate() {
-        CandidateInput candidateInput = new CandidateInput("ID","1", "John", "Doe", "Summary");
-        CandidateUpdateDTO candidateUpdateDTO = new CandidateUpdateDTO(candidateInput);
-        CandidateDTO candidateDTO = new CandidateDTO(candidateInput);
+        CandidateInputDTO candidateInputDTO = new CandidateInputDTO("ID","1", "John", "Doe", "Summary");
+        CandidateUpdateDTO candidateUpdateDTO = new CandidateUpdateDTO(candidateInputDTO);
+        CandidateDTO candidateDTO = new CandidateDTO(candidateInputDTO);
         when(userDetails.getUsername()).thenReturn("1");
         when(candidateService.updateCandidate("ID", "1", candidateUpdateDTO)).thenReturn(Optional.of(candidateDTO));
 
-        CandidateDTO result = candidateResolver.updateCandidate(userDetails, candidateInput);
+        CandidateDTO result = candidateResolver.updateCandidate(userDetails, candidateInputDTO);
 
         assertEquals(candidateDTO, result);
 

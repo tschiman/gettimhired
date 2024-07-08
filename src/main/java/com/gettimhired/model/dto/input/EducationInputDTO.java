@@ -1,4 +1,4 @@
-package com.gettimhired.model.dto;
+package com.gettimhired.model.dto.input;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gettimhired.model.mongo.EducationLevel;
@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record EducationInput(
+public record EducationInputDTO(
         String id,
         String userId,
         String candidateId,

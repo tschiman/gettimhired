@@ -3,7 +3,7 @@ package com.gettimhired.service;
 
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.JobDTO;
-import com.gettimhired.model.dto.JobUpdateDTO;
+import com.gettimhired.model.dto.update.JobUpdateDTO;
 import com.gettimhired.model.mongo.Job;
 import com.gettimhired.repository.JobRepository;
 import org.slf4j.Logger;

@@ -1,11 +1,11 @@
-package com.gettimhired.model.dto;
+package com.gettimhired.model.dto.input;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record CandidateInput(
+public record CandidateInputDTO(
         String id,
         String userId,
         @NotBlank(message = "First name cannot be blank")

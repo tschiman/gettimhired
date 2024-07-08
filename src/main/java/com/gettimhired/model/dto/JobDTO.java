@@ -1,5 +1,6 @@
 package com.gettimhired.model.dto;
 
+import com.gettimhired.model.dto.input.JobInputDTO;
 import com.gettimhired.model.mongo.Job;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -41,7 +42,7 @@ public record JobDTO(
         );
     }
 
-    public JobDTO(JobInput job) {
+    public JobDTO(JobInputDTO job) {
         this(
                 job.id(),
                 job.userId(),

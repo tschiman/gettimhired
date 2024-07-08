@@ -1,6 +1,7 @@
-package com.gettimhired.model.dto;
+package com.gettimhired.model.dto.update;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gettimhired.model.dto.input.CandidateInputDTO;
 import com.gettimhired.model.mongo.Candidate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -24,7 +25,7 @@ public record CandidateUpdateDTO(
         );
     }
 
-    public CandidateUpdateDTO(CandidateInput candidate) {
+    public CandidateUpdateDTO(CandidateInputDTO candidate) {
         this(
                 candidate.firstName(),
                 candidate.lastName(),

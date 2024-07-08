@@ -2,7 +2,7 @@ package com.gettimhired.controller;
 
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.EducationDTO;
-import com.gettimhired.model.dto.EducationUpdateDTO;
+import com.gettimhired.model.dto.update.EducationUpdateDTO;
 import com.gettimhired.service.EducationService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;

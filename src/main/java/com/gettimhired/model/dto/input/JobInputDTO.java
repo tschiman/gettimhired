@@ -1,4 +1,4 @@
-package com.gettimhired.model.dto;
+package com.gettimhired.model.dto.input;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-public record JobInput(
+public record JobInputDTO(
         String id,
         String userId,
         String candidateId,

@@ -3,7 +3,7 @@ package com.gettimhired.controller;
 import com.gettimhired.TestHelper;
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
-import com.gettimhired.model.dto.CandidateUpdateDTO;
+import com.gettimhired.model.dto.update.CandidateUpdateDTO;
 import com.gettimhired.service.CandidateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
