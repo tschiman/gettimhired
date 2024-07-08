@@ -46,7 +46,7 @@
                             <h4 class="text-center" th:text="${job.title()}"></h4>
                         </div>
                         <div class="col-md-4">
-                            <h4 class="text-center" th:text="${'From: ' + job.startDate() + ' To: ' + (job.currentlyWorking() ? 'Present' : job.endDate())}"></h4>
+                            <h4 class="text-center" th:text="${'From: ' + job.startDate() + ' To: ' + (job.endDate() == null ? 'Present' : job.endDate())}"></h4>
                         </div>
                     </div>
                     <div class="row" th:if="${job.skills().size() > 0 || job.achievements().size() > 0}">

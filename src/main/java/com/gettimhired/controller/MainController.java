@@ -57,13 +57,13 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping("/credentials")
+    @GetMapping("/signup")
     public String credentials() {
         log.info("GET /credentials credentials");
         return "credentials";
     }
 
-    @PostMapping("/credentials")
+    @PostMapping("/signup")
     public String createCredentials(Model model) {
         log.info("POST /credentials createCredentials");
         //create a user
