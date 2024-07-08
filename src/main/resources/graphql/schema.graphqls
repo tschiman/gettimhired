@@ -20,8 +20,7 @@ type Mutation {
 
     createEducation(education: EducationInput): Education
     updateEducation(education: EducationInput): Education
-#    TODO: remove candidateId
-    deleteEducation(id: String, candidateId: String): Boolean
+    deleteEducation(id: String): Boolean
 }
 
 type Education {

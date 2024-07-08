@@ -87,12 +87,12 @@ public class EducationService {
         }
     }
 
-    public boolean deleteEducation(String id, String userId, String candidateId) {
+    public boolean deleteEducation(String id, String userId) {
         try {
-            educationRepository.deleteByIdAndUserIdAndCandidateId(id, userId, candidateId);
+            educationRepository.deleteByIdAndUserId(id, userId);
             return true;
         } catch (Exception e) {
-            log.error("deleteEducation userId={} id={} candidateId={}", userId, id, candidateId, e);
+            log.error("deleteEducation userId={} id={}", userId, id, e);
             return false;
         }
     }

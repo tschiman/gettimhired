@@ -173,18 +173,18 @@ class EducationServiceTest {
 
     @Test
     public void testDeleteEducation_Success() {
-        doNothing().when(educationRepository).deleteByIdAndUserIdAndCandidateId(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
+        doNothing().when(educationRepository).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
 
-        boolean result = educationService.deleteEducation(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
+        boolean result = educationService.deleteEducation(TestHelper.ID, TestHelper.USER_ID);
 
         assertTrue(result);
     }
 
     @Test
     public void testDeleteEducation_Failure() {
-        doThrow(new RuntimeException("Database error")).when(educationRepository).deleteByIdAndUserIdAndCandidateId(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
+        doThrow(new RuntimeException("Database error")).when(educationRepository).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
 
-        boolean result = educationService.deleteEducation(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
+        boolean result = educationService.deleteEducation(TestHelper.ID, TestHelper.USER_ID);
 
         assertFalse(result);
     }

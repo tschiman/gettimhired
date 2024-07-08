@@ -12,7 +12,7 @@ public interface EducationRepository extends MongoRepository<Education, String> 
 
     Optional<Education> findEducationByIdAndUserId(String id, String userId);
 
-    void deleteByIdAndUserIdAndCandidateId(String id, String userId, String candidateId);
+    void deleteByIdAndUserId(String id, String userId);
 
     List<EducationDTO> findAllByCandidateIdOrderByEndDateDesc(String candidateId);
 

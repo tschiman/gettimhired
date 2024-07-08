@@ -168,11 +168,11 @@ class EducationAPITest {
     public void testDeleteEducation_Success() {
         
         when(userDetails.getUsername()).thenReturn(USER_ID);
-        when(educationService.deleteEducation(any(String.class), any(String.class), any(String.class)))
+        when(educationService.deleteEducation(any(String.class), any(String.class)))
                 .thenReturn(true);
 
         
-        var response = educationAPI.deleteEducation(userDetails, ID, CANDIDATE_ID);
+        var response = educationAPI.deleteEducation(userDetails, ID);
 
         
         assertNotNull(response);
@@ -184,11 +184,11 @@ class EducationAPITest {
     public void testDeleteEducation_Failure() {
         
         when(userDetails.getUsername()).thenReturn(USER_ID);
-        when(educationService.deleteEducation(any(String.class), any(String.class), any(String.class)))
+        when(educationService.deleteEducation(any(String.class), any(String.class)))
                 .thenReturn(false);
 
         
-        var response = educationAPI.deleteEducation(userDetails, ID, CANDIDATE_ID);
+        var response = educationAPI.deleteEducation(userDetails, ID);
 
         
         assertNotNull(response);

@@ -94,11 +94,10 @@ public class EducationAPI {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity deleteEducation(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable String id,
-            @PathVariable String candidateId
+            @PathVariable String id
     ) {
-        log.info("DELETE /api/candidates/{candidateId}/educations/{id} deleteEducation userId={} candidateId={} id={}", userDetails.getUsername(), candidateId, id);
-        boolean result = educationService.deleteEducation(id, userDetails.getUsername(), candidateId);
+        log.info("DELETE /api/candidates/{candidateId}/educations/{id} deleteEducation userId={} id={}", userDetails.getUsername(), id);
+        boolean result = educationService.deleteEducation(id, userDetails.getUsername());
         return result ?
                 ResponseEntity.ok().build() :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
