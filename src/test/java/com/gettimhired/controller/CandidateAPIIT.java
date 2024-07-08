@@ -1,6 +1,7 @@
 package com.gettimhired.controller;
 
 import com.gettimhired.TestHelper;
+import com.gettimhired.config.TestSecurityConfig;
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.update.CandidateUpdateDTO;
