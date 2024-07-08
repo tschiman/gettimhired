@@ -96,7 +96,7 @@
                 <div class="row border-dashed" th:each="education : ${educations}">
                     <div class="col-md-4 text-center" th:text="${education.name()}"></div>
                     <div class="col-md-4 text-center" th:text="${education.areaOfStudy()}"></div>
-                    <div class="col-md-4 text-center" th:text="${education.levelOfEducation()}"></div>
+                    <div class="col-md-4 text-center" th:text="${education.educationLevel()}"></div>
                     <div class="col-md-4 text-center" th:text="${education.graduated() ? 'Graduated' : 'Incomplete'}"></div>
                     <div class="col-md-4 text-center"
                          th:text="${

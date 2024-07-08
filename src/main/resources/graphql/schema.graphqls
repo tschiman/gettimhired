@@ -32,7 +32,7 @@ type Education {
     endDate: String
     graduated: Boolean
     areaOfStudy: String
-    levelOfEducation: String
+    educationLevel: String
 }
 input EducationInput {
     id: ID
@@ -43,7 +43,7 @@ input EducationInput {
     endDate: String
     graduated: Boolean
     areaOfStudy: String!
-    levelOfEducation: String
+    educationLevel: String
 }
 
 type Candidate {

@@ -1,6 +1,5 @@
 package com.gettimhired.model.mongo;
 
-import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.EducationDTO;
 import org.springframework.data.annotation.Id;
 
@@ -16,7 +15,7 @@ public record Education(
         LocalDate endDate,
         Boolean graduated,
         String areaOfStudy,
-        EducationLevel levelOfEducation
+        EducationLevel educationLevel
 ) {
     public Education(String userId, String candidateId, EducationDTO educationDTO) {
         this(
@@ -28,7 +27,7 @@ public record Education(
                 educationDTO.endDate(),
                 educationDTO.graduated(),
                 educationDTO.areaOfStudy(),
-                educationDTO.levelOfEducation()
+                educationDTO.educationLevel()
         );
     }
 }

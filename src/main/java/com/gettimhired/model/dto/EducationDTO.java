@@ -22,8 +22,7 @@ public record EducationDTO(
         @NotBlank(message = "Area of Study cannot be blank")
         @Size(min = 1, max = 256, message = "Area of Study can be between 1 and 256 characters")
         String areaOfStudy,
-        //TODO: Rename to educationLevel
-        EducationLevel levelOfEducation
+        EducationLevel educationLevel
 ) {
         public EducationDTO(Education education) {
                 this(
@@ -35,7 +34,7 @@ public record EducationDTO(
                         education.endDate(),
                         education.graduated(),
                         education.areaOfStudy(),
-                        education.levelOfEducation()
+                        education.educationLevel()
                 );
         }
 
@@ -49,7 +48,7 @@ public record EducationDTO(
                         education.endDate(),
                         education.graduated(),
                         education.areaOfStudy(),
-                        education.levelOfEducation()
+                        education.educationLevel()
                 );
         }
 }

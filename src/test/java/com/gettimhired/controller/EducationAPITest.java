@@ -44,7 +44,7 @@ class EducationAPITest {
 
         var result = educationAPI.getAllEducations(userDetails, CANDIDATE_ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(educationService, times(1))
                 .findAllEducationsForUserAndCandidateId(
                     USER_ID,
@@ -62,7 +62,7 @@ class EducationAPITest {
 
         var result = educationAPI.getEducationById(userDetails, ID, CANDIDATE_ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(educationService, times(1)).findEducationByIdAndUserId(ID, USER_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
@@ -70,13 +70,13 @@ class EducationAPITest {
     }
 
     @Test
-    public void testGetEducationByIdNOtFound() {
+    public void testGetEducationByIdNotFound() {
         when(userDetails.getUsername()).thenReturn(USER_ID);
         when(educationService.findEducationByIdAndUserId(ID, USER_ID)).thenReturn(Optional.empty());
 
         var result = educationAPI.getEducationById(userDetails, ID, CANDIDATE_ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(educationService, times(1)).findEducationByIdAndUserId(ID, USER_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(404), result.getStatusCode());
@@ -90,7 +90,7 @@ class EducationAPITest {
 
         var result = educationAPI.createEducation(userDetails, educationDto, CANDIDATE_ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(educationService, times(1)).createEducation(USER_ID, CANDIDATE_ID, educationDto);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
@@ -105,7 +105,7 @@ class EducationAPITest {
 
         var result = educationAPI.createEducation(userDetails, educationDto, CANDIDATE_ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(educationService, times(1)).createEducation(USER_ID, CANDIDATE_ID, educationDto);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(500), result.getStatusCode());

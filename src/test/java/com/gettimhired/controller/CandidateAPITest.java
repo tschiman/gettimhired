@@ -38,7 +38,7 @@ class CandidateAPITest {
 
         var allCandidates = candidateAPI.getAllCandidates(userDetails);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(candidateService, times(1)).findAllCandidatesForUser("BARK");
         assertEquals(0, allCandidates.size());
     }
@@ -52,7 +52,7 @@ class CandidateAPITest {
         var response = candidateAPI.getCandidateById(userDetails, TestHelper.ID);
 
         verify(candidateService, times(1)).findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID);
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         assertNotNull(response);
         assertEquals(HttpStatusCode.valueOf(200) ,response.getStatusCode());
         assertEquals(candidateDto, response.getBody());
@@ -66,7 +66,7 @@ class CandidateAPITest {
         var response = candidateAPI.getCandidateById(userDetails, TestHelper.ID);
 
         verify(candidateService, times(1)).findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID);
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         assertNotNull(response);
         assertEquals(HttpStatusCode.valueOf(404) ,response.getStatusCode());
         assertNull(response.getBody());
@@ -91,7 +91,7 @@ class CandidateAPITest {
         var result = candidateAPI.createCandidate(userDetails, candidateDtoIn);
 
         verify(candidateService, times(1)).createCandidate(TestHelper.USER_ID, candidateDtoIn);
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
     }
@@ -106,7 +106,7 @@ class CandidateAPITest {
         var result = candidateAPI.createCandidate(userDetails, candidateDtoIn);
 
         verify(candidateService, times(1)).createCandidate(TestHelper.USER_ID, candidateDtoIn);
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(500), result.getStatusCode());
     }
@@ -131,7 +131,7 @@ class CandidateAPITest {
         var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, TestHelper.ID);
 
         verify(candidateService, times(1)).updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto);
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         assertNotNull(result);
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -150,7 +150,7 @@ class CandidateAPITest {
         var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, TestHelper.ID);
 
         verify(candidateService, times(1)).updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto);
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         assertNotNull(result);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
         assertNull(result.getBody());
@@ -169,7 +169,7 @@ class CandidateAPITest {
         var result = candidateAPI.updateCandidate(userDetails, candidateUpdateDto, TestHelper.ID);
 
         verify(candidateService, times(1)).updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto);
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         assertNotNull(result);
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         assertNull(result.getBody());
@@ -182,7 +182,7 @@ class CandidateAPITest {
 
         var result = candidateAPI.deleteCandidate(userDetails, TestHelper.ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(candidateService, times(1)).deleteCandidate(TestHelper.ID, TestHelper.USER_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
@@ -195,7 +195,7 @@ class CandidateAPITest {
 
         var result = candidateAPI.deleteCandidate(userDetails, TestHelper.ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(candidateService, times(1)).deleteCandidate(TestHelper.ID, TestHelper.USER_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(500), result.getStatusCode());

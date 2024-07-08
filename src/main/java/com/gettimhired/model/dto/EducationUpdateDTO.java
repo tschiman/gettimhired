@@ -13,7 +13,7 @@ public record EducationUpdateDTO(
         Boolean graduated,
         @Size(min = 1, max = 256, message = "Area of Study can be between 1 and 256 characters")
         String areaOfStudy,
-        EducationLevel levelOfEducation
+        EducationLevel educationLevel
 ) {
     public EducationUpdateDTO(EducationInput education) {
         this(
@@ -22,7 +22,7 @@ public record EducationUpdateDTO(
                 education.endDate(),
                 education.graduated(),
                 education.areaOfStudy(),
-                education.levelOfEducation()
+                education.educationLevel()
         );
     }
 }

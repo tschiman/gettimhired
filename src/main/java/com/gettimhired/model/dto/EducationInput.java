@@ -21,7 +21,6 @@ public record EducationInput(
         @NotBlank(message = "Area of Study cannot be blank")
         @Size(min = 1, max = 256, message = "Area of Study can be between 1 and 256 characters")
         String areaOfStudy,
-        //TODO: Rename to educationLevel
-        EducationLevel levelOfEducation
+        EducationLevel educationLevel
 ) {
 }

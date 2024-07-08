@@ -63,7 +63,7 @@ public class EducationService {
                             educationUpdateDTO.endDate(),
                             educationUpdateDTO.graduated(),
                             educationUpdateDTO.areaOfStudy(),
-                            educationUpdateDTO.levelOfEducation()
+                            educationUpdateDTO.educationLevel()
                     );
                     Education educationToReturn;
                     try {

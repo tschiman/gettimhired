@@ -44,7 +44,7 @@ class JobAPITest {
 
         var result = jobApi.getAllJobs(userDetails, CANDIDATE_ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(jobService, times(1))
                 .findAllJobsForUserAndCandidateId(
                         USER_ID,
@@ -62,7 +62,7 @@ class JobAPITest {
 
         var result = jobApi.getJobById(userDetails, ID, CANDIDATE_ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(jobService, times(1)).findJobByIdAndUserId(ID, USER_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
@@ -76,7 +76,7 @@ class JobAPITest {
 
         var result = jobApi.getJobById(userDetails, ID, CANDIDATE_ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(jobService, times(1)).findJobByIdAndUserId(ID, USER_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(404), result.getStatusCode());
@@ -90,7 +90,7 @@ class JobAPITest {
 
         var result = jobApi.createJob(userDetails, jobDto, CANDIDATE_ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(jobService, times(1)).createJob(USER_ID, CANDIDATE_ID, jobDto);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
@@ -105,7 +105,7 @@ class JobAPITest {
 
         var result = jobApi.createJob(userDetails, jobDto, CANDIDATE_ID);
 
-        verify(userDetails, times(1)).getUsername();
+        verify(userDetails, times(2)).getUsername();
         verify(jobService, times(1)).createJob(USER_ID, CANDIDATE_ID, jobDto);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(500), result.getStatusCode());
