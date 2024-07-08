@@ -122,10 +122,10 @@
                     <div class="col-md-4 text-center" th:text="${education.educationLevel()}"></div>
                     <div class="col-md-4 text-center" th:text="${education.graduated() ? 'Graduated' : 'Incomplete'}"></div>
                     <div class="col-md-4 text-center"
-                         th:text="${
-                         education.startDate() != null && education.endDate() != null ?
-                         education.startDate() + ' to ' + education.endDate() :
-                         ''}">
+                         th:text="${education.startDate() + ' to ' + education.endDate() == null ?
+                         'Present' :
+                         education.endDate()}"
+                    >
                     </div>
                 </div>
             </div>
