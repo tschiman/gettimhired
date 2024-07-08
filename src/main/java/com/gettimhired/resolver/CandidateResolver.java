@@ -44,14 +44,21 @@ public class CandidateResolver {
     @MutationMapping
     @PreAuthorize("isAuthenticated()")
     public CandidateDTO createCandidate(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid CandidateInput candidate) {
-        log.info("GQL createCandidate userId={} id={}", userDetails.getUsername());
+        log.info("GQL createCandidate userId={} id={}", userDetails.getUsername(), candidate.id());
         return candidateService.createCandidate(userDetails.getUsername(), new CandidateDTO(candidate)).orElse(null);
     }
 
     @MutationMapping
     @PreAuthorize("isAuthenticated()")
     public CandidateDTO updateCandidate(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid CandidateInput candidate) {
-        log.info("GQL updateCandidate userId={} id={}", userDetails.getUsername());
+        log.info("GQL updateCandidate userId={} id={}", userDetails.getUsername(), candidate.id());
         return candidateService.updateCandidate(candidate.id(), userDetails.getUsername(), new CandidateUpdateDTO(candidate)).orElse(null);
+    }
+
+    @MutationMapping
+    @PreAuthorize("isAuthenticated()")
+    public boolean deleteCandidate(@AuthenticationPrincipal UserDetails userDetails, @Argument @Valid String id) {
+        log.info("GQL deleteCandidate userId={}", userDetails.getUsername());
+        return candidateService.deleteCandidate(id, userDetails.getUsername());
     }
 }

@@ -54,4 +54,11 @@ public class EducationResolver {
         log.info("GQL updateEducation userId={} candidateId={}", userDetails.getUsername(), education.candidateId());
         return educationService.updateEducation(education.id(), userDetails.getUsername(), education.candidateId(), new EducationUpdateDTO(education)).orElse(null);
     }
+
+    @MutationMapping
+    @PreAuthorize("isAuthenticated()")
+    public boolean deleteEducation(@AuthenticationPrincipal UserDetails userDetails, @Argument String id, @Argument String candidateId) {
+        log.info("GQL deleteEducation userId={} candidateId={} id={}", userDetails.getUsername(), candidateId, id);
+        return educationService.deleteEducation(id, userDetails.getUsername(), candidateId);
+    }
 }

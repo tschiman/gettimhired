@@ -12,12 +12,16 @@ type Query {
 type Mutation {
     createCandidate(candidate: CandidateInput): Candidate
     updateCandidate(candidate: CandidateInput): Candidate
+    deleteCandidate(id: String): Boolean
 
     createJob(job: JobInput): Job
     updateJob(job: JobInput): Job
+    deleteJob(id: String): Boolean
 
     createEducation(education: EducationInput): Education
     updateEducation(education: EducationInput): Education
+#    TODO: remove candidateId
+    deleteEducation(id: String, candidateId: String): Boolean
 }
 
 type Education {

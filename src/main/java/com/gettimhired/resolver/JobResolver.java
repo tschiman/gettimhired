@@ -54,4 +54,11 @@ public class JobResolver {
         log.info("GQL updateJob userId={} candidateId={}", userDetails.getUsername(), job.candidateId());
         return jobService.updateJob(job.id(), userDetails.getUsername(), job.candidateId(), new JobUpdateDTO(job)).orElse(null);
     }
+
+    @MutationMapping
+    @PreAuthorize("isAuthenticated()")
+    public boolean deleteJob(@AuthenticationPrincipal UserDetails userDetails, @Argument String id) {
+        log.info("GQL deleteJob userId={} id={}", userDetails.getUsername(), id);
+        return jobService.deleteJob(id, userDetails.getUsername());
+    }
 }
