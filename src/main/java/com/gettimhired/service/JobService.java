@@ -31,7 +31,7 @@ public class JobService {
     }
 
     public Optional<JobDTO> findJobByIdAndUserId(String id, String userId) {
-        return jobRepository.findJobByIdAndUserId(id, userId)
+        return jobRepository.findJobByIdAndUserIdOrderByEndDate(id, userId)
                 .map(JobDTO::new);
     }
 

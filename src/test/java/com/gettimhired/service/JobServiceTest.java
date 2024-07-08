@@ -52,7 +52,7 @@ class JobServiceTest {
 
         var job = getJob("BARK_NAME");
         var expectedJobDTO = new JobDTO(job);
-        when(jobRepository.findJobByIdAndUserId(anyString(), anyString()))
+        when(jobRepository.findJobByIdAndUserIdOrderByEndDate(anyString(), anyString()))
                 .thenReturn(Optional.of(job));
 
         Optional<JobDTO> result = jobService.findJobByIdAndUserId(ID, USER_ID);
@@ -64,7 +64,7 @@ class JobServiceTest {
     @Test
     public void testFindJobByUserIdAndCandidateIdAndId_NotFound() {
 
-        when(jobRepository.findJobByIdAndUserId(anyString(), anyString()))
+        when(jobRepository.findJobByIdAndUserIdOrderByEndDate(anyString(), anyString()))
                 .thenReturn(Optional.empty());
 
         Optional<JobDTO> result = jobService.findJobByIdAndUserId(ID, USER_ID);
