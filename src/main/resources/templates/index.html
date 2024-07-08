@@ -46,7 +46,7 @@
                             <h4 class="text-center" th:text="${job.title()}"></h4>
                         </div>
                         <div class="col-md-4">
-                            <p class="text-center" th:text="${'From: ' + job.startDate() + ' To: ' + (job.currentlyWorking() ? 'Present' : job.endDate())}"></p>
+                            <h4 class="text-center" th:text="${'From: ' + job.startDate() + ' To: ' + (job.currentlyWorking() ? 'Present' : job.endDate())}"></h4>
                         </div>
                     </div>
                     <div class="row" th:if="${job.skills().size() > 0 || job.achievements().size() > 0}">
@@ -98,6 +98,14 @@
                             <ul th:if="${job.achievements().size() > 0}">
                                 <li th:each="achievement : ${job.achievements()}" th:text="${achievement}"></li>
                             </ul>
+                        </div>
+                    </div>
+                    <div class="row" th:if="${job.reasonForLeaving() != null}">
+                        <div class="col-md-2">
+                            <h5 class="text-center">Reason For Leaving: </h5>
+                        </div>
+                        <div class="col-md-10">
+                            <h5 class="text-left" th:text="${job.reasonForLeaving()}"></h5>
                         </div>
                     </div>
                 </div>

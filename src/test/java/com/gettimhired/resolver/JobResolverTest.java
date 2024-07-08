@@ -49,7 +49,7 @@ class JobResolverTest {
 
     @Test
     void testGetJobById() {
-        JobDTO job = new JobDTO("1", "user1", "userId1", "candidateId1", "Company", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), Collections.emptyList(), Collections.emptyList(), true);
+        JobDTO job = new JobDTO("1", "user1", "userId1", "candidateId1", "Company", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), Collections.emptyList(), Collections.emptyList(), true, "BARK_LEAVE");
         when(userDetails.getUsername()).thenReturn("user1");
         when(jobService.findJobByIdAndUserId("1", "user1")).thenReturn(Optional.of(job));
 
@@ -67,7 +67,7 @@ class JobResolverTest {
 
     @Test
     void testCreateJob() {
-        JobInputDTO jobInputDTO = new JobInputDTO("1", "userId1", "candidateId1", "Company", "title", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), Collections.emptyList(), Collections.emptyList(), true);
+        JobInputDTO jobInputDTO = new JobInputDTO("1", "userId1", "candidateId1", "Company", "title", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), Collections.emptyList(), Collections.emptyList(), true, "BARK_LEAVE");
         JobDTO jobDTO = new JobDTO(jobInputDTO);
         when(userDetails.getUsername()).thenReturn("userId1");
         when(jobService.createJob("userId1", "candidateId1", jobDTO)).thenReturn(Optional.of(jobDTO));
@@ -88,7 +88,7 @@ class JobResolverTest {
 
     @Test
     void testUpdateJob() {
-        JobInputDTO jobInputDTO = new JobInputDTO("1", "userId1", "candidateId1", "Company", "title", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), Collections.emptyList(), Collections.emptyList(), true);
+        JobInputDTO jobInputDTO = new JobInputDTO("1", "userId1", "candidateId1", "Company", "title", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), Collections.emptyList(), Collections.emptyList(), true, "BARK_LEAVE");
         JobUpdateDTO jobUpdateDTO = new JobUpdateDTO(jobInputDTO);
         JobDTO jobDTO = new JobDTO(jobInputDTO);
         when(userDetails.getUsername()).thenReturn("userId1");

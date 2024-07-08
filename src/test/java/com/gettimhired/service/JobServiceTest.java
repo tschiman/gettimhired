@@ -166,7 +166,8 @@ class JobServiceTest {
                 LocalDate.now(),
                 new ArrayList<>(),
                 new ArrayList<>(),
-                true
+                true,
+                "BARK_LEAVE"
         );
     }
 
@@ -199,7 +200,8 @@ class JobServiceTest {
                 LocalDate.now(),
                 new ArrayList<>(),
                 new ArrayList<>(),
-                true
+                true,
+                "BARK_LEAVE"
         );
     }
 

@@ -17,7 +17,8 @@ public record Job(
     LocalDate endDate,
     List<String> skills,
     List<String> achievements,
-    Boolean currentlyWorking
+    Boolean currentlyWorking,
+    String reasonForLeaving
 
 ) {
     public Job(String userId, String candidateId, JobDTO jobDto) {
@@ -31,7 +32,8 @@ public record Job(
                 jobDto.endDate(),
                 jobDto.skills(),
                 jobDto.achievements(),
-                jobDto.currentlyWorking()
+                jobDto.currentlyWorking(),
+                jobDto.reasonForLeaving()
         );
     }
 }

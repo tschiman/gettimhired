@@ -66,7 +66,8 @@ public class JobService {
                             jobUpdateDTO.endDate(),
                             jobUpdateDTO.skills(),
                             jobUpdateDTO.achievements(),
-                            jobUpdateDTO.currentlyWorking()
+                            jobUpdateDTO.currentlyWorking(),
+                            jobUpdateDTO.reasonForLeaving()
                     );
                     Job jobToReturn;
                     try {

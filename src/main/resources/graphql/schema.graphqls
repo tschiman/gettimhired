@@ -72,6 +72,7 @@ type Job {
     skills: [String]
     achievements: [String]
     currentlyWorking: Boolean
+    reasonForLeaving: String
 }
 input JobInput {
     id: ID
@@ -84,4 +85,5 @@ input JobInput {
     skills: [String]
     achievements: [String]
     currentlyWorking: Boolean
+    reasonForLeaving: String
 }
