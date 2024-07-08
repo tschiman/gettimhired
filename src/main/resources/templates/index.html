@@ -61,7 +61,22 @@
                         <div class="col-md-6 border-dotted">
                             <table class="table table-striped" th:if="${job.skills().size() > 0}">
                                 <tbody>
-                                    <tr th:each="i : ${#numbers.sequence(0, job.skills().size() / 5)}">
+                                    <tr th:if="${job.skills().size() % 5 != 0}" th:each="i : ${#numbers.sequence(0, job.skills().size() / 5)}">
+                                        <td th:text="${job.skills().get(i*5)}"></td>
+
+                                        <td th:if="${i*5 + 1 < job.skills().size()}" th:text="${job.skills().get(i*5 + 1)}"></td>
+                                        <td th:if="${i*5 + 1 >= job.skills().size()}"> </td>
+
+                                        <td th:if="${i*5 + 2 < job.skills().size()}" th:text="${job.skills().get(i*5 + 2)}"></td>
+                                        <td th:if="${i*5 + 2 >= job.skills().size()}"> </td>
+
+                                        <td th:if="${i*5 + 3 < job.skills().size()}" th:text="${job.skills().get(i*5 + 3)}"></td>
+                                        <td th:if="${i*5 + 3 >= job.skills().size()}"> </td>
+
+                                        <td th:if="${i*5 + 4 < job.skills().size()}" th:text="${job.skills().get(i*5 + 4)}"></td>
+                                        <td th:if="${i*5 + 4 >= job.skills().size()}"> </td>
+                                    </tr>
+                                    <tr th:if="${job.skills().size() % 5 == 0}" th:each="i : ${#numbers.sequence(0, (job.skills().size() - 1) / 5)}">
                                         <td th:text="${job.skills().get(i*5)}"></td>
 
                                         <td th:if="${i*5 + 1 < job.skills().size()}" th:text="${job.skills().get(i*5 + 1)}"></td>
