@@ -2,6 +2,7 @@ package com.gettimhired.model.dto.update;
 
 import com.gettimhired.model.dto.input.EducationInputDTO;
 import com.gettimhired.model.mongo.EducationLevel;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ public record EducationUpdateDTO(
         Boolean graduated,
         @Size(min = 1, max = 256, message = "Area of Study can be between 1 and 256 characters")
         String areaOfStudy,
+        @NotNull
         EducationLevel educationLevel
 ) {
     public EducationUpdateDTO(EducationInputDTO education) {

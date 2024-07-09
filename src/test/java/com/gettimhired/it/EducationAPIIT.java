@@ -106,7 +106,7 @@ class EducationAPIIT {
                                 "    \"endDate\": \"2022-01-01\",\n" +
                                 "    \"graduated\": true,\n" +
                                 "    \"areaOfStudy\": \"Barking\",\n" +
-                                "    \"levelOfEducation\": \"Bachelor's\"\n" +
+                                "    \"educationLevel\": \"BACHELORS\"\n" +
                                 "}")
                 )
                 .andExpect(status().isOk())
@@ -130,7 +130,7 @@ class EducationAPIIT {
                                 "    \"endDate\": \"2022-01-01\",\n" +
                                 "    \"graduated\": true,\n" +
                                 "    \"areaOfStudy\": \"Barking\",\n" +
-                                "    \"levelOfEducation\": \"Bachelor's\"\n" +
+                                "    \"educationLevel\": \"BACHELORS\"\n" +
                                 "}"))
                 .andExpect(status().isInternalServerError());
 
@@ -154,7 +154,7 @@ class EducationAPIIT {
                                 "    \"endDate\": \"2022-01-01\",\n" +
                                 "    \"graduated\": true,\n" +
                                 "    \"areaOfStudy\": \"Advanced Barking\",\n" +
-                                "    \"levelOfEducation\": \"Master's\"\n" +
+                                "    \"educationLevel\": \"NONE\"\n" +
                                 "}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").exists());
@@ -178,7 +178,7 @@ class EducationAPIIT {
                                 "    \"endDate\": \"2022-01-01\",\n" +
                                 "    \"graduated\": true,\n" +
                                 "    \"areaOfStudy\": \"Advanced Barking\",\n" +
-                                "    \"levelOfEducation\": \"Master's\"\n" +
+                                "    \"educationLevel\": \"MASTERS\"\n" +
                                 "}"))
                 .andExpect(status().isInternalServerError());
 
@@ -201,7 +201,7 @@ class EducationAPIIT {
                                 "    \"endDate\": \"2022-01-01\",\n" +
                                 "    \"graduated\": true,\n" +
                                 "    \"areaOfStudy\": \"Advanced Barking\",\n" +
-                                "    \"levelOfEducation\": \"Master's\"\n" +
+                                "    \"educationLevel\": \"MASTERS\"\n" +
                                 "}"))
                 .andExpect(status().isForbidden());
 
