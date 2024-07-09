@@ -60,7 +60,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"firstName\": \"firstName\",\r\n    \"lastName\": \"lastName\",\r\n    \"summary\": \"summary\"\r\n}",
+									"raw": "{\r\n    \"firstName\": \"firstName\",\r\n    \"lastName\": \"lastName\",\r\n    \"summary\": \"summary\",\r\n    \"linkedInUrl\": null,\r\n    \"githubUrl\": null\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -225,7 +225,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"firstName\": \"firstName\",\r\n    \"lastName\": \"lastName\",\r\n    \"summary\": \"summary\"\r\n}",
+									"raw": "{\r\n    \"firstName\": \"firstName\",\r\n    \"lastName\": \"lastName\",\r\n    \"summary\": \"summary\",\r\n    \"linkedInUrl\": null,\r\n    \"githubUrl\": null\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -973,7 +973,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation {\r\n  createCandidate(candidate: {\r\n    id:\"\", \r\n    userId:\"\", \r\n    firstName: \"firstName\", \r\n    lastName: \"lastName\", \r\n    summary: \"summary\"\r\n}) {\r\n    id\r\n    userId\r\n    firstName\r\n    lastName\r\n    summary\r\n  }\r\n}",
+										"query": "mutation {\r\n  createCandidate(candidate: {\r\n    id:\"\", \r\n    userId:\"\", \r\n    firstName: \"firstName\", \r\n    lastName: \"lastName\", \r\n    summary: \"summary\",\r\n    linkedInUrl: null,\r\n    githubUrl: null\r\n}) {\r\n    id\r\n    userId\r\n    firstName\r\n    lastName\r\n    summary\r\n    linkedInUrl\r\n    githubUrl\r\n  }\r\n}",
 										"variables": ""
 									}
 								},
@@ -1117,7 +1117,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "mutation {\r\n  updateCandidate(candidate: {\r\n    id:\"{{CANDIDATE_ID}}\", \r\n    userId:\"\", \r\n    firstName: \"firstName\", \r\n    lastName: \"lastName\", \r\n    summary: \"summary\"\r\n}) {\r\n    id\r\n    userId\r\n    firstName\r\n    lastName\r\n    summary\r\n  }\r\n}",
+										"query": "mutation {\r\n  updateCandidate(candidate: {\r\n    id:\"{{CANDIDATE_ID}}\", \r\n    userId:\"\", \r\n    firstName: \"firstName\", \r\n    lastName: \"lastName\", \r\n    summary: \"summary\",\r\n    linkedInUrl: null,\r\n    githubUrl: null\r\n}) {\r\n    id\r\n    userId\r\n    firstName\r\n    lastName\r\n    summary\r\n    linkedInUrl\r\n    githubUrl\r\n  }\r\n}",
 										"variables": ""
 									}
 								},

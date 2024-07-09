@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gettimhired.model.dto.input.CandidateInputDTO;
 import com.gettimhired.model.mongo.Candidate;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -18,7 +19,11 @@ public record CandidateDTO(
         String lastName,
         @Size(max = 4000)
         String summary,
+        @Pattern(regexp = "^https://www\\.linkedin\\.com.*", message = "LinkedIn Url must be prefaced with https://www.linkedin.com")
+        @Size(max = 2048, message = "Linkedin Url must be between 1 and 2048 characters")
         String linkedInUrl,
+        @Pattern(regexp = "^https://github\\.com.*", message = "Github Url must be prefaced with https://github.com")
+        @Size(max = 2048, message = "Github Url must be between 1 and 2048 characters")
         String githubUrl
 ) {
     public CandidateDTO(Candidate candidate) {
