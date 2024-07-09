@@ -9,48 +9,47 @@
 
         <div th:insert="~{navbar}"></div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Get Tim Hired</h1>
-            </div>
-            <div class="col-md-12">
-
-                <p>This site was built for one reason, to Get Tim Hired! I'm developing this site to showcase my
-                development skills. I have started with getting an API set up with a minimal front end. From there I
-                will decompose the services into microservices showcasing a functioning 12 factor application. After
-                that I will build functional UI to manage creating and modifying the resources here.</p>
-
-                <p>To get started click the Signup link and create your user credentials. Save them somewhere on your
-                computer and use them to access the API. On that page you will be able to download postman files for
-                interacting with the API. You have you choice of REST or GraphQL. Alternatively, you can user swagger.
-                If you have any feedback or bug fixes please utilize the
-                <a href="https://github.com/tschiman/gettimhired">github repository</a>, you can get a hold of me there
-                or on <a href="https://www.linkedin.com/in/timothy-schimandle/">linkedin</a>.</p>
-            </div>
-            <div class="col-md-12">
-                <p>Tools that were used to build this project include:</p>
-            </div>
-            <div class="col-md-2">
-                <img class="img-size" src="/img/java.png" alt="Java Logo">
-            </div>
-            <div class="col-md-2">
-                <img class="img-size" src="/img/intellij.png" alt="intellij Logo">
-            </div>
-            <div class="col-md-2">
-                <img class="img-size" src="/img/Mongodb.png" alt="Mongodb Logo">
-            </div>
-            <div class="col-md-2">
-                <img class="img-size" src="/img/spring.jpg" alt="spring Logo">
-            </div>
-            <div class="col-md-2">
-                <img class="img-size" src="/img/heroku.png" alt="heroku Logo">
-            </div>
-            <div class="col-md-2">
-                <img class="img-size" src="/img/postman.png" alt="postman Logo">
-            </div>
-        </div>
-
         <div th:unless="${hasCandidate}">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Get Tim Hired</h1>
+                </div>
+                <div class="col-md-12">
+
+                    <p>This site was built for one reason, to Get Tim Hired! I'm developing this site to showcase my
+                        development skills. I have started with getting an API set up with a minimal front end. From there I
+                        will decompose the services into microservices showcasing a functioning 12 factor application. After
+                        that I will build functional UI to manage creating and modifying the resources here.</p>
+
+                    <p>To get started click the Signup link and create your user credentials. Save them somewhere on your
+                        computer and use them to access the API. On that page you will be able to download postman files for
+                        interacting with the API. You have you choice of REST or GraphQL. Alternatively, you can user swagger.
+                        If you have any feedback or bug fixes please utilize the
+                        <a href="https://github.com/tschiman/gettimhired">github repository</a>, you can get a hold of me there
+                        or on <a href="https://www.linkedin.com/in/timothy-schimandle/">linkedin</a>.</p>
+                </div>
+                <div class="col-md-12">
+                    <p>Tools that were used to build this project include:</p>
+                </div>
+                <div class="col-md-2">
+                    <img class="img-size" src="/img/java.png" alt="Java Logo">
+                </div>
+                <div class="col-md-2">
+                    <img class="img-size" src="/img/intellij.png" alt="intellij Logo">
+                </div>
+                <div class="col-md-2">
+                    <img class="img-size" src="/img/Mongodb.png" alt="Mongodb Logo">
+                </div>
+                <div class="col-md-2">
+                    <img class="img-size" src="/img/spring.jpg" alt="spring Logo">
+                </div>
+                <div class="col-md-2">
+                    <img class="img-size" src="/img/heroku.png" alt="heroku Logo">
+                </div>
+                <div class="col-md-2">
+                    <img class="img-size" src="/img/postman.png" alt="postman Logo">
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <h2>Candidates</h2>
@@ -69,6 +68,16 @@
                 <div class="row">
                     <div class="col-md-12">
                         <h1 class="text-center" th:text="${candidate.firstName() + ' ' + candidate.lastName()}"></h1>
+                    </div>
+                    <div th:if="${candidate.linkedInUrl() != null}" class="col-md-6">
+                        <h3 class="text-center">
+                            <a th:href="${candidate.linkedInUrl()}">LinkedIn</a>
+                        </h3>
+                    </div>
+                    <div th:if="${candidate.githubUrl() != null}" class="col-md-6">
+                        <h3 class="text-center">
+                            <a th:href="${candidate.githubUrl()}">Github</a>
+                        </h3>
                     </div>
                 </div>
                 <div class="row">
