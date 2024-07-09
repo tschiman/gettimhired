@@ -63,7 +63,9 @@ public class CandidateService {
                         candidateOpt.get().userId(),
                         candidateUpdateDTO.firstName(),
                         candidateUpdateDTO.lastName(),
-                        candidateUpdateDTO.summary()
+                        candidateUpdateDTO.summary(),
+                        candidateUpdateDTO.linkedInUrl(),
+                        candidateUpdateDTO.githubUrl()
                 );
                 Candidate candidateToReturn;
                 try {

@@ -46,7 +46,7 @@ class CandidateServiceTest {
 
     @Test
     public void testFindCandidateByIdHappy() {
-        var candidate = new Candidate(TestHelper.ID, TestHelper.USER_ID, "BARK_FNAME", "BARK_LNAME", "BARK_SUMMARY");
+        var candidate = new Candidate(TestHelper.ID, TestHelper.USER_ID, "BARK_FNAME", "BARK_LNAME", "BARK_SUMMARY", "LinkedIn", "Github");
         when(candidateRepository.findCandidateByIdAndUserId(TestHelper.ID, TestHelper.USER_ID)).thenReturn(Optional.of(candidate));
 
         var result = candidateService.findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID);
@@ -74,7 +74,7 @@ class CandidateServiceTest {
 
     @Test
     public void testCreateCandidateHappy() {
-        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark");
+        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark", "LinkedIn", "Github");
         var candidateOut = new Candidate(TestHelper.USER_ID, candidateDtoIn);
         when(candidateRepository.save(any(Candidate.class))).thenReturn(candidateOut);
 
@@ -92,7 +92,7 @@ class CandidateServiceTest {
 
     @Test
     public void testCreateCandidateThrowsException() {
-        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark");
+        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark", "LinkedIn", "Github");
         var candidateOut = new Candidate(TestHelper.USER_ID, candidateDtoIn);
         when(candidateRepository.save(any(Candidate.class))).thenThrow(new RuntimeException());
 
@@ -107,14 +107,14 @@ class CandidateServiceTest {
         var candidateUpdateDto = new CandidateUpdateDTO(
                 "BARK_FNAME_UPDATE",
                 "BARK_LNAME_UPDATE",
-                "BARK_SUMMARY_UPDATE"
+                "BARK_SUMMARY_UPDATE", "LinkedIn", "Github"
         );
         var candidate = new Candidate(
                 TestHelper.ID,
                 TestHelper.USER_ID,
                 "BARK_FNAME",
                 "BARK_LNAME",
-                "BARK_SUMMARY"
+                "BARK_SUMMARY", "LinkedIn", "Github"
         );
         when(candidateRepository.findById(TestHelper.ID)).thenReturn(Optional.of(candidate));
         when(candidateRepository.save(any(Candidate.class))).then(AdditionalAnswers.returnsFirstArg());
@@ -136,14 +136,14 @@ class CandidateServiceTest {
         var candidateUpdateDto = new CandidateUpdateDTO(
                 "BARK_FNAME_UPDATE",
                 "BARK_LNAME_UPDATE",
-                "BARK_SUMMARY_UPDATE"
+                "BARK_SUMMARY_UPDATE", "LinkedIn", "Github"
         );
         var candidate = new Candidate(
                 TestHelper.ID,
                 TestHelper.USER_ID,
                 "BARK_FNAME",
                 "BARK_LNAME",
-                "BARK_SUMMARY"
+                "BARK_SUMMARY", "LinkedIn", "Github"
         );
         when(candidateRepository.findById(TestHelper.ID)).thenReturn(Optional.of(candidate));
         when(candidateRepository.save(any(Candidate.class))).thenThrow(new RuntimeException());
@@ -161,14 +161,14 @@ class CandidateServiceTest {
         var candidateUpdateDto = new CandidateUpdateDTO(
                 "BARK_FNAME_UPDATE",
                 "BARK_LNAME_UPDATE",
-                "BARK_SUMMARY_UPDATE"
+                "BARK_SUMMARY_UPDATE", "LinkedIn", "Github"
         );
         var candidate = new Candidate(
                 TestHelper.ID,
                 "BARK_USER_ID_MISMATCH",
                 "BARK_FNAME",
                 "BARK_LNAME",
-                "BARK_SUMMARY"
+                "BARK_SUMMARY", "LinkedIn", "Github"
         );
         when(candidateRepository.findById(TestHelper.ID)).thenReturn(Optional.of(candidate));
 
@@ -184,7 +184,7 @@ class CandidateServiceTest {
         var candidateUpdateDto = new CandidateUpdateDTO(
                 "BARK_FNAME_UPDATE",
                 "BARK_LNAME_UPDATE",
-                "BARK_SUMMARY_UPDATE"
+                "BARK_SUMMARY_UPDATE", "LinkedIn", "Github"
         );
         when(candidateRepository.findById(TestHelper.ID)).thenReturn(Optional.empty());
 

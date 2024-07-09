@@ -45,7 +45,7 @@ class CandidateAPITest {
 
     @Test
     public void testGetCandidateByUserIdAndIdHappy() {
-        var candidateDto = new CandidateDTO(TestHelper.ID, TestHelper.USER_ID, "BARK_FNAME", "BARK_LNAME", "BARK_SUMMARY");
+        var candidateDto = new CandidateDTO(TestHelper.ID, TestHelper.USER_ID, "BARK_FNAME", "BARK_LNAME", "BARK_SUMMARY", "LinkedIn", "Github");
         when(candidateService.findCandidateByUserIdAndId(TestHelper.USER_ID, TestHelper.ID)).thenReturn(Optional.of(candidateDto));
         when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
 
@@ -75,14 +75,16 @@ class CandidateAPITest {
     @Test
     public void testCreateCandidateHappy() {
 
-        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark");
+        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark", "LinkedIn", "Github");
         var candidateDtoOutOpt = Optional.of(
                 new CandidateDTO(
                         UUID.randomUUID().toString(),
                         UUID.randomUUID().toString(),
                         "Bark",
                         "McBarkson",
-                        "Summary Bark"
+                        "Summary Bark",
+                        "LinkedIn",
+                        "Github"
                 )
         );
         when(candidateService.createCandidate(TestHelper.USER_ID, candidateDtoIn)).thenReturn(candidateDtoOutOpt);
@@ -99,7 +101,7 @@ class CandidateAPITest {
     @Test
     public void testCreateCandidateFailedToSave() {
 
-        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark");
+        var candidateDtoIn = new CandidateDTO(null, null, "Bark", "McBarkson", "Summary Bark", "LinkedIn", "Github");
         when(candidateService.createCandidate(TestHelper.USER_ID, candidateDtoIn)).thenReturn(Optional.empty());
         when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
 
@@ -116,14 +118,18 @@ class CandidateAPITest {
         var candidateUpdateDto = new CandidateUpdateDTO(
                 "BARK_FNAME_UPDATE",
                 "BARK_LNAME_UPDATE",
-                "BARK_SUMMARY_UPDATE"
+                "BARK_SUMMARY_UPDATE",
+                "LinkedIn",
+                "Github"
         );
         CandidateDTO candidateDto = new CandidateDTO(
                 TestHelper.ID,
                 TestHelper.USER_ID,
                 "BARK_FNAME",
                 "BARK_LNAME",
-                "BARK_SUMMARY"
+                "BARK_SUMMARY",
+                "LinkedIn",
+                "Github"
         );
         when(candidateService.updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto)).thenReturn(Optional.of(candidateDto));
         when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
@@ -142,7 +148,9 @@ class CandidateAPITest {
         var candidateUpdateDto = new CandidateUpdateDTO(
                 "BARK_FNAME_UPDATE",
                 "BARK_LNAME_UPDATE",
-                "BARK_SUMMARY_UPDATE"
+                "BARK_SUMMARY_UPDATE",
+                "LinkedIn",
+                "Github"
         );
         when(candidateService.updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto)).thenReturn(Optional.empty());
         when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
@@ -161,7 +169,9 @@ class CandidateAPITest {
         var candidateUpdateDto = new CandidateUpdateDTO(
                 "BARK_FNAME_UPDATE",
                 "BARK_LNAME_UPDATE",
-                "BARK_SUMMARY_UPDATE"
+                "BARK_SUMMARY_UPDATE",
+                "LinkedIn",
+                "Github"
         );
         when(candidateService.updateCandidate(TestHelper.ID, TestHelper.USER_ID, candidateUpdateDto)).thenThrow(new APIUpdateException(HttpStatus.NOT_FOUND));
         when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);

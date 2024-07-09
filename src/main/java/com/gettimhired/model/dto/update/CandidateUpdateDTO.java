@@ -15,13 +15,17 @@ public record CandidateUpdateDTO(
         @Size(min = 1, max = 256, message = "Last name must be between 1 and 256 characters")
         String lastName,
         @Size(max = 4000)
-        String summary
+        String summary,
+        String linkedInUrl,
+        String githubUrl
 ) {
     public CandidateUpdateDTO(Candidate candidate) {
         this(
                 candidate.firstName(),
                 candidate.lastName(),
-                candidate.summary()
+                candidate.summary(),
+                candidate.linkedInUrl(),
+                candidate.githubUrl()
         );
     }
 
@@ -29,7 +33,9 @@ public record CandidateUpdateDTO(
         this(
                 candidate.firstName(),
                 candidate.lastName(),
-                candidate.summary()
+                candidate.summary(),
+                candidate.linkedInUrl(),
+                candidate.githubUrl()
         );
     }
 }

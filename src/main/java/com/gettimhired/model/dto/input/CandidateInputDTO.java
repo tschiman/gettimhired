@@ -15,6 +15,8 @@ public record CandidateInputDTO(
         @Size(min = 1, max = 256, message = "Last name must be between 1 and 256 characters")
         String lastName,
         @Size(max = 4000)
-        String summary
+        String summary,
+        String linkedInUrl,
+        String githubUrl
 ) {
 }

@@ -47,7 +47,7 @@ class CandidateResolverTest {
 
     @Test
     void testGetCandidateById() {
-        CandidateDTO candidate = new CandidateDTO("1", "user1", "John", "Doe", "Summary");
+        CandidateDTO candidate = new CandidateDTO("1", "user1", "John", "Doe", "Summary", "LinkedIn", "Github");
         when(userDetails.getUsername()).thenReturn("user1");
         when(candidateService.findCandidateByUserIdAndId("user1", "1")).thenReturn(Optional.of(candidate));
 
@@ -65,7 +65,7 @@ class CandidateResolverTest {
 
     @Test
     void testCreateCandidate() {
-        CandidateInputDTO candidateInputDTO = new CandidateInputDTO("id","1", "John", "Doe", "Summary");
+        CandidateInputDTO candidateInputDTO = new CandidateInputDTO("id","1", "John", "Doe", "Summary", "LinkedIn", "Github");
         CandidateDTO candidateDTO = new CandidateDTO(candidateInputDTO);
         when(userDetails.getUsername()).thenReturn("user1");
         when(candidateService.createCandidate("user1", candidateDTO)).thenReturn(Optional.of(candidateDTO));
@@ -84,7 +84,7 @@ class CandidateResolverTest {
 
     @Test
     void testUpdateCandidate() {
-        CandidateInputDTO candidateInputDTO = new CandidateInputDTO("ID","1", "John", "Doe", "Summary");
+        CandidateInputDTO candidateInputDTO = new CandidateInputDTO("ID","1", "John", "Doe", "Summary", "LinkedIn", "Github");
         CandidateUpdateDTO candidateUpdateDTO = new CandidateUpdateDTO(candidateInputDTO);
         CandidateDTO candidateDTO = new CandidateDTO(candidateInputDTO);
         when(userDetails.getUsername()).thenReturn("1");

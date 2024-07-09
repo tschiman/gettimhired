@@ -63,7 +63,7 @@ class CandidateAPIIT {
     @WithMockUser(username = "user1")
     void testGetCandidateById_Found() throws Exception {
         String candidateId = "1";
-        CandidateDTO candidate = new CandidateDTO(candidateId, "user1", null, null, null);
+        CandidateDTO candidate = new CandidateDTO(candidateId, "user1", null, null, null, "LinkedIn", "Github");
         when(userDetails.getUsername()).thenReturn("user1");
         when(candidateService.findCandidateByUserIdAndId("user1", candidateId)).thenReturn(Optional.of(candidate));
 
@@ -90,7 +90,7 @@ class CandidateAPIIT {
     @Test
     @WithMockUser(username = "user1")
     void testCreateCandidate_Success() throws Exception {
-        CandidateDTO candidateDTO = new CandidateDTO(TestHelper.ID,TestHelper.USER_ID,"Bark","Bark","Bark");
+        CandidateDTO candidateDTO = new CandidateDTO(TestHelper.ID,TestHelper.USER_ID,"Bark","Bark","Bark", "LinkedIn", "Github");
         when(userDetails.getUsername()).thenReturn(TestHelper.USER_ID);
         when(candidateService.createCandidate(eq("user1"), any(CandidateDTO.class))).thenReturn(Optional.of(candidateDTO));
 
@@ -132,7 +132,7 @@ class CandidateAPIIT {
     @WithMockUser(username = "user1")
     void testUpdateCandidate_Success() throws Exception {
         String candidateId = "1";
-        CandidateDTO candidateDTO = new CandidateDTO("1","user1",null,null,null);
+        CandidateDTO candidateDTO = new CandidateDTO("1","user1",null,null,null, "LinkedIn", "Github");
         when(userDetails.getUsername()).thenReturn("user1");
         when(candidateService.updateCandidate(eq(candidateId), eq("user1"), any(CandidateUpdateDTO.class))).thenReturn(Optional.of(candidateDTO));
 
@@ -173,7 +173,7 @@ class CandidateAPIIT {
     @WithMockUser(username = "user1")
     void testUpdateCandidate_APIUpdateException() throws Exception {
         String candidateId = "1";
-        CandidateUpdateDTO candidateUpdateDTO = new CandidateUpdateDTO(null,null,null);
+        CandidateUpdateDTO candidateUpdateDTO = new CandidateUpdateDTO(null,null,null, "LinkedIn", "Github");
         when(userDetails.getUsername()).thenReturn("user1");
         when(candidateService.updateCandidate(eq(candidateId), eq("user1"), any(CandidateUpdateDTO.class))).thenThrow(new APIUpdateException(HttpStatus.FORBIDDEN));
 

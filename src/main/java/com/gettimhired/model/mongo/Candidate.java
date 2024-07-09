@@ -10,7 +10,9 @@ public record Candidate(
         String userId,
         String firstName,
         String lastName,
-        String summary
+        String summary,
+        String linkedInUrl,
+        String githubUrl
 ) {
     public Candidate(String userId, CandidateDTO candidateDTO) {
         this(
@@ -18,7 +20,9 @@ public record Candidate(
                 userId,
                 candidateDTO.firstName(),
                 candidateDTO.lastName(),
-                candidateDTO.summary()
+                candidateDTO.summary(),
+                candidateDTO.linkedInUrl(),
+                candidateDTO.githubUrl()
         );
     }
 }

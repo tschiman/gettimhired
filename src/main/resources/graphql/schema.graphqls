@@ -52,6 +52,8 @@ type Candidate {
     firstName: String!
     lastName: String!
     summary: String
+    linkedInUrl: String
+    githubUrl: String
 }
 input CandidateInput {
     id: String
@@ -59,6 +61,8 @@ input CandidateInput {
     firstName: String!
     lastName: String!
     summary: String
+    linkedInUrl: String
+    githubUrl: String
 }
 
 type Job {

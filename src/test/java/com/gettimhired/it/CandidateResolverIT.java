@@ -62,11 +62,11 @@ class CandidateResolverIT {
     @WithMockUser(username = "user1")
     void testGetCandidateById_Found() throws Exception {
         String candidateId = "1";
-        CandidateDTO candidate = new CandidateDTO(candidateId, "user1", "First", "Last", "Summary");
+        CandidateDTO candidate = new CandidateDTO(candidateId, "user1", "First", "Last", "Summary", "LinkedIn", "Github");
         when(userDetails.getUsername()).thenReturn("user1");
         when(candidateService.findCandidateByUserIdAndId("user1", candidateId)).thenReturn(Optional.of(candidate));
 
-        graphQlTester.document("{ getCandidateById(id: \"" + candidateId + "\") { id userId firstName lastName summary } }")
+        graphQlTester.document("{ getCandidateById(id: \"" + candidateId + "\") { id userId firstName lastName summary linkedInUrl githubUrl } }")
                 .execute()
                 .path("getCandidateById")
                 .entity(CandidateDTO.class)
@@ -93,8 +93,8 @@ class CandidateResolverIT {
     @Test
     @WithMockUser(username = "user1")
     void testCreateCandidate_Success() throws Exception {
-        CandidateInputDTO candidateInput = new CandidateInputDTO(null,null,null,null,null);
-        CandidateDTO candidateDTO = new CandidateDTO("1", "user1", "First", "Last", "Summary");
+        CandidateInputDTO candidateInput = new CandidateInputDTO(null,null,null,null,null, "LinkedIn", "Github");
+        CandidateDTO candidateDTO = new CandidateDTO("1", "user1", "First", "Last", "Summary", "LinkedIn", "Github");
         when(userDetails.getUsername()).thenReturn("user1");
         when(candidateService.createCandidate(eq("user1"), any(CandidateDTO.class))).thenReturn(Optional.of(candidateDTO));
 
@@ -123,7 +123,7 @@ class CandidateResolverIT {
     @Test
     @WithMockUser(username = "user1")
     void testCreateCandidate_Failure() throws Exception {
-        CandidateInputDTO candidateInput = new CandidateInputDTO(null,null,null,null,null);
+        CandidateInputDTO candidateInput = new CandidateInputDTO(null,null,null,null,null, "LinkedIn", "Github");
         when(userDetails.getUsername()).thenReturn("user1");
         when(candidateService.createCandidate(eq("user1"), any(CandidateDTO.class))).thenReturn(Optional.empty());
 
@@ -152,8 +152,8 @@ class CandidateResolverIT {
     @Test
     @WithMockUser(username = "user1")
     void testUpdateCandidate_Success() throws Exception {
-        CandidateInputDTO candidateInput = new CandidateInputDTO(null,null,null,null,null);
-        CandidateDTO candidateDTO = new CandidateDTO("1", "user1", "First", "Last", "Summary");
+        CandidateInputDTO candidateInput = new CandidateInputDTO(null,null,null,null,null, "LinkedIn", "Github");
+        CandidateDTO candidateDTO = new CandidateDTO("1", "user1", "First", "Last", "Summary", "LinkedIn", "Github");
         when(userDetails.getUsername()).thenReturn("user1");
         when(candidateService.updateCandidate(eq("1"), eq("user1"), any(CandidateUpdateDTO.class))).thenReturn(Optional.of(candidateDTO));
 
@@ -183,7 +183,7 @@ class CandidateResolverIT {
     @Test
     @WithMockUser(username = "user1")
     void testUpdateCandidate_Failure() throws Exception {
-        CandidateInputDTO candidateInput = new CandidateInputDTO(null,null,null,null,null);
+        CandidateInputDTO candidateInput = new CandidateInputDTO(null,null,null,null,null, "LinkedIn", "Github");
         when(userDetails.getUsername()).thenReturn("user1");
         when(candidateService.updateCandidate(eq("1"), eq("user1"), any(CandidateUpdateDTO.class))).thenReturn(Optional.empty());
 
