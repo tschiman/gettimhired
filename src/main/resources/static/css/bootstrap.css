@@ -6866,3 +6866,12 @@ button.close {
 .border-dotted {
   border: 1px dotted black;
 }
+
+.parent {
+  display: flex;
+  align-items: stretch;
+}
+
+.child {
+  flex: 1;
+}
