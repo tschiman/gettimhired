@@ -1,5 +1,6 @@
 package com.gettimhired.model.dto.update;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gettimhired.model.dto.input.JobInputDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record JobUpdateDTO(
         @NotBlank(message = "Company name cannot be blank")
         @Size(min = 1, max = 256, message = "Company name must be between 1 and 256 characters")

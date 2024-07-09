@@ -1,5 +1,6 @@
 package com.gettimhired.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gettimhired.model.dto.input.JobInputDTO;
 import com.gettimhired.model.mongo.Job;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record JobDTO(
         String id,
         String userId,
