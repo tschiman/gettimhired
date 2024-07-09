@@ -6875,3 +6875,8 @@ button.close {
 .child {
   flex: 1;
 }
+
+.padding-15 {
+  padding-left: 15px;
+  padding-right: 15px;
+}
