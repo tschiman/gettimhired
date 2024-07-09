@@ -1,9 +1,10 @@
-package com.gettimhired.resolver;
+package com.gettimhired.it;
 
 import com.gettimhired.config.TestSecurityConfig;
 import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.input.CandidateInputDTO;
 import com.gettimhired.model.dto.update.CandidateUpdateDTO;
+import com.gettimhired.resolver.CandidateResolver;
 import com.gettimhired.service.CandidateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,9 +103,9 @@ class CandidateResolverIT {
                           createCandidate(candidate: {
                             id:"",
                             userId:"",
-                            firstName: "Tim",
-                            lastName: "Schimandle",
-                            summary: "I have nearly 10 years of software engineering experience and have been professionally writing code in a microservice environment since 2014. I have proven expertise using Java and the Spring Framework. My skills allow me to build fast, reliable, and secure microservice applications from the ground up, powered by code written to be clear, concise, and performant."
+                            firstName: "Bark",
+                            lastName: "BARK",
+                            summary: "BARK"
                         }) {
                             id
                             userId
@@ -131,9 +132,9 @@ class CandidateResolverIT {
                           createCandidate(candidate: {
                             id:"",
                             userId:"",
-                            firstName: "Tim",
-                            lastName: "Schimandle",
-                            summary: "I have nearly 10 years of software engineering experience and have been professionally writing code in a microservice environment since 2014. I have proven expertise using Java and the Spring Framework. My skills allow me to build fast, reliable, and secure microservice applications from the ground up, powered by code written to be clear, concise, and performant."
+                            firstName: "Bark",
+                            lastName: "BARK",
+                            summary: "BARK"
                         }) {
                             id
                             userId
@@ -161,9 +162,9 @@ class CandidateResolverIT {
                                           updateCandidate(candidate: {
                                             id:"1",
                                             userId:"",
-                                            firstName: "Tim",
-                                            lastName: "Smith",
-                                            summary: "New candidate summary"
+                                            firstName: "BARK",
+                                            lastName: "BARK",
+                                            summary: "BARK"
                                         }) {
                                             id
                                             userId
@@ -191,9 +192,9 @@ class CandidateResolverIT {
                                           updateCandidate(candidate: {
                                             id:"1",
                                             userId:"",
-                                            firstName: "Tim",
-                                            lastName: "Smith",
-                                            summary: "New candidate summary"
+                                            firstName: "BARK",
+                                            lastName: "BARK",
+                                            summary: "BARK"
                                         }) {
                                             id
                                             userId

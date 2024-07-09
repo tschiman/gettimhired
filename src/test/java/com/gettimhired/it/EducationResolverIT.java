@@ -1,4 +1,4 @@
-package com.gettimhired.resolver;
+package com.gettimhired.it;
 
 import com.gettimhired.TestHelper;
 import com.gettimhired.config.TestSecurityConfig;
@@ -6,6 +6,7 @@ import com.gettimhired.model.dto.EducationDTO;
 import com.gettimhired.model.dto.input.EducationInputDTO;
 import com.gettimhired.model.dto.update.EducationUpdateDTO;
 import com.gettimhired.model.mongo.EducationLevel;
+import com.gettimhired.resolver.EducationResolver;
 import com.gettimhired.service.EducationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -149,14 +150,14 @@ class EducationResolverIT {
         graphQlTester.document("""
                         mutation {
                           createEducation(education: {
-                            id:"",\s
-                            userId:"",\s
-                            candidateId:"1",\s
-                            name: "No End Date School",\s
-                            startDate: "1999-08-01",\s
-                            endDate: null,\s
-                            graduated: true,\s
-                            educationLevel: "DIPLOMA",\s
+                            id:"",
+                            userId:"",
+                            candidateId:"1",
+                            name: "No End Date School",
+                            startDate: "1999-08-01",
+                            endDate: null,
+                            graduated: true,
+                            educationLevel: "DIPLOMA",
                             areaOfStudy: "Fake"
                         }) {
                             id
@@ -187,14 +188,14 @@ class EducationResolverIT {
         graphQlTester.document("""
                         mutation {
                            createEducation(education: {
-                             id:"",\s
-                             userId:"",\s
-                             candidateId:"1",\s
-                             name: "No End Date School",\s
-                             startDate: "1999-08-01",\s
-                             endDate: null,\s
-                             graduated: true,\s
-                             educationLevel: "DIPLOMA",\s
+                             id:"",
+                             userId:"",
+                             candidateId:"1",
+                             name: "No End Date School",
+                             startDate: "1999-08-01",
+                             endDate: null,
+                             graduated: true,
+                             educationLevel: "DIPLOMA",
                              areaOfStudy: "Fake"
                          }) {
                              id

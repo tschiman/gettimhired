@@ -1,5 +1,6 @@
-package com.gettimhired.controller;
+package com.gettimhired.it;
 
+import com.gettimhired.controller.MainController;
 import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.mongo.User;
 import com.gettimhired.service.CandidateService;
