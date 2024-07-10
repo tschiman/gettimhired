@@ -71,4 +71,9 @@ class MainControllerTest {
         Mockito.verify(model, times(2)).addAttribute(Mockito.anyString(), Mockito.any());
     }
 
+    @Test
+    public void testThatPostmanRouteWorks() {
+        assertEquals("postman", mainController.postman());
+    }
+
 }

@@ -100,4 +100,11 @@ class MainControllerIT {
 
         verify(userService, times(1)).createUser();
     }
+
+    @Test
+    void testPostman() throws Exception {
+        mockMvc.perform(get("/postman"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("postmans"));
+    }
 }

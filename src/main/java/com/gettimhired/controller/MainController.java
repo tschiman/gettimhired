@@ -74,4 +74,10 @@ public class MainController {
                 .addAttribute("password", user.password());
         return "credentials";
     }
+
+    @GetMapping("/postman")
+    public String postman() {
+        log.info("GET / postman");
+        return "postmans";
+    }
 }
