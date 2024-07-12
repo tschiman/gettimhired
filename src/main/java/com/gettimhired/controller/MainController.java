@@ -3,15 +3,20 @@ package com.gettimhired.controller;
 import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.EducationDTO;
 import com.gettimhired.model.dto.JobDTO;
+import com.gettimhired.model.dto.SignUpFormDTO;
 import com.gettimhired.service.CandidateService;
 import com.gettimhired.service.EducationService;
 import com.gettimhired.service.JobService;
 import com.gettimhired.service.UserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -58,22 +63,35 @@ public class MainController {
     }
 
     @GetMapping("/signup")
-    public String credentials() {
-        log.info("GET /credentials credentials");
-        return "credentials";
+    public String signup(Model model) {
+        log.info("GET /signup signup");
+        model.addAttribute("signUpForm", new SignUpFormDTO(null, null, null));
+        return "signups";
     }
 
     @PostMapping("/signup")
-    public String createCredentials(Model model) {
-        log.info("POST /credentials createCredentials");
-        //create a user
-        var user = userService.createUser();
-        //put credentials in model to view them
-        model
-                .addAttribute("user", user.id())
-                .addAttribute("password", user.password());
-        return "credentials";
+    public String signUp(@Valid @ModelAttribute SignUpFormDTO signupForm, BindingResult bindingResult, Model model) {
+        if (!signupForm.password().equals(signupForm.passwordCopy())) {
+            bindingResult.addError(new ObjectError("password", "Passwords must match"));
+        }
+        if (bindingResult.hasErrors()) {
+            return "signups";
+        }
+        userService.createUser(signupForm.email(), signupForm.password());
+        return "redirect:/login";
     }
+
+//    @PostMapping("/signup")
+//    public String createCredentials(Model model) {
+//        log.info("POST /credentials createCredentials");
+//        //create a user
+//        var user = userService.createUser();
+//        //put credentials in model to view them
+//        model
+//                .addAttribute("user", user.id())
+//                .addAttribute("password", user.password());
+//        return "credentials";
+//    }
 
     @GetMapping("/postman")
     public String postman() {

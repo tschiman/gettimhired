@@ -5,6 +5,8 @@ import com.gettimhired.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,12 +23,27 @@ public class UserService {
 
     public User createUser() {
         var password = UUID.randomUUID().toString();
-        var user = new User(UUID.randomUUID().toString(), passwordEncoder.encode(password));
+        var user = new User(UUID.randomUUID().toString(), passwordEncoder.encode(password), "email", "password", Collections.emptyList());
         userRepository.save(user);
-        return new User(user.id(), password);
+        return new User(user.id(), password, "email", "password", Collections.emptyList());
     }
 
     public Optional<User> findUserByUsername(String username) {
         return userRepository.findById(username);
+    }
+
+    public void createUser(String email, String password) {
+        var user = new User(
+                UUID.randomUUID().toString(),
+                null,
+                email,
+                passwordEncoder.encode(password),
+                List.of("ROLE_USER")
+        );
+        userRepository.save(user);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

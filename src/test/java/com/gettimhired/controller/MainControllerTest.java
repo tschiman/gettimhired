@@ -55,18 +55,18 @@ class MainControllerTest {
 
     @Test
     public void testThatAPIRouteReturnsTheAPIPage() {
-        assertEquals("credentials", mainController.credentials());
+        assertEquals("signups", mainController.signup(model));
     }
 
     @Test
     public void testThatAPIRouteReturnsAPI() {
-        User user = new User("BARK_USER", "BARK_PASSWORD");
+        User user = new User("BARK_USER", "BARK_PASSWORD", "email", "password");
 
         when(userService.createUser()).thenReturn(user);
 
         when(model.addAttribute(anyString(), any())).thenReturn(model);
 
-        assertEquals("credentials", mainController.createCredentials(model));
+//        assertEquals("credentials", mainController.createCredentials(model));
 
         Mockito.verify(model, times(2)).addAttribute(Mockito.anyString(), Mockito.any());
     }
