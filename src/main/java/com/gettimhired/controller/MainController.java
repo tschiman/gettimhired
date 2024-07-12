@@ -96,7 +96,7 @@ public class MainController {
 
     @PostMapping("/account")
     public String createApiPassword(@AuthenticationPrincipal UserDetails userDetails,Model model) {
-        log.info("POST /apiPassword createApiPassword username={}", userDetails.getUsername());
+        log.info("POST /account createApiPassword username={}", userDetails.getUsername());
         //create a user
         var userOpt = userService.findByEmail(userDetails.getUsername());
         if (userOpt.isPresent()) {

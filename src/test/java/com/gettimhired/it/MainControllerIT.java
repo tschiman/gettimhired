@@ -2,7 +2,7 @@ package com.gettimhired.it;
 
 import com.gettimhired.controller.MainController;
 import com.gettimhired.model.dto.CandidateDTO;
-import com.gettimhired.model.mongo.User;
+import com.gettimhired.model.dto.SignUpFormDTO;
 import com.gettimhired.service.CandidateService;
 import com.gettimhired.service.EducationService;
 import com.gettimhired.service.JobService;
@@ -60,7 +60,7 @@ class MainControllerIT {
     @Test
     void testIndexWithCandidateId() throws Exception {
         String candidateId = "1";
-        CandidateDTO candidate = new CandidateDTO("candidateId",null,null,null,null, "LinkedIn", "Github");
+        CandidateDTO candidate = new CandidateDTO(candidateId, null, null, null, null, "LinkedIn", "Github");
         when(candidateService.findCandidateById(candidateId)).thenReturn(Optional.of(candidate));
         when(educationService.findAllEducationsByCandidateId(candidateId)).thenReturn(Collections.emptyList());
         when(jobService.findAllJobsByCandidateId(candidateId)).thenReturn(Collections.emptyList());
@@ -79,27 +79,89 @@ class MainControllerIT {
     }
 
     @Test
-    void testCredentialsGet() throws Exception {
+    void testSignupGet() throws Exception {
         mockMvc.perform(get("/signup"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("credentials"));
-
-        // No service call expected for this endpoint
+                .andExpect(view().name("signups"))
+                .andExpect(model().attributeExists("signUpForm"));
     }
 
     @Test
-    void testCreateCredentials() throws Exception {
-        User user = new User("id", "password");
-        when(userService.createUser()).thenReturn(user);
+    void testSignupPostSuccess() throws Exception {
+        SignUpFormDTO form = new SignUpFormDTO("test@example.com", "password", "password");
+        doNothing().when(userService).createUser(form.email(), form.password());
 
-        mockMvc.perform(post("/signup"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("credentials"))
-                .andExpect(model().attributeExists("user"))
-                .andExpect(model().attributeExists("password"));
+        mockMvc.perform(post("/signup")
+                        .param("email", form.email())
+                        .param("password", form.password())
+                        .param("passwordCopy", form.passwordCopy()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
 
-        verify(userService, times(1)).createUser();
+        verify(userService, times(1)).createUser(form.email(), form.password());
     }
+
+    @Test
+    void testSignupPostPasswordMismatch() throws Exception {
+        SignUpFormDTO form = new SignUpFormDTO("test@example.com", "password", "differentPassword");
+
+        mockMvc.perform(post("/signup")
+                        .param("email", form.email())
+                        .param("password", form.password())
+                        .param("passwordCopy", form.passwordCopy()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("signups"));
+
+        verify(userService, times(0)).createUser(anyString(), anyString());
+    }
+
+    @Test
+    void testSignupPostValidationErrors() throws Exception {
+        SignUpFormDTO form = new SignUpFormDTO("email", "password", "password");
+
+        mockMvc.perform(post("/signup")
+                        .param("email", form.email())
+                        .param("password", form.password())
+                        .param("passwordCopy", form.passwordCopy()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("signups"));
+
+        verify(userService, times(0)).createUser(anyString(), anyString());
+    }
+
+//    TODO Figure out how to test these with a mock spring security
+//    @Test
+//    @WithMockUser(username = "test@example.com")
+//    void testAccountPage() throws Exception {
+//        User user = new User("1", "pw", "test@example.com", "epw", Collections.emptyList());
+//        when(userService.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+//
+//        mockMvc.perform(get("/account"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("accounts"))
+//                .andExpect(model().attributeExists("user"))
+//                .andExpect(model().attributeExists("email"));
+//
+//        verify(userService, times(1)).findByEmail("test@example.com");
+//    }
+//
+//    @Test
+//    @WithMockUser(username = "user1")
+//    void testCreateApiPassword() throws Exception {
+//        User user = new User("1", "pw", "test@example.com", "epw", Collections.emptyList());
+//        when(userService.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+//        when(userService.generatePassword(user)).thenReturn("newApiPassword");
+//
+//        mockMvc.perform(post("/account"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("accounts"))
+//                .andExpect(model().attributeExists("user"))
+//                .andExpect(model().attributeExists("email"))
+//                .andExpect(model().attributeExists("password"));
+//
+//        verify(userService, times(1)).findByEmail("test@example.com");
+//        verify(userService, times(1)).generatePassword(user);
+//    }
 
     @Test
     void testPostman() throws Exception {

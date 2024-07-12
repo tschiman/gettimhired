@@ -15,8 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 public class TestSecurityConfig {
@@ -46,10 +44,14 @@ public class TestSecurityConfig {
     @Profile("local")
     public SecurityFilterChain filterChainLocalForm(HttpSecurity http) throws Exception {
         return http
-                .formLogin(withDefaults())
+                .formLogin(formLogin -> {
+                    formLogin.defaultSuccessUrl("/account");
+                })
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/private").authenticated();
+                    authorize.requestMatchers("/account").authenticated();
+                    authorize.requestMatchers("/postman").authenticated();
+                    authorize.requestMatchers("/swagger-ui/**").authenticated();
                     authorize.anyRequest().permitAll();
                 })
                 .userDetailsService(userDetailsService())

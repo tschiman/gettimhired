@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 public class SecurityConfig {
 
@@ -53,15 +51,18 @@ public class SecurityConfig {
         return http
                 .requiresChannel(channel ->
                         channel.anyRequest().requiresSecure())
-                .formLogin(withDefaults())
+                .formLogin(formLogin -> {
+                    formLogin.defaultSuccessUrl("/account");
+                })
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/private").authenticated();
+                    authorize.requestMatchers("/account").authenticated();
+                    authorize.requestMatchers("/postman").authenticated();
+                    authorize.requestMatchers("/swagger-ui/**").authenticated();
                     authorize.anyRequest().permitAll();
                 })
                 .userDetailsService(formUserDetailsService)
                 .build();
-        // ...
     }
 
     @Bean
@@ -102,6 +103,5 @@ public class SecurityConfig {
                 })
                 .userDetailsService(formUserDetailsService)
                 .build();
-        // ...
     }
 }
