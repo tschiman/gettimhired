@@ -2,6 +2,8 @@ package com.gettimhired.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -13,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 public class TestSecurityConfig {
@@ -20,6 +24,10 @@ public class TestSecurityConfig {
     @Bean
     SecurityFilterChain filterChainLocal(HttpSecurity http) throws Exception {
         return http
+                .securityMatchers(matchers -> {
+                    matchers.requestMatchers("/api/**");
+                    matchers.requestMatchers("/graphql");
+                })
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(basic -> basic.init(http))
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -31,6 +39,22 @@ public class TestSecurityConfig {
                 })
                 .userDetailsService(userDetailsService())
                 .build();
+    }
+
+    @Bean
+    @Order(1)
+    @Profile("local")
+    public SecurityFilterChain filterChainLocalForm(HttpSecurity http) throws Exception {
+        return http
+                .formLogin(withDefaults())
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> {
+                    authorize.requestMatchers("/private").authenticated();
+                    authorize.anyRequest().permitAll();
+                })
+                .userDetailsService(userDetailsService())
+                .build();
+        // ...
     }
 
     @Bean

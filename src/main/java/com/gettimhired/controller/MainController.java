@@ -77,7 +77,13 @@ public class MainController {
 
     @GetMapping("/postman")
     public String postman() {
-        log.info("GET / postman");
+        log.info("GET /postman postman");
         return "postmans";
+    }
+
+    @GetMapping("/private")
+    public String priv() {
+        log.info("GET /private priv");
+        return "privates";
     }
 }

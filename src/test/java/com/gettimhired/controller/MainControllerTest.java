@@ -73,7 +73,7 @@ class MainControllerTest {
 
     @Test
     public void testThatPostmanRouteWorks() {
-        assertEquals("postman", mainController.postman());
+        assertEquals("postmans", mainController.postman());
     }
 
 }
