@@ -54,6 +54,9 @@ public class SecurityConfig {
                 .formLogin(formLogin -> {
                     formLogin.defaultSuccessUrl("/account");
                 })
+                .logout(logout -> {
+                    logout.logoutSuccessUrl("/");
+                })
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/account").authenticated();
@@ -93,6 +96,9 @@ public class SecurityConfig {
         return http
                 .formLogin(formLogin -> {
                     formLogin.defaultSuccessUrl("/account");
+                })
+                .logout(logout -> {
+                    logout.logoutSuccessUrl("/");
                 })
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> {
