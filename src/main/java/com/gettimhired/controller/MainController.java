@@ -117,4 +117,10 @@ public class MainController {
         log.info("GET /postman postman");
         return "postmans";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        log.info("GET /login login");
+        return "logins";
+    }
 }

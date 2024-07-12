@@ -96,6 +96,7 @@ public class SecurityConfig {
         return http
                 .formLogin(formLogin -> {
                     formLogin.defaultSuccessUrl("/account");
+                    formLogin.loginPage("/login");
                 })
                 .logout(logout -> {
                     logout.logoutSuccessUrl("/");
