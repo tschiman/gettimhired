@@ -90,10 +90,14 @@ public class SecurityConfig {
     @Profile("local")
     public SecurityFilterChain filterChainLocalForm(HttpSecurity http) throws Exception {
         return http
-                .formLogin(withDefaults())
+                .formLogin(formLogin -> {
+                    formLogin.defaultSuccessUrl("/account");
+                })
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/private").authenticated();
+                    authorize.requestMatchers("/account").authenticated();
+                    authorize.requestMatchers("/postman").authenticated();
+                    authorize.requestMatchers("/swagger-ui/**").authenticated();
                     authorize.anyRequest().permitAll();
                 })
                 .userDetailsService(formUserDetailsService)

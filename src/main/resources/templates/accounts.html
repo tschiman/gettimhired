@@ -10,12 +10,28 @@
 that comes back here with two UUIDs that are displayed as the user credentials-->
   <div class="container">
     <div th:insert="~{navbar}"></div>
-    <div th:unless="${user}">
-      <div class="row" >
+    <div th:unless="${password}">
+      <div class="row">
         <div class="col-md-12">
-          <h1>Create Credentials</h1>
+          <h1>Account</h1>
+        </div>
+      </div>
+      <div class="row" >
+        <div class="col-md-2">
+          <span><strong>USER_ID:</strong></span>
+        </div>
+        <div class="col-md-10">
+          <span th:text="${user}"></span>
+        </div>
+        <div class="col-md-2">
+          <span><strong>EMAIL:</strong></span>
+        </div>
+        <div class="col-md-10">
+          <span th:text="${email}"></span>
+        </div>
+        <div class="col-md-12">
           <p>Click the button to generate a User and get your credentials.</p>
-          <form action="#" th:action="@{/signup}" method="post">
+          <form action="#" th:action="@{/account}" method="post">
             <div>
               <button class="btn btn-default" type="submit">Get Credentials</button>
             </div>
@@ -23,7 +39,7 @@ that comes back here with two UUIDs that are displayed as the user credentials--
         </div>
       </div>
     </div>
-    <div th:if="${user}">
+    <div th:if="${password}">
       <div class="row" th:if="${user}">
         <div class="col-md-12">
           <h1>Save Credentials</h1>
@@ -39,6 +55,12 @@ that comes back here with two UUIDs that are displayed as the user credentials--
         </div>
         <div class="col-md-10">
           <span th:text="${password}"></span>
+        </div>
+        <div class="col-md-2">
+          <span><strong>EMAIL:</strong></span>
+        </div>
+        <div class="col-md-10">
+          <span th:text="${email}"></span>
         </div>
       </div>
       <div class="row">

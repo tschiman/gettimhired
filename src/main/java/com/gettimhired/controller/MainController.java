@@ -11,6 +11,8 @@ import com.gettimhired.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -81,27 +83,38 @@ public class MainController {
         return "redirect:/login";
     }
 
-//    @PostMapping("/signup")
-//    public String createCredentials(Model model) {
-//        log.info("POST /credentials createCredentials");
-//        //create a user
-//        var user = userService.createUser();
-//        //put credentials in model to view them
-//        model
-//                .addAttribute("user", user.id())
-//                .addAttribute("password", user.password());
-//        return "credentials";
-//    }
+    @GetMapping("/account")
+    public String accountPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        log.info("GET /account accountPage username={}", userDetails.getUsername());
+        var userOpt = userService.findByEmail(userDetails.getUsername());
+        if (userOpt.isPresent()) {
+            model.addAttribute("user", userOpt.get().id());
+            model.addAttribute("email", userOpt.get().email());
+        }
+        return "accounts";
+    }
+
+    @PostMapping("/account")
+    public String createApiPassword(@AuthenticationPrincipal UserDetails userDetails,Model model) {
+        log.info("POST /apiPassword createApiPassword username={}", userDetails.getUsername());
+        //create a user
+        var userOpt = userService.findByEmail(userDetails.getUsername());
+        if (userOpt.isPresent()) {
+            var password = userService.generatePassword(userOpt.get());
+            //put credentials in model to view them
+            model
+                    .addAttribute("user", userOpt.get().id())
+                    .addAttribute("email", userOpt.get().email())
+                    .addAttribute("password", password);
+            return "accounts";
+        } else {
+            return "redirect:/error";
+        }
+    }
 
     @GetMapping("/postman")
     public String postman() {
         log.info("GET /postman postman");
         return "postmans";
-    }
-
-    @GetMapping("/private")
-    public String priv() {
-        log.info("GET /private priv");
-        return "privates";
     }
 }

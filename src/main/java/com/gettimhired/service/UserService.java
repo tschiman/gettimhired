@@ -46,4 +46,19 @@ public class UserService {
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+    public String generatePassword(User user) {
+        var password = UUID.randomUUID().toString();
+        var userToSave = new User(
+                user.id(),
+                passwordEncoder.encode(password),
+                user.email(),
+                user.emailPassword(),
+                user.roles()
+        );
+
+        userRepository.save(userToSave);
+
+        return password;
+    }
 }
