@@ -14,12 +14,9 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final FormUserDetailsService formUserDetailsService;
-    private final CustomAuthenticationManager customAuthenticationManager;
-
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService, FormUserDetailsService formUserDetailsService, CustomAuthenticationManager customAuthenticationManager) {
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, FormUserDetailsService formUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
         this.formUserDetailsService = formUserDetailsService;
-        this.customAuthenticationManager = customAuthenticationManager;
     }
 
     @Bean
