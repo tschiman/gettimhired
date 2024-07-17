@@ -1,5 +1,6 @@
 package com.gettimhired.service;
 
+import com.gettimhired.model.dto.UserDTO;
 import com.gettimhired.model.mongo.User;
 import com.gettimhired.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,5 +61,11 @@ public class UserService {
         userRepository.save(userToSave);
 
         return password;
+    }
+
+    public List<UserDTO> findAll() {
+        return userRepository.findAll().stream()
+                .map(u -> new UserDTO(u.id(), u.password(), u.email(), u.emailPassword(), u.roles()))
+                .toList();
     }
 }
