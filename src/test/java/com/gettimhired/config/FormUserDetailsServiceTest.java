@@ -1,6 +1,6 @@
 package com.gettimhired.config;
 
-import com.gettimhired.model.mongo.User;
+import com.gettimhired.model.dto.UserDTO;
 import com.gettimhired.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class FormUserDetailsServiceTest {
     @Test
     void testLoadUserByUsername_UserFound() {
         String id = "id";
-        User user = new User(id, "password123", "email", "password", List.of("ROLE_USER"));
+        var user = new UserDTO(id, "password123", "email", "password", List.of("ROLE_USER"));
         when(userService.findByEmail(id)).thenReturn(Optional.of(user));
 
         UserDetails userDetails = formUserDetailsService.loadUserByUsername(id);

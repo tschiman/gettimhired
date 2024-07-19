@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class FormUserDetailsService implements UserDetailsService {
     private final UserService userService;
-
     public FormUserDetailsService(UserService userService) {
         this.userService = userService;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var userOpt = userService.findByEmail(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        var userOpt = userService.findByEmail(email);
 
         if (userOpt.isPresent()) {
             return new CustomUserDetails(

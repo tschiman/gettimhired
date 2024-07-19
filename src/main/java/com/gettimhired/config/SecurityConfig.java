@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -39,6 +41,7 @@ public class SecurityConfig {
                     authorize.requestMatchers("/graphql").authenticated();
                 })
                 .userDetailsService(customUserDetailsService)
+                .addFilterBefore(new RequestContextFilter(), BasicAuthenticationFilter.class)
                 .build();
     }
 
@@ -63,6 +66,7 @@ public class SecurityConfig {
                     authorize.anyRequest().permitAll();
                 })
                 .userDetailsService(formUserDetailsService)
+                .addFilterBefore(new RequestContextFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -85,6 +89,7 @@ public class SecurityConfig {
                     authorize.requestMatchers("/graphql").authenticated();
                 })
                 .userDetailsService(customUserDetailsService)
+                .addFilterBefore(new RequestContextFilter(), BasicAuthenticationFilter.class)
                 .build();
     }
 
@@ -108,6 +113,7 @@ public class SecurityConfig {
                     authorize.anyRequest().permitAll();
                 })
                 .userDetailsService(formUserDetailsService)
+                .addFilterBefore(new RequestContextFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

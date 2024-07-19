@@ -1,7 +1,7 @@
 package com.gettimhired.controller;
 
 import com.gettimhired.model.dto.SignUpFormDTO;
-import com.gettimhired.model.mongo.User;
+import com.gettimhired.model.dto.UserDTO;
 import com.gettimhired.service.CandidateService;
 import com.gettimhired.service.EducationService;
 import com.gettimhired.service.JobService;
@@ -103,7 +103,7 @@ class MainControllerTest {
     public void testGetAccountPage() {
         when(userDetails.getUsername()).thenReturn("userName");
         when(userDetails.getUsername()).thenReturn("userName");
-        var user = new User("id", "pw", "email", "epw", Collections.emptyList());
+        var user = new UserDTO("id", "pw", "email", "epw", Collections.emptyList());
         when(userService.findByEmail(anyString())).thenReturn(Optional.of(user));
 
         var result = mainController.accountPage(userDetails, model);
@@ -143,9 +143,9 @@ class MainControllerTest {
     public void testCreateApiPasswordWithUser() {
         when(userDetails.getUsername()).thenReturn("userName");
         when(userDetails.getUsername()).thenReturn("userName");
-        var user = new User("id", "pw", "email", "epw", Collections.emptyList());
+        var user = new UserDTO("id", "pw", "email", "epw", Collections.emptyList());
         when(userService.findByEmail(anyString())).thenReturn(Optional.of(user));
-        when(userService.generatePassword(any(User.class))).thenReturn("pw");
+        when(userService.generatePassword(any(UserDTO.class))).thenReturn("pw");
         when(model.addAttribute(anyString(),anyString())).thenReturn(model);
         when(model.addAttribute(anyString(),anyString())).thenReturn(model);
         when(model.addAttribute(anyString(),anyString())).thenReturn(model);
@@ -155,7 +155,7 @@ class MainControllerTest {
         assertEquals("accounts", result);
         verify(userDetails, times(2)).getUsername();
         verify(userService, times(1)).findByEmail(anyString());
-        verify(userService, times(1)).generatePassword(any(User.class));
+        verify(userService, times(1)).generatePassword(any(UserDTO.class));
         verify(model, times(3)).addAttribute(anyString(),anyString());
     }
 }
