@@ -16,7 +16,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -107,12 +106,6 @@ public class UserService {
             log.error("POST /api/users/{email}/password generatePassword failed request email={} httpStatus={}", user.email(), result.getStatusCode());
             return null;
         }
-    }
-
-    public List<UserDTO> findAll() {
-        return userRepository.findAll().stream()
-                .map(u -> new UserDTO(u.id(), u.password(), u.email(), u.emailPassword(), u.roles()))
-                .toList();
     }
 
     private HttpEntity<UserDTO> getAuthorization() {
