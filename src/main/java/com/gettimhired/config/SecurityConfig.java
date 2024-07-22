@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/api/users/migrate").permitAll();
+                    authorize.requestMatchers("/api/candidates/all/jobs/migrate").permitAll();
                     authorize.requestMatchers("/api/**").authenticated();
                     authorize.requestMatchers("/graphql").authenticated();
                 })
@@ -84,7 +84,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/api/users/migrate").permitAll();
+                    authorize.requestMatchers("/api/candidates/all/jobs/migrate").permitAll();
                     authorize.requestMatchers("/api/**").authenticated();
                     authorize.requestMatchers("/graphql").authenticated();
                 })

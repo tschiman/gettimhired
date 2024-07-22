@@ -116,4 +116,10 @@ public class JobService {
                     return j2.endDate().compareTo(j1.endDate());
                 }).toList();
     }
+
+    public List<JobDTO> findAllJobs() {
+        return jobRepository.findAll().stream()
+                .map(JobDTO::new)
+                .toList();
+    }
 }
