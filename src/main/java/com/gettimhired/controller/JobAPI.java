@@ -103,9 +103,4 @@ public class JobAPI {
                 ResponseEntity.ok().build() :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
-    @GetMapping("/migrate")
-    public List<JobDTO> migrateJobs() {
-        return jobService.findAllJobs();
-    }
 }

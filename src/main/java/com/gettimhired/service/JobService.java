@@ -160,13 +160,6 @@ public class JobService {
                 }).toList();
     }
 
-    //for migration
-    public List<JobDTO> findAllJobs() {
-        return jobRepository.findAll().stream()
-                .map(JobDTO::new)
-                .toList();
-    }
-
     private String makeBasicToken(String username, String password) {
         var toBase64 = username + ":" + password;
         return "Basic " + Base64.getEncoder().encodeToString(toBase64.getBytes(StandardCharsets.UTF_8));
