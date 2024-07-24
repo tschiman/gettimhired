@@ -1,5 +1,7 @@
 package com.gettimhired.controller;
 
+import com.gettimhired.TestHelper;
+import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.SignUpFormDTO;
 import com.gettimhired.model.dto.UserDTO;
 import com.gettimhired.service.CandidateService;
@@ -54,12 +56,15 @@ class MainControllerTest {
 
     @Test
     public void testThatRootRouteWithCandidateReturnsTheIndex() {
+
+        CandidateDTO candidateDto = new CandidateDTO(TestHelper.ID, TestHelper.USER_ID, null, null, null, null, null);
+        when(candidateService.findCandidateById(TestHelper.ID)).thenReturn(Optional.of(candidateDto));
         when(model.addAttribute(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(model);
         when(model.addAttribute(Mockito.anyString(), Mockito.any())).thenReturn(model);
         when(model.addAttribute(Mockito.anyString(), Mockito.anyList())).thenReturn(model);
         when(model.addAttribute(Mockito.anyString(), Mockito.anyList())).thenReturn(model);
 
-        assertEquals("index", mainController.index("BARK", model));
+        assertEquals("index", mainController.index(TestHelper.ID, model));
 
         Mockito.verify(model, times(4)).addAttribute(Mockito.anyString(), Mockito.any());
     }

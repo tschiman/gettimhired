@@ -67,13 +67,13 @@ class JobAPIIT {
         String jobId = "1";
         JobDTO jobDTO = new JobDTO(null,null,null,null,null,null,null,null,null,null,null);
         when(userDetails.getUsername()).thenReturn("user1");
-        when(jobService.findJobByIdAndUserId(jobId, "user1")).thenReturn(Optional.of(jobDTO));
+        when(jobService.findJobByIdAndUserId(jobId, "user1", candidateId)).thenReturn(Optional.of(jobDTO));
 
         mockMvc.perform(get("/api/candidates/{candidateId}/jobs/{id}", candidateId, jobId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").exists());
 
-        verify(jobService, times(1)).findJobByIdAndUserId(jobId, "user1");
+        verify(jobService, times(1)).findJobByIdAndUserId(jobId, "user1", candidateId);
     }
 
     @Test
@@ -82,12 +82,12 @@ class JobAPIIT {
         String candidateId = "1";
         String jobId = "1";
         when(userDetails.getUsername()).thenReturn("user1");
-        when(jobService.findJobByIdAndUserId(jobId, "user1")).thenReturn(Optional.empty());
+        when(jobService.findJobByIdAndUserId(jobId, "user1", candidateId)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/candidates/{candidateId}/jobs/{id}", candidateId, jobId))
                 .andExpect(status().isNotFound());
 
-        verify(jobService, times(1)).findJobByIdAndUserId(jobId, "user1");
+        verify(jobService, times(1)).findJobByIdAndUserId(jobId, "user1", candidateId);
     }
 
     @Test
@@ -244,12 +244,12 @@ class JobAPIIT {
         String candidateId = "1";
         String jobId = "1";
         when(userDetails.getUsername()).thenReturn("user1");
-        when(jobService.deleteJob(eq(jobId), eq("user1"))).thenReturn(true);
+        when(jobService.deleteJob(eq(jobId), eq("user1"), eq(candidateId))).thenReturn(true);
 
         mockMvc.perform(delete("/api/candidates/{candidateId}/jobs/{id}", candidateId, jobId))
                 .andExpect(status().isOk());
 
-        verify(jobService, times(1)).deleteJob(eq(jobId), eq("user1"));
+        verify(jobService, times(1)).deleteJob(eq(jobId), eq("user1"), eq(candidateId));
     }
 
     @Test
@@ -258,11 +258,11 @@ class JobAPIIT {
         String candidateId = "1";
         String jobId = "1";
         when(userDetails.getUsername()).thenReturn("user1");
-        when(jobService.deleteJob(eq(jobId), eq("user1"))).thenReturn(false);
+        when(jobService.deleteJob(eq(jobId), eq("user1"), eq(candidateId))).thenReturn(false);
 
         mockMvc.perform(delete("/api/candidates/{candidateId}/jobs/{id}", candidateId, jobId))
                 .andExpect(status().isInternalServerError());
 
-        verify(jobService, times(1)).deleteJob(eq(jobId), eq("user1"));
+        verify(jobService, times(1)).deleteJob(eq(jobId), eq("user1"), eq(candidateId));
     }
 }

@@ -58,12 +58,12 @@ class JobAPITest {
     public void testGetJobByIdHappy() {
         var jobDto = getJobDto();
         when(userDetails.getUsername()).thenReturn(USER_ID);
-        when(jobService.findJobByIdAndUserId(ID, USER_ID)).thenReturn(Optional.of(jobDto));
+        when(jobService.findJobByIdAndUserId(ID, USER_ID, CANDIDATE_ID)).thenReturn(Optional.of(jobDto));
 
         var result = jobApi.getJobById(userDetails, ID, CANDIDATE_ID);
 
         verify(userDetails, times(2)).getUsername();
-        verify(jobService, times(1)).findJobByIdAndUserId(ID, USER_ID);
+        verify(jobService, times(1)).findJobByIdAndUserId(ID, USER_ID, CANDIDATE_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(200), result.getStatusCode());
         assertEquals(jobDto, result.getBody());
@@ -72,12 +72,12 @@ class JobAPITest {
     @Test
     public void testGetJobByIdNOtFound() {
         when(userDetails.getUsername()).thenReturn(USER_ID);
-        when(jobService.findJobByIdAndUserId(ID, USER_ID)).thenReturn(Optional.empty());
+        when(jobService.findJobByIdAndUserId(ID, USER_ID, CANDIDATE_ID)).thenReturn(Optional.empty());
 
         var result = jobApi.getJobById(userDetails, ID, CANDIDATE_ID);
 
         verify(userDetails, times(2)).getUsername();
-        verify(jobService, times(1)).findJobByIdAndUserId(ID, USER_ID);
+        verify(jobService, times(1)).findJobByIdAndUserId(ID, USER_ID, CANDIDATE_ID);
         assertNotNull(result);
         assertEquals(HttpStatusCode.valueOf(404), result.getStatusCode());
     }
@@ -168,7 +168,7 @@ class JobAPITest {
     public void testDeleteJob_Success() {
 
         when(userDetails.getUsername()).thenReturn(USER_ID);
-        when(jobService.deleteJob(any(String.class), any(String.class)))
+        when(jobService.deleteJob(anyString(), anyString(), anyString()))
                 .thenReturn(true);
 
 
@@ -184,7 +184,7 @@ class JobAPITest {
     public void testDeleteJob_Failure() {
 
         when(userDetails.getUsername()).thenReturn(USER_ID);
-        when(jobService.deleteJob(any(String.class), any(String.class)))
+        when(jobService.deleteJob(anyString(), anyString(), anyString()))
                 .thenReturn(false);
 
 

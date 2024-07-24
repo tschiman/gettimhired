@@ -53,7 +53,7 @@ public class MainController {
         log.info("GET /?candidateId index candidateId={}", candidateId);
         Optional<CandidateDTO> candidate = candidateService.findCandidateById(candidateId);
         List<EducationDTO> educations = educationService.findAllEducationsByCandidateId(candidateId);
-        List<JobDTO> jobs = jobService.findAllJobsByCandidateId(candidateId);
+        List<JobDTO> jobs = jobService.findAllJobsByCandidateId(candidateId, candidate.get().userId());
 
         model
                 .addAttribute("hasCandidate", true)

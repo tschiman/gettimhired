@@ -1,15 +1,23 @@
 package com.gettimhired.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gettimhired.TestHelper;
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.JobDTO;
 import com.gettimhired.model.dto.update.JobUpdateDTO;
 import com.gettimhired.model.mongo.Job;
 import com.gettimhired.repository.JobRepository;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.client.RestClient;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,44 +26,62 @@ import java.util.UUID;
 
 import static com.gettimhired.TestHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 class JobServiceTest {
 
     private JobService jobService;
     private JobRepository jobRepository;
+    private RestClient restClient;
+    private MockWebServer mockWebServer;
+    private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void init() {
+    public void init() throws IOException {
+        mockWebServer = new MockWebServer();
+        mockWebServer.start();
+
         jobRepository = mock(JobRepository.class);
-        jobService = new JobService(jobRepository);
+        restClient = RestClient.builder().baseUrl(mockWebServer.url("/").toString()).build();
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        jobService = new JobService(restClient, jobRepository, "username", "password");
+    }
+
+    @AfterEach
+    public void shutDown() throws IOException {
+        mockWebServer.shutdown();
     }
 
     @Test
-    public void testfindAllJobsForUserAndCandidateIdHappy() {
+    public void testfindAllJobsForUserAndCandidateIdHappy() throws JsonProcessingException {
         var e1 = getJob("BARK_NAME");
         var e2 = getJob("BARK_NAME_TWO");
         var jobs = List.of(e1, e2);
-        when(jobRepository.findAllByUserIdAndCandidateId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID)).thenReturn(jobs);
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(objectMapper.writeValueAsString(jobs))
+                .setHeader("Content-Type", "application/json")
+        );
 
         var result = jobService.findAllJobsForUserAndCandidateId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
 
-        verify(jobRepository, times(1)).findAllByUserIdAndCandidateId(TestHelper.USER_ID, TestHelper.CANDIDATE_ID);
         assertNotNull(result);
         assertEquals(2, result.size());
     }
 
     @Test
-    public void testFindJobByUserIdAndCandidateIdAndId_Found() {
+    public void testFindJobByUserIdAndCandidateIdAndId_Found() throws JsonProcessingException {
 
         var job = getJob("BARK_NAME");
         var expectedJobDTO = new JobDTO(job);
-        when(jobRepository.findJobByIdAndUserId(anyString(), anyString()))
-                .thenReturn(Optional.of(job));
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(objectMapper.writeValueAsString(job))
+                .setHeader("Content-Type", "application/json")
+        );
 
-        Optional<JobDTO> result = jobService.findJobByIdAndUserId(ID, USER_ID);
+        Optional<JobDTO> result = jobService.findJobByIdAndUserId(ID, USER_ID, "candidateId");
 
         assertTrue(result.isPresent());
         assertEquals(expectedJobDTO, result.get());
@@ -64,31 +90,37 @@ class JobServiceTest {
     @Test
     public void testFindJobByUserIdAndCandidateIdAndId_NotFound() {
 
-        when(jobRepository.findJobByIdAndUserId(anyString(), anyString()))
-                .thenReturn(Optional.empty());
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(404)
+        );
 
-        Optional<JobDTO> result = jobService.findJobByIdAndUserId(ID, USER_ID);
+        Optional<JobDTO> result = jobService.findJobByIdAndUserId(ID, USER_ID, "candidateId");
 
         assertFalse(result.isPresent());
     }
 
     @Test
-    public void testCreateJob_Success() {
+    public void testCreateJob_Success() throws JsonProcessingException {
         var job = getJob("BARK_NAME");;
         JobDTO jobDTO = new JobDTO(job);
-        Job savedJob = getJob("BARK_NAME"); // Assuming you have an Job entity
-        when(jobRepository.save(any(Job.class))).thenReturn(savedJob);
+        mockWebServer.enqueue(new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(objectMapper.writeValueAsString(job))
+                        .setHeader("Content-Type", "application/json")
+        );
 
         Optional<JobDTO> result = jobService.createJob(TestHelper.USER_ID, TestHelper.CANDIDATE_ID, jobDTO);
 
         assertTrue(result.isPresent());
-        assertEquals(new JobDTO(savedJob), result.get());
+        assertEquals(new JobDTO(job), result.get());
     }
 
     @Test
     public void testCreateJob_Failure() {
         JobDTO jobDTO = new JobDTO(getJob("BARK_NAME"));
-        when(jobRepository.save(any(Job.class))).thenThrow(new RuntimeException("Database error"));
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(500)
+        );
 
         Optional<JobDTO> result = jobService.createJob(TestHelper.USER_ID, TestHelper.CANDIDATE_ID, jobDTO);
 
@@ -98,94 +130,97 @@ class JobServiceTest {
     @Test
     public void testUpdateJob_JobNotFound() {
         var jobUpdateDto = getJobUpdate();
-        when(jobRepository.findById(TestHelper.ID)).thenReturn(Optional.empty());
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(404)
+        );
 
         var ex = assertThrows(APIUpdateException.class, () -> jobService.updateJob(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID, jobUpdateDto));
 
-        verify(jobRepository, times(1)).findById(TestHelper.ID);
         assertEquals(HttpStatus.NOT_FOUND, ex.getHttpStatus());
     }
 
     @Test
     public void testUpdateJob_UserIdNotMatch() {
-        var job = getJob("BARK_NAME");
         var jobUpdateDto = getJobUpdate();
-        when(jobRepository.findById(TestHelper.ID)).thenReturn(Optional.of(job));
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(403)
+        );
 
         var ex = assertThrows(APIUpdateException.class, () -> jobService.updateJob(TestHelper.ID, "NO_MATCH", TestHelper.CANDIDATE_ID, jobUpdateDto));
 
-        verify(jobRepository, times(1)).findById(TestHelper.ID);
         assertEquals(HttpStatus.FORBIDDEN, ex.getHttpStatus());
     }
 
     @Test
     public void testUpdateJob_CandidateIdNotMatch() {
-        var job = getJob("BARK_NAME");
         var jobUpdateDto = getJobUpdate();
-        when(jobRepository.findById(TestHelper.ID)).thenReturn(Optional.of(job));
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(403)
+        );
 
         var ex = assertThrows(APIUpdateException.class, () -> jobService.updateJob(TestHelper.ID, TestHelper.USER_ID, "NO_MATCH", jobUpdateDto));
 
-        verify(jobRepository, times(1)).findById(TestHelper.ID);
         assertEquals(HttpStatus.FORBIDDEN, ex.getHttpStatus());
     }
 
     @Test
     public void testUpdateJob_SaveThrowsException() {
-        var job = getJob("BARK_NAME");
         var jobUpdateDto = getJobUpdate();
-        when(jobRepository.findById(TestHelper.ID)).thenReturn(Optional.of(job));
-        when(jobRepository.save(any(Job.class))).thenThrow(new RuntimeException());
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(500)
+        );
 
-        var result = jobService.updateJob(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID, jobUpdateDto);
+        var ex = assertThrows(APIUpdateException.class, () -> jobService.updateJob(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID, jobUpdateDto));
 
-        verify(jobRepository, times(1)).findById(TestHelper.ID);
-        verify(jobRepository, times(1)).save(any(Job.class));
-        assertFalse(result.isPresent());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, ex.getHttpStatus());
     }
-
     @Test
-    public void testUpdateJob_Happy() {
+    public void testUpdateJob_Happy() throws JsonProcessingException {
         var job = getJob("BARK_NAME");
         var jobUpdateDto = getJobUpdate();
-        when(jobRepository.findById(TestHelper.ID)).thenReturn(Optional.of(job));
-        when(jobRepository.save(any(Job.class))).thenReturn(job);
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(objectMapper.writeValueAsString(job))
+                .setHeader("Content-Type", "application/json")
+        );
 
         var result = jobService.updateJob(TestHelper.ID, TestHelper.USER_ID, TestHelper.CANDIDATE_ID, jobUpdateDto);
 
-        verify(jobRepository, times(1)).findById(TestHelper.ID);
-        verify(jobRepository, times(1)).save(any(Job.class));
         assertTrue(result.isPresent());
     }
 
     @Test
     public void testDeleteJob_Success() {
-        doNothing().when(jobRepository).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200));
 
-        boolean result = jobService.deleteJob(TestHelper.ID, TestHelper.USER_ID);
+        boolean result = jobService.deleteJob(TestHelper.ID, TestHelper.USER_ID, "candidateId");
 
         assertTrue(result);
     }
 
     @Test
     public void testDeleteJob_Failure() {
-        doThrow(new RuntimeException("Database error")).when(jobRepository).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
+        mockWebServer.enqueue(new MockResponse().setResponseCode(500));
 
-        boolean result = jobService.deleteJob(TestHelper.ID, TestHelper.USER_ID);
+        boolean result = jobService.deleteJob(TestHelper.ID, TestHelper.USER_ID, "candidateId");
 
         assertFalse(result);
     }
 
     @Test
-    public void testFindAllJobsByCandidateId_Sorting() {
+    public void testFindAllJobsByCandidateId_Sorting() throws JsonProcessingException {
 
         var j1 = new JobDTO(null,null,null,null,null,null,LocalDate.of(2000,1,1),null,null,null,null);
         var j2 = new JobDTO(null,null,null,null,null,null,LocalDate.of(2020,1,1),null,null,null,null);
         var j3 = new JobDTO(null,null,null,null,null,null,null,null,null,null,null);
         var jobs = List.of(j1, j2, j3);
-        when(jobRepository.findAllByCandidateId(CANDIDATE_ID)).thenReturn(jobs);
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody(objectMapper.writeValueAsString(jobs))
+                .setHeader("Content-Type", "application/json")
+        );
 
-        var result = jobService.findAllJobsByCandidateId(CANDIDATE_ID);
+        var result = jobService.findAllJobsByCandidateId(CANDIDATE_ID, "userId");
 
         assertEquals(3, result.size());
         assertEquals(j3, result.get(0));

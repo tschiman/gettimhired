@@ -36,9 +36,9 @@ public class JobResolver {
 
     @QueryMapping
     @PreAuthorize("isAuthenticated()")
-    public JobDTO getJobById(@AuthenticationPrincipal UserDetails userDetails, @Argument String id) {
+    public JobDTO getJobById(@AuthenticationPrincipal UserDetails userDetails, @Argument String id, @Argument String candidateId) {
         log.info("GQL getJobById userId={} id={}", userDetails.getUsername(), id);
-        return jobService.findJobByIdAndUserId(id, userDetails.getUsername()).orElse(null);
+        return jobService.findJobByIdAndUserId(id, userDetails.getUsername(), candidateId).orElse(null);
     }
 
     @MutationMapping
@@ -57,8 +57,8 @@ public class JobResolver {
 
     @MutationMapping
     @PreAuthorize("isAuthenticated()")
-    public boolean deleteJob(@AuthenticationPrincipal UserDetails userDetails, @Argument String id) {
+    public boolean deleteJob(@AuthenticationPrincipal UserDetails userDetails, @Argument String id, @Argument String candidateId) {
         log.info("GQL deleteJob userId={} id={}", userDetails.getUsername(), id);
-        return jobService.deleteJob(id, userDetails.getUsername());
+        return jobService.deleteJob(id, userDetails.getUsername(), candidateId);
     }
 }

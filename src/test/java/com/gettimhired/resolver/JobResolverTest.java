@@ -51,15 +51,15 @@ class JobResolverTest {
     void testGetJobById() {
         JobDTO job = new JobDTO("1", "user1", "userId1", "candidateId1", "Company", LocalDate.parse("2016-01-01"), LocalDate.parse("2017-01-01"), Collections.emptyList(), Collections.emptyList(), true, "BARK_LEAVE");
         when(userDetails.getUsername()).thenReturn("user1");
-        when(jobService.findJobByIdAndUserId("1", "user1")).thenReturn(Optional.of(job));
+        when(jobService.findJobByIdAndUserId(eq("1"), eq("user1"), eq("candidateId"))).thenReturn(Optional.of(job));
 
-        JobDTO result = jobResolver.getJobById(userDetails, "1");
+        JobDTO result = jobResolver.getJobById(userDetails, "1", "candidateId");
 
         assertEquals(job, result);
 
         ArgumentCaptor<String> idCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> userIdCaptor = ArgumentCaptor.forClass(String.class);
-        verify(jobService, times(1)).findJobByIdAndUserId(idCaptor.capture(), userIdCaptor.capture());
+        verify(jobService, times(1)).findJobByIdAndUserId(idCaptor.capture(), userIdCaptor.capture(), eq("candidateId"));
         assertEquals("1", idCaptor.getValue());
         assertEquals("user1", userIdCaptor.getValue());
         verify(userDetails, times(2)).getUsername();
@@ -113,15 +113,15 @@ class JobResolverTest {
     @Test
     void testDeleteJob() {
         when(userDetails.getUsername()).thenReturn("user1");
-        when(jobService.deleteJob("1", "user1")).thenReturn(true);
+        when(jobService.deleteJob(eq("1"), eq("user1"), eq("candidateId"))).thenReturn(true);
 
-        boolean result = jobResolver.deleteJob(userDetails, "1");
+        boolean result = jobResolver.deleteJob(userDetails, "1", "candidateId");
 
         assertEquals(true, result);
 
         ArgumentCaptor<String> idCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<String> userIdCaptor = ArgumentCaptor.forClass(String.class);
-        verify(jobService, times(1)).deleteJob(idCaptor.capture(), userIdCaptor.capture());
+        verify(jobService, times(1)).deleteJob(idCaptor.capture(), userIdCaptor.capture(), eq("candidateId"));
         assertEquals("1", idCaptor.getValue());
         assertEquals("user1", userIdCaptor.getValue());
         verify(userDetails, times(2)).getUsername();

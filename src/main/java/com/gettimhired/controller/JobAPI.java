@@ -51,7 +51,7 @@ public class JobAPI {
             @PathVariable String candidateId
     ) {
         log.info("GET /api/candidates/{candidateId}/jobs/{id} getAllJobs userId={} candidateId={} id={}", userDetails.getUsername(), candidateId, id);
-        var jobOpt = jobService.findJobByIdAndUserId(id, userDetails.getUsername());
+        var jobOpt = jobService.findJobByIdAndUserId(id, userDetails.getUsername(),candidateId);
         return jobOpt
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -98,7 +98,7 @@ public class JobAPI {
             @PathVariable String candidateId
     ) {
         log.info("DELETE /api/candidates/{candidateId}/jobs/{id} deleteJob userId={} candidateId={} id={}", userDetails.getUsername(), candidateId, id);
-        boolean result = jobService.deleteJob(id, userDetails.getUsername());
+        boolean result = jobService.deleteJob(id, userDetails.getUsername(), candidateId);
         return result ?
                 ResponseEntity.ok().build() :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -84,7 +84,7 @@ class JobResolverIT {
         String jobId = "1";
         JobDTO jobDTO = new JobDTO(jobId, "user1", "", "Updated Title", "Updated Company", LocalDate.parse("2021-01-01"), LocalDate.parse("2022-01-01"), null, null,true, "Leaving");
         when(userDetails.getUsername()).thenReturn("user1");
-        when(jobService.findJobByIdAndUserId(jobId, "user1")).thenReturn(Optional.of(jobDTO));
+        when(jobService.findJobByIdAndUserId(jobId, "user1", "candidateId")).thenReturn(Optional.of(jobDTO));
 
         graphQlTester.document("""
                         query {
@@ -108,7 +108,7 @@ class JobResolverIT {
                 .entity(JobDTO.class)
                 .isEqualTo(jobDTO);
 
-        verify(jobService, times(1)).findJobByIdAndUserId(jobId, "user1");
+        verify(jobService, times(1)).findJobByIdAndUserId(jobId, "user1", "candidateId");
     }
 
     @Test
@@ -116,7 +116,7 @@ class JobResolverIT {
     void testGetJobById_NotFound() {
         String jobId = "1";
         when(userDetails.getUsername()).thenReturn("user1");
-        when(jobService.findJobByIdAndUserId(jobId, "user1")).thenReturn(Optional.empty());
+        when(jobService.findJobByIdAndUserId(jobId, "user1", "candidateId")).thenReturn(Optional.empty());
 
         graphQlTester.document("""
                         query {
@@ -139,7 +139,7 @@ class JobResolverIT {
                 .path("getJobById")
                 .valueIsNull();
 
-        verify(jobService, times(1)).findJobByIdAndUserId(jobId, "user1");
+        verify(jobService, times(1)).findJobByIdAndUserId(jobId, "user1", "candidateId");
     }
 
     @Test
@@ -328,7 +328,7 @@ class JobResolverIT {
     void testDeleteJob_Success() {
         String jobId = "1";
         when(userDetails.getUsername()).thenReturn("user1");
-        when(jobService.deleteJob(eq(jobId), eq("user1"))).thenReturn(true);
+        when(jobService.deleteJob(eq(jobId), eq("user1"), eq("candidateId"))).thenReturn(true);
 
         graphQlTester.document("""
                         mutation {
@@ -337,7 +337,7 @@ class JobResolverIT {
                         """)
                 .execute();
 
-        verify(jobService, times(1)).deleteJob(eq(jobId), eq("user1"));
+        verify(jobService, times(1)).deleteJob(eq(jobId), eq("user1"), eq("candidateId"));
     }
 
     @Test
@@ -345,7 +345,7 @@ class JobResolverIT {
     void testDeleteJob_Failure() {
         String jobId = "1";
         when(userDetails.getUsername()).thenReturn("user1");
-        when(jobService.deleteJob(eq(jobId), eq("user1"))).thenReturn(false);
+        when(jobService.deleteJob(eq(jobId), eq("user1"), eq("candidateId"))).thenReturn(false);
 
         graphQlTester.document("""
                         mutation {
@@ -354,6 +354,6 @@ class JobResolverIT {
                         """)
                 .execute();
 
-        verify(jobService, times(1)).deleteJob(eq(jobId), eq("user1"));
+        verify(jobService, times(1)).deleteJob(eq(jobId), eq("user1"), eq("candidateId"));
     }
 }

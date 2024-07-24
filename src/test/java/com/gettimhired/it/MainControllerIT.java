@@ -60,10 +60,10 @@ class MainControllerIT {
     @Test
     void testIndexWithCandidateId() throws Exception {
         String candidateId = "1";
-        CandidateDTO candidate = new CandidateDTO(candidateId, null, null, null, null, "LinkedIn", "Github");
+        CandidateDTO candidate = new CandidateDTO(candidateId, "userId", null, null, null, "LinkedIn", "Github");
         when(candidateService.findCandidateById(candidateId)).thenReturn(Optional.of(candidate));
         when(educationService.findAllEducationsByCandidateId(candidateId)).thenReturn(Collections.emptyList());
-        when(jobService.findAllJobsByCandidateId(candidateId)).thenReturn(Collections.emptyList());
+        when(jobService.findAllJobsByCandidateId(candidateId, "userId")).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/").param("candidateId", candidateId))
                 .andExpect(status().isOk())
@@ -75,7 +75,7 @@ class MainControllerIT {
 
         verify(candidateService, times(1)).findCandidateById(candidateId);
         verify(educationService, times(1)).findAllEducationsByCandidateId(candidateId);
-        verify(jobService, times(1)).findAllJobsByCandidateId(candidateId);
+        verify(jobService, times(1)).findAllJobsByCandidateId(candidateId, "userId");
     }
 
     @Test

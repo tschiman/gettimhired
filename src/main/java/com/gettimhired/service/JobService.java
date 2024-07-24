@@ -4,13 +4,18 @@ package com.gettimhired.service;
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.JobDTO;
 import com.gettimhired.model.dto.update.JobUpdateDTO;
-import com.gettimhired.model.mongo.Job;
 import com.gettimhired.repository.JobRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,91 +23,129 @@ import java.util.Optional;
 public class JobService {
 
     Logger log = LoggerFactory.getLogger(JobService.class);
+    private final RestClient jobServiceRestClient;
     private final JobRepository jobRepository;
 
-    public JobService(JobRepository jobRepository) {
+    private final String username;
+
+    private final String password;
+
+    public JobService(
+            RestClient jobServiceRestClient,
+            JobRepository jobRepository,
+            @Value("${resumesite.userservice.username}") String username,
+            @Value("${resumesite.userservice.password}") String password) {
+        this.jobServiceRestClient = jobServiceRestClient;
         this.jobRepository = jobRepository;
+        this.username = username;
+        this.password = password;
     }
 
     public List<JobDTO> findAllJobsForUserAndCandidateId(String userId, String candidateId) {
-        return jobRepository.findAllByUserIdAndCandidateId(userId, candidateId).stream()
-                .map(JobDTO::new)
-                .toList();
+        try {
+            var jobsResponse = jobServiceRestClient.get()
+                    .uri(builder -> builder
+                            .path("/api/candidates/" + candidateId + "/jobs")
+                            .queryParam("userId", userId)
+                            .build()
+                    )
+                    .header("Authorization", makeBasicToken(username, password))
+                    .retrieve()
+                    .toEntity(JobDTO[].class);
+            return jobsResponse.getBody() == null ? Collections.emptyList() : List.of(jobsResponse.getBody());
+        }catch (RestClientResponseException e) {
+            log.error("GET /api/candidates/" + candidateId + "/jobs findAllJobsForUserAndCandidateId userId={} httpStatus={}", userId, e.getStatusCode(), e);
+            return Collections.emptyList();
+        }
     }
 
-    public Optional<JobDTO> findJobByIdAndUserId(String id, String userId) {
-        return jobRepository.findJobByIdAndUserId(id, userId)
-                .map(JobDTO::new);
+    public Optional<JobDTO> findJobByIdAndUserId(String id, String userId, String candidateId) {
+        try {
+            var jobResponse = jobServiceRestClient
+                    .get()
+                    .uri(builder -> builder
+                            .path("/api/candidates/" + candidateId + "/jobs/" + id)
+                            .queryParam("userId", userId)
+                            .build()
+                    )
+                    .header("Authorization", makeBasicToken(username, password))
+                    .retrieve()
+                    .toEntity(JobDTO.class);
+            return jobResponse.getBody() == null ? Optional.empty() : Optional.of(jobResponse.getBody());
+        } catch (RestClientResponseException e) {
+            log.error("GET /api/candidates/" + candidateId + "/jobs/" + id + " findJobByIdAndUserId userId={} httpStatus={}", userId, e.getStatusCode(), e);
+            return Optional.empty();
+        }
     }
 
     public Optional<JobDTO> createJob(String userId, String candidateId, JobDTO jobDto) {
-        var job = new Job(userId, candidateId, jobDto);
         try {
-            var jobFromDb = jobRepository.save(job);
-            var jobFromDatabase = new JobDTO(jobFromDb);
-            return Optional.of(jobFromDatabase);
-        } catch (Exception e) {
-            log.error("createJob userId={} candidateId={}", userId, candidateId, e);
+            var createJobResponse = jobServiceRestClient
+                    .post()
+                    .uri(builder -> builder
+                            .path("/api/candidates/" + candidateId + "/jobs")
+                            .queryParam("userId", userId)
+                            .build()
+                    )
+                    .header("Authorization", makeBasicToken(username, password))
+                    .header("Content-Type", "application/json")
+                    .header("Accept", "application/json")
+                    .body(jobDto)
+                    .retrieve()
+                    .toEntity(JobDTO.class);
+            return createJobResponse.getBody() == null ? Optional.empty() : Optional.of(createJobResponse.getBody());
+        } catch (RestClientResponseException e) {
+            log.error("POST /api/candidates/" + candidateId + "/jobs" + " createJob userId={} httpStatus={}", userId, e.getStatusCode(), e);
             return Optional.empty();
         }
     }
 
     public Optional<JobDTO> updateJob(String id, String userId, String candidateId, JobUpdateDTO jobUpdateDTO) {
-        //get job from db
-        Optional<Job> jobOpt = jobRepository.findById(id);
-        if (jobOpt.isPresent()) {
-            //check if the username matches
-            if (jobOpt.get().userId().equals(userId)) {
-                //check the candidateId
-                if (jobOpt.get().candidateId().equals(candidateId)) {
-                    //then update the candidate values
-                    var jobToSave = new Job(
-                            jobOpt.get().id(),
-                            jobOpt.get().userId(),
-                            jobOpt.get().candidateId(),
-                            jobUpdateDTO.companyName(),
-                            jobUpdateDTO.title(),
-                            jobUpdateDTO.startDate(),
-                            jobUpdateDTO.endDate(),
-                            jobUpdateDTO.skills(),
-                            jobUpdateDTO.achievements(),
-                            jobUpdateDTO.currentlyWorking(),
-                            jobUpdateDTO.reasonForLeaving()
-                    );
-                    Job jobToReturn;
-                    try {
-                        jobToReturn = jobRepository.save(jobToSave);
-                    } catch (Exception e) {
-                        log.error("updateJob userId={} id={} candidateId={}", userId, id, candidateId, e);
-                        return Optional.empty();
-                    }
-                    var jobDto = new JobDTO(jobToReturn);
-                    return Optional.of(jobDto);
-                } else {
-                    throw new APIUpdateException(HttpStatus.FORBIDDEN);
-                }
-            } else {
-                //userId does not match (403)
-                throw new APIUpdateException(HttpStatus.FORBIDDEN);
-            }
-        } else {
-            //CandidateId not found(404)
-            throw new APIUpdateException(HttpStatus.NOT_FOUND);
+        try {
+            var updateJobResponse = jobServiceRestClient
+                    .put()
+                    .uri(builder -> builder
+                            .path("/api/candidates/" + candidateId + "/jobs/" + id)
+                            .queryParam("userId", userId)
+                            .build()
+                    )
+                    .header("Authorization", makeBasicToken(username, password))
+                    .header("Content-Type", "application/json")
+                    .header("Accept", "application/json")
+                    .body(jobUpdateDTO)
+                    .retrieve()
+                    .toEntity(JobDTO.class);
+            return updateJobResponse.getBody() == null ? Optional.empty() : Optional.of(updateJobResponse.getBody());
+        } catch (RestClientResponseException e) {
+            log.error("PUT /api/candidates/" + candidateId + "/jobs/" + id + " updateJob userId={} httpStatus={}", userId, e.getStatusCode(), e);
+            throw new APIUpdateException(HttpStatus.resolve(e.getStatusCode().value()));
         }
     }
 
-    public boolean deleteJob(String id, String userId) {
+    public boolean deleteJob(String id, String userId, String candidateId) {
         try {
-            jobRepository.deleteByIdAndUserId(id, userId);
+            jobServiceRestClient
+                    .delete()
+                    .uri(builder -> builder
+                            .path("/api/candidates/" + candidateId + "/jobs/" + id)
+                            .queryParam("userId", userId)
+                            .build()
+                    )
+                    .header("Authorization", makeBasicToken(username, password))
+                    .retrieve()
+                    .toBodilessEntity();
             return true;
         } catch (Exception e) {
-            log.error("deleteJob userId={} id={}", userId, id, e);
+            log.error("DELETE " + "/api/candidates/" + candidateId + "/jobs/" + id + " deleteJob userId={}", userId, e);
             return false;
         }
+
+
     }
 
-    public List<JobDTO> findAllJobsByCandidateId(String candidateId) {
-        return jobRepository.findAllByCandidateId(candidateId)
+    //for the main page
+    public List<JobDTO> findAllJobsByCandidateId(String candidateId, String userId) {
+        return findAllJobsForUserAndCandidateId(userId, candidateId)
                 .stream().sorted((j1, j2) -> {
                     if (j1.endDate() == null && j2.endDate() == null) {
                         return 0;
@@ -117,9 +160,15 @@ public class JobService {
                 }).toList();
     }
 
+    //for migration
     public List<JobDTO> findAllJobs() {
         return jobRepository.findAll().stream()
                 .map(JobDTO::new)
                 .toList();
+    }
+
+    private String makeBasicToken(String username, String password) {
+        var toBase64 = username + ":" + password;
+        return "Basic " + Base64.getEncoder().encodeToString(toBase64.getBytes(StandardCharsets.UTF_8));
     }
 }

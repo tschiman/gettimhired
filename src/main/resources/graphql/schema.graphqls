@@ -3,7 +3,7 @@ type Query {
     getCandidateById(id: ID!): Candidate
 
     getJobs(candidateId: String!): [Job]
-    getJobById(id: ID!): Job
+    getJobById(id: ID!, candidateId: String!): Job
 
     getEducations(candidateId: String!): [Education]
     getEducationById(id: ID!): Education
@@ -16,7 +16,7 @@ type Mutation {
 
     createJob(job: JobInput): Job
     updateJob(job: JobInput): Job
-    deleteJob(id: String): Boolean
+    deleteJob(id: String, candidateId: String): Boolean
 
     createEducation(education: EducationInput): Education
     updateEducation(education: EducationInput): Education
