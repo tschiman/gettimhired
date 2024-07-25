@@ -6,7 +6,6 @@ import com.gettimhired.model.dto.update.CandidateUpdateDTO;
 import com.gettimhired.model.mongo.Candidate;
 import com.gettimhired.repository.CandidateRepository;
 import com.gettimhired.repository.EducationRepository;
-import com.gettimhired.repository.JobRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,12 +19,12 @@ public class CandidateService {
 
     Logger log = LoggerFactory.getLogger(CandidateService.class);
     private final CandidateRepository candidateRepository;
-    private final JobRepository jobRepository;
+    private final JobService jobService;
     private final EducationRepository educationRepository;
 
-    public CandidateService(CandidateRepository candidateRepository, JobRepository jobRepository, EducationRepository educationRepository) {
+    public CandidateService(CandidateRepository candidateRepository, JobService jobService, EducationRepository educationRepository) {
         this.candidateRepository = candidateRepository;
-        this.jobRepository = jobRepository;
+        this.jobService = jobService;
         this.educationRepository = educationRepository;
     }
 
@@ -89,7 +88,7 @@ public class CandidateService {
     public boolean deleteCandidate(String id, String userId) {
         try {
             candidateRepository.deleteByIdAndUserId(id, userId);
-            jobRepository.deleteByUserId(userId);
+            jobService.deleteJobsByUserId(userId);
             educationRepository.deleteByUserId(userId);
             return true;
         } catch (Exception e) {

@@ -160,6 +160,20 @@ public class JobService {
                 }).toList();
     }
 
+    public void deleteJobsByUserId(String userId) {
+        try {
+            jobServiceRestClient.delete()
+                    .uri(uriBuilder -> uriBuilder.path("/api/candidates/all/jobs")
+                            .queryParam("userId", userId)
+                            .build())
+                    .header("Authorization", makeBasicToken(username, password))
+                    .retrieve()
+                    .toBodilessEntity();
+        }catch (Exception e) {
+            log.error("DELETE /api/candidates/all/jobs deleteJobsByUserId userId={}", userId, e);
+        }
+    }
+
     private String makeBasicToken(String username, String password) {
         var toBase64 = username + ":" + password;
         return "Basic " + Base64.getEncoder().encodeToString(toBase64.getBytes(StandardCharsets.UTF_8));
