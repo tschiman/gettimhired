@@ -160,10 +160,10 @@ public class JobService {
                 }).toList();
     }
 
-    public void deleteJobsByUserId(String userId) {
+    public void deleteJobsByCandidateIdAndUserId(String candidateId, String userId) {
         try {
             jobServiceRestClient.delete()
-                    .uri(uriBuilder -> uriBuilder.path("/api/candidates/all/jobs")
+                    .uri(uriBuilder -> uriBuilder.path("/api/candidates/" + candidateId + "/jobs")
                             .queryParam("userId", userId)
                             .build())
                     .header("Authorization", makeBasicToken(username, password))

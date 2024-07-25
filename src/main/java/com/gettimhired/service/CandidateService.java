@@ -88,7 +88,8 @@ public class CandidateService {
     public boolean deleteCandidate(String id, String userId) {
         try {
             candidateRepository.deleteByIdAndUserId(id, userId);
-            jobService.deleteJobsByUserId(userId);
+            jobService.deleteJobsByCandidateIdAndUserId(id, userId);
+            //This is a bug, need to delete by UserId and CandidateId
             educationRepository.deleteByUserId(userId);
             return true;
         } catch (Exception e) {
