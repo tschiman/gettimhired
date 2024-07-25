@@ -4,7 +4,6 @@ package com.gettimhired.service;
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.JobDTO;
 import com.gettimhired.model.dto.update.JobUpdateDTO;
-import com.gettimhired.repository.JobRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,19 +23,15 @@ public class JobService {
 
     Logger log = LoggerFactory.getLogger(JobService.class);
     private final RestClient jobServiceRestClient;
-    private final JobRepository jobRepository;
-
     private final String username;
 
     private final String password;
 
     public JobService(
             RestClient jobServiceRestClient,
-            JobRepository jobRepository,
             @Value("${resumesite.userservice.username}") String username,
             @Value("${resumesite.userservice.password}") String password) {
         this.jobServiceRestClient = jobServiceRestClient;
-        this.jobRepository = jobRepository;
         this.username = username;
         this.password = password;
     }

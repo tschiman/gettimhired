@@ -1,7 +1,6 @@
 package com.gettimhired.service;
 
 import com.gettimhired.model.dto.UserDTO;
-import com.gettimhired.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +20,6 @@ import java.util.Optional;
 @Service
 public class UserService {
     Logger log = LoggerFactory.getLogger(UserService.class);
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final RestTemplate restTemplate;
@@ -32,14 +30,12 @@ public class UserService {
 
     private final String password;
 
-    public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder,
+    public UserService(PasswordEncoder passwordEncoder,
                        RestTemplate restTemplate,
                        @Value("${resumesite.userservice.host}") String host,
                        @Value("${resumesite.userservice.username}") String username,
                        @Value("${resumesite.userservice.password}") String password
     ) {
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.restTemplate = restTemplate;
         this.host = host;

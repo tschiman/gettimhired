@@ -2,7 +2,6 @@ package com.gettimhired.service;
 
 import com.gettimhired.TestHelper;
 import com.gettimhired.model.dto.UserDTO;
-import com.gettimhired.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -26,14 +25,12 @@ class UserServiceTest {
     private UserService userService;
     private RestTemplate restTemplate;
 
-    private UserRepository userRepository;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @BeforeEach
     public void init() {
-        userRepository = Mockito.mock(UserRepository.class);
         restTemplate = Mockito.mock(RestTemplate.class);
-        userService = new UserService(userRepository, passwordEncoder, restTemplate, "http://localhost:8080", "username", "password");
+        userService = new UserService(passwordEncoder, restTemplate, "http://localhost:8080", "username", "password");
     }
 
     @Test

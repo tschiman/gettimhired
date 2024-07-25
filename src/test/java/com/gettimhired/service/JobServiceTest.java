@@ -8,7 +8,6 @@ import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.JobDTO;
 import com.gettimhired.model.dto.update.JobUpdateDTO;
 import com.gettimhired.model.mongo.Job;
-import com.gettimhired.repository.JobRepository;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -26,12 +25,10 @@ import java.util.UUID;
 
 import static com.gettimhired.TestHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 class JobServiceTest {
 
     private JobService jobService;
-    private JobRepository jobRepository;
     private RestClient restClient;
     private MockWebServer mockWebServer;
     private ObjectMapper objectMapper;
@@ -41,11 +38,10 @@ class JobServiceTest {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
 
-        jobRepository = mock(JobRepository.class);
         restClient = RestClient.builder().baseUrl(mockWebServer.url("/").toString()).build();
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        jobService = new JobService(restClient, jobRepository, "username", "password");
+        jobService = new JobService(restClient, "username", "password");
     }
 
     @AfterEach
