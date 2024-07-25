@@ -197,13 +197,13 @@ class CandidateServiceTest {
     @Test
     public void testDeleteCandidateHappy() {
         doNothing().when(candidateRepository).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
-        doNothing().when(jobService).deleteJobsByUserId(TestHelper.USER_ID);
+        doNothing().when(jobService).deleteJobsByCandidateIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
         doNothing().when(educationRepository).deleteByUserId(TestHelper.USER_ID);
 
         var result = candidateService.deleteCandidate(TestHelper.ID, TestHelper.USER_ID);
 
         verify(candidateRepository, times(1)).deleteByIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
-        verify(jobService, times(1)).deleteJobsByUserId(TestHelper.USER_ID);
+        verify(jobService, times(1)).deleteJobsByCandidateIdAndUserId(TestHelper.ID, TestHelper.USER_ID);
         verify(educationRepository, times(1)).deleteByUserId(TestHelper.USER_ID);
         assertTrue(result);
     }
