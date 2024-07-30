@@ -112,4 +112,10 @@ public class EducationService {
                     return e2.endDate().compareTo(e1.endDate());
                 }).toList();
     }
+
+    public List<EducationDTO> migrateEducations() {
+        return educationRepository.findAll().stream()
+                .map(EducationDTO::new)
+                .toList();
+    }
 }

@@ -102,4 +102,9 @@ public class EducationAPI {
                 ResponseEntity.ok().build() :
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
+    @GetMapping("/migrate")
+    public List<EducationDTO> migrate(@PathVariable String candidateId) {
+        return educationService.migrateEducations();
+    }
 }
