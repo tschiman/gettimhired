@@ -100,7 +100,55 @@ public class EducationService {
     }
 
     public Optional<EducationDTO> findEducationByIdAndUserId(String id, String userId) {
-        return educationRepository.findEducationByIdAndUserId(id, userId).map(EducationDTO::new);
+        Map<String, Object> variables = Map.of("userId", userId, "id", id);
+        String query = """
+                query ($id: ID!, $userId: String!) {
+                  getEducationById(id: $id, userId: $userId) {
+                    id
+                    userId
+                    candidateId
+                    name
+                    startDate
+                    endDate
+                    graduated
+                    areaOfStudy
+                    educationLevel
+                  }
+                }
+                """;
+        Map<String, Object> body = Map.of("query", query, "variables", variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBasicAuth(username, password);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<Map> responseEntity = null;
+        try {
+            responseEntity = restTemplate.exchange(
+                    educationServiceHost + "/graphql",
+                    HttpMethod.POST,
+                    requestEntity,
+                    Map.class
+            );
+        } catch (Exception e) {
+            log.error("Failed Get education by id id={} userId={}", id, userId, e);
+            return Optional.empty();
+        }
+
+        if (responseEntity.getBody() != null && responseEntity.getBody().containsKey("errors")) {
+            log.error("Error obtaining educations from GQL endpoint id={} userId={}", id, userId);
+            return Optional.empty();
+        }
+
+        var education = (LinkedHashMap) ((LinkedHashMap) ((LinkedHashMap) responseEntity.getBody()).get("data")).get("getEducationById");
+        EducationDTO educationDto = null;
+        try {
+            educationDto = objectMapper.readValue(objectMapper.writeValueAsString(education), EducationDTO.class);
+        } catch (JsonProcessingException e) {
+            log.error("Error", e);
+        }
+        return Optional.ofNullable(educationDto);
     }
 
     public Optional<EducationDTO> createEducation(String userId, String candidateId, EducationDTO educationDTO) {
