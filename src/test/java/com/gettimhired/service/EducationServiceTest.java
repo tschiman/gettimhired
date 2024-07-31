@@ -27,7 +27,7 @@ class EducationServiceTest {
     @BeforeEach
     public void init() {
         educationRepository = mock(EducationRepository.class);
-        educationService = new EducationService(educationRepository);
+        educationService = new EducationService(educationRepository, educationServiceHost, restTemplate);
     }
 
     @Test

@@ -1,5 +1,7 @@
 package com.gettimhired.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.EducationDTO;
 import com.gettimhired.model.dto.update.EducationUpdateDTO;
@@ -7,26 +9,94 @@ import com.gettimhired.model.mongo.Education;
 import com.gettimhired.repository.EducationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EducationService {
 
+    private final String username;
+    private final String password;
     Logger log = LoggerFactory.getLogger(EducationService.class);
     private final EducationRepository educationRepository;
+    private final String educationServiceHost;
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
 
-    public EducationService(EducationRepository educationRepository) {
+    public EducationService(
+            EducationRepository educationRepository,
+            @Value("${resumesite.educationservice.host}") String educationServiceHost,
+            RestTemplate restTemplate,
+            @Value("${resumesite.userservice.username}") String username,
+            @Value("${resumesite.userservice.password}") String password,
+            ObjectMapper objectMapper) {
         this.educationRepository = educationRepository;
+        this.educationServiceHost = educationServiceHost;
+        this.restTemplate = restTemplate;
+        this.username = username;
+        this.password = password;
+        this.objectMapper = objectMapper;
     }
 
     public List<EducationDTO> findAllEducationsForUserAndCandidateId(String userId, String candidateId) {
-        return educationRepository.findAllByUserIdAndCandidateIdOrderByEndDate(userId, candidateId).stream()
-                .map(EducationDTO::new)
+        Map<String, Object> variables = Map.of("userId", userId, "candidateId", candidateId);
+        String query = """
+                query ($candidateId: String!, $userId: String!) {
+                  getEducations(candidateId: $candidateId, userId: $userId) {
+                    id
+                    userId
+                    candidateId
+                    name
+                    startDate
+                    endDate
+                    graduated
+                    areaOfStudy
+                    educationLevel
+                  }
+                }
+                """;
+        Map<String, Object> body = Map.of("query", query, "variables", variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBasicAuth(username, password);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<Map> responseEntity = null;
+        try {
+            responseEntity = restTemplate.exchange(
+                    educationServiceHost + "/graphql",
+                    HttpMethod.POST,
+                    requestEntity,
+                    Map.class
+            );
+        } catch (Exception e) {
+            log.error("Failed Get All Educations candidateId={} userId={}", candidateId, userId, e);
+            return Collections.emptyList();
+        }
+
+        if (responseEntity.getBody() != null && responseEntity.getBody().containsKey("errors")) {
+            log.error("Error obtaining educations from GQL endpoint candidateId={} userId={}", candidateId, userId);
+            return Collections.emptyList();
+        }
+
+        List<EducationDTO> educations = ((ArrayList<LinkedHashMap>) ((LinkedHashMap) responseEntity.getBody().get("data")).get("getEducations")).stream()
+                .map(map -> {
+                    try {
+                        return objectMapper.readValue(objectMapper.writeValueAsString(map), EducationDTO.class);
+                    } catch (JsonProcessingException e) {
+                        log.error("Error", e);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
                 .toList();
+
+        return educations;
     }
 
     public Optional<EducationDTO> findEducationByIdAndUserId(String id, String userId) {
