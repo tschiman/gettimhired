@@ -2,10 +2,8 @@ package com.gettimhired.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.EducationDTO;
 import com.gettimhired.model.dto.update.EducationUpdateDTO;
-import com.gettimhired.model.mongo.Education;
 import com.gettimhired.repository.EducationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -209,45 +207,64 @@ public class EducationService {
     }
 
     public Optional<EducationDTO> updateEducation(String id, String userId, String candidateId, EducationUpdateDTO educationUpdateDTO) {
-        //get education from db
-        Optional<Education> educationOpt = educationRepository.findById(id);
-        if (educationOpt.isPresent()) {
-            //check if the username matches
-            if (educationOpt.get().userId().equals(userId)) {
-                //check the candidateId
-                if (educationOpt.get().candidateId().equals(candidateId)) {
-                    //then update the candidate values
-                    var educationToSave = new Education(
-                            educationOpt.get().id(),
-                            educationOpt.get().userId(),
-                            educationOpt.get().candidateId(),
-                            educationUpdateDTO.name(),
-                            educationUpdateDTO.startDate(),
-                            educationUpdateDTO.endDate(),
-                            educationUpdateDTO.graduated(),
-                            educationUpdateDTO.areaOfStudy(),
-                            educationUpdateDTO.educationLevel()
-                    );
-                    Education educationToReturn;
-                    try {
-                        educationToReturn = educationRepository.save(educationToSave);
-                    } catch (Exception e) {
-                        log.error("updateEducation userId={} id={} candidateId={}", userId, id, candidateId, e);
-                        return Optional.empty();
-                    }
-                    var educationDTO = new EducationDTO(educationToReturn);
-                    return Optional.of(educationDTO);
-                } else {
-                    throw new APIUpdateException(HttpStatus.FORBIDDEN);
-                }
-            } else {
-                //userId does not match (403)
-                throw new APIUpdateException(HttpStatus.FORBIDDEN);
-            }
-        } else {
-            //CandidateId not found(404)
-            throw new APIUpdateException(HttpStatus.NOT_FOUND);
+        Map<String, Object> variables = null;
+        try {
+            variables = Map.of(
+                    "education", objectMapper.readValue(objectMapper.writeValueAsString(educationUpdateDTO), Map.class),
+                    "userId", userId,
+                    "id", id,
+                    "candidateId", candidateId);
+        } catch (JsonProcessingException e) {
+            return Optional.empty();
         }
+        String query = """
+                mutation ($education: EducationInput, $userId: String!, $id: String!, $candidateId: String!) {
+                  updateEducation(education: $education, userId: $userId, id: $id, candidateId: $candidateId) {
+                    id
+                    userId
+                    candidateId
+                    name
+                    startDate
+                    endDate
+                    graduated
+                    areaOfStudy
+                    educationLevel
+                  }
+                }
+                """;
+        Map<String, Object> body = Map.of("query", query, "variables", variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBasicAuth(username, password);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<Map> responseEntity = null;
+        try {
+            responseEntity = restTemplate.exchange(
+                    educationServiceHost + "/graphql",
+                    HttpMethod.POST,
+                    requestEntity,
+                    Map.class
+            );
+        } catch (Exception e) {
+            log.error("Failed create education by id userId={}", userId, e);
+            return Optional.empty();
+        }
+
+        if (responseEntity.getBody() != null && responseEntity.getBody().containsKey("errors")) {
+            log.error("Error create educations from GQL endpoint userId={}", userId);
+            return Optional.empty();
+        }
+
+        var education = (LinkedHashMap) ((LinkedHashMap) ((LinkedHashMap) responseEntity.getBody()).get("data")).get("updateEducation");
+        EducationDTO educationDto = null;
+        try {
+            educationDto = objectMapper.readValue(objectMapper.writeValueAsString(education), EducationDTO.class);
+        } catch (JsonProcessingException e) {
+            log.error("Error", e);
+        }
+        return Optional.ofNullable(educationDto);
     }
 
     public boolean deleteEducation(String id, String userId) {
