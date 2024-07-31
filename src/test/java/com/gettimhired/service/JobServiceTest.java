@@ -7,7 +7,6 @@ import com.gettimhired.TestHelper;
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.JobDTO;
 import com.gettimhired.model.dto.update.JobUpdateDTO;
-import com.gettimhired.model.mongo.Job;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -70,7 +69,6 @@ class JobServiceTest {
     public void testFindJobByUserIdAndCandidateIdAndId_Found() throws JsonProcessingException {
 
         var job = getJob("BARK_NAME");
-        var expectedJobDTO = new JobDTO(job);
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
                 .setBody(objectMapper.writeValueAsString(job))
@@ -80,7 +78,7 @@ class JobServiceTest {
         Optional<JobDTO> result = jobService.findJobByIdAndUserId(ID, USER_ID, "candidateId");
 
         assertTrue(result.isPresent());
-        assertEquals(expectedJobDTO, result.get());
+        assertEquals(job, result.get());
     }
 
     @Test
@@ -98,22 +96,21 @@ class JobServiceTest {
     @Test
     public void testCreateJob_Success() throws JsonProcessingException {
         var job = getJob("BARK_NAME");;
-        JobDTO jobDTO = new JobDTO(job);
         mockWebServer.enqueue(new MockResponse()
                         .setResponseCode(200)
                         .setBody(objectMapper.writeValueAsString(job))
                         .setHeader("Content-Type", "application/json")
         );
 
-        Optional<JobDTO> result = jobService.createJob(TestHelper.USER_ID, TestHelper.CANDIDATE_ID, jobDTO);
+        Optional<JobDTO> result = jobService.createJob(TestHelper.USER_ID, TestHelper.CANDIDATE_ID, job);
 
         assertTrue(result.isPresent());
-        assertEquals(new JobDTO(job), result.get());
+        assertEquals(job, result.get());
     }
 
     @Test
     public void testCreateJob_Failure() {
-        JobDTO jobDTO = new JobDTO(getJob("BARK_NAME"));
+        var jobDTO = getJob("BARK_NAME");
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(500)
         );
@@ -224,8 +221,8 @@ class JobServiceTest {
         assertEquals(j1, result.get(2));
     }
 
-    private static Job getJob(String name) {
-        return new Job(
+    private static JobDTO getJob(String name) {
+        return new JobDTO(
                 UUID.randomUUID().toString(),
                 USER_ID,
                 CANDIDATE_ID,
