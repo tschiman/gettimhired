@@ -2,7 +2,6 @@ package com.gettimhired.config;
 
 import com.gettimhired.model.mongo.Candidate;
 import com.gettimhired.model.mongo.ChangeSet;
-import com.gettimhired.model.mongo.Education;
 import com.gettimhired.model.mongo.Job;
 import com.gettimhired.repository.ChangeSetRepository;
 import jakarta.annotation.PostConstruct;
@@ -31,9 +30,9 @@ public class MongoSchemaManager {
                 "tim.schimandle",
                 "add index to Education userId and candidateId",
                 () -> {
-                    var index = new Index()
-                            .on("userId", Sort.Direction.ASC).on("candidateId", Sort.Direction.ASC).background();
-                    mongoTemplate.indexOps(Education.class).ensureIndex(index);
+//                    var index = new Index()
+//                            .on("userId", Sort.Direction.ASC).on("candidateId", Sort.Direction.ASC).background();
+//                    mongoTemplate.indexOps(Education.class).ensureIndex(index);
                     }
                 );
         doChangeSet(
@@ -41,9 +40,9 @@ public class MongoSchemaManager {
                 "tim.schimandle",
                 "add Education index to candidateId",
                 () -> {
-                    var index = new Index()
-                            .on("candidateId", Sort.Direction.ASC).background();
-                    mongoTemplate.indexOps(Education.class).ensureIndex(index);
+//                    var index = new Index()
+//                            .on("candidateId", Sort.Direction.ASC).background();
+//                    mongoTemplate.indexOps(Education.class).ensureIndex(index);
                 }
         );
         doChangeSet(
@@ -51,9 +50,9 @@ public class MongoSchemaManager {
                 "tim.schimandle",
                 "add Education index to userId",
                 () -> {
-                    var index = new Index()
-                            .on("userId", Sort.Direction.ASC).background();
-                    mongoTemplate.indexOps(Education.class).ensureIndex(index);
+//                    var index = new Index()
+//                            .on("userId", Sort.Direction.ASC).background();
+//                    mongoTemplate.indexOps(Education.class).ensureIndex(index);
                 }
         );
         doChangeSet(
