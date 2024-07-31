@@ -306,19 +306,60 @@ public class EducationService {
     }
 
     public List<EducationDTO> findAllEducationsByCandidateId(String candidateId) {
-        return educationRepository.findAllByCandidateId(candidateId)
-                .stream().sorted((e1, e2) -> {
-                    if (e1.endDate() == null && e2.endDate() == null) {
-                        return 0;
+        Map<String, Object> variables = Map.of("candidateId", candidateId);
+        String query = """
+                query ($candidateId: String!) {
+                  getEducationsByCandidateId(candidateId: $candidateId) {
+                    id
+                    userId
+                    candidateId
+                    name
+                    startDate
+                    endDate
+                    graduated
+                    areaOfStudy
+                    educationLevel
+                  }
+                }
+                """;
+        Map<String, Object> body = Map.of("query", query, "variables", variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBasicAuth(username, password);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<Map> responseEntity = null;
+        try {
+            responseEntity = restTemplate.exchange(
+                    educationServiceHost + "/graphql",
+                    HttpMethod.POST,
+                    requestEntity,
+                    Map.class
+            );
+        } catch (Exception e) {
+            log.error("Failed Get All Educations candidateId={}", candidateId, e);
+            return Collections.emptyList();
+        }
+
+        if (responseEntity.getBody() != null && responseEntity.getBody().containsKey("errors")) {
+            log.error("Error obtaining educations from GQL endpoint candidateId={}", candidateId);
+            return Collections.emptyList();
+        }
+
+        List<EducationDTO> educations = ((ArrayList<LinkedHashMap>) ((LinkedHashMap) responseEntity.getBody().get("data")).get("getEducationsByCandidateId")).stream()
+                .map(map -> {
+                    try {
+                        return objectMapper.readValue(objectMapper.writeValueAsString(map), EducationDTO.class);
+                    } catch (JsonProcessingException e) {
+                        log.error("Error", e);
+                        return null;
                     }
-                    if (e1.endDate() == null) {
-                        return -1;
-                    }
-                    if (e2.endDate() == null) {
-                        return 1;
-                    }
-                    return e2.endDate().compareTo(e1.endDate());
-                }).toList();
+                })
+                .filter(Objects::nonNull)
+                .toList();
+
+        return educations;
     }
 
     public List<EducationDTO> migrateEducations() {
