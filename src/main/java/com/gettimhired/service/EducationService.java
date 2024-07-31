@@ -152,15 +152,60 @@ public class EducationService {
     }
 
     public Optional<EducationDTO> createEducation(String userId, String candidateId, EducationDTO educationDTO) {
-        var education = new Education(userId, candidateId, educationDTO);
+        Map<String, Object> variables = null;
         try {
-            var educationFromDb = educationRepository.save(education);
-            var educationDtoFromDatabase = new EducationDTO(educationFromDb);
-            return Optional.of(educationDtoFromDatabase);
-        } catch (Exception e) {
-            log.error("createEducation userId={}", userId, e);
+            variables = Map.of("education", objectMapper.readValue(objectMapper.writeValueAsString(educationDTO), Map.class) , "userId", userId);
+        } catch (JsonProcessingException e) {
             return Optional.empty();
         }
+        String query = """
+                mutation ($education: EducationInput, $userId: String!) {
+                  createEducation(education: $education, userId: $userId) {
+                    id
+                    userId
+                    candidateId
+                    name
+                    startDate
+                    endDate
+                    graduated
+                    areaOfStudy
+                    educationLevel
+                  }
+                }
+                """;
+        Map<String, Object> body = Map.of("query", query, "variables", variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBasicAuth(username, password);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<Map> responseEntity = null;
+        try {
+            responseEntity = restTemplate.exchange(
+                    educationServiceHost + "/graphql",
+                    HttpMethod.POST,
+                    requestEntity,
+                    Map.class
+            );
+        } catch (Exception e) {
+            log.error("Failed create education by id userId={}", userId, e);
+            return Optional.empty();
+        }
+
+        if (responseEntity.getBody() != null && responseEntity.getBody().containsKey("errors")) {
+            log.error("Error create educations from GQL endpoint userId={}", userId);
+            return Optional.empty();
+        }
+
+        var education = (LinkedHashMap) ((LinkedHashMap) ((LinkedHashMap) responseEntity.getBody()).get("data")).get("createEducation");
+        EducationDTO educationDto = null;
+        try {
+            educationDto = objectMapper.readValue(objectMapper.writeValueAsString(education), EducationDTO.class);
+        } catch (JsonProcessingException e) {
+            log.error("Error", e);
+        }
+        return Optional.ofNullable(educationDto);
     }
 
     public Optional<EducationDTO> updateEducation(String id, String userId, String candidateId, EducationUpdateDTO educationUpdateDTO) {
