@@ -1,4 +1,4 @@
-package com.gettimhired.model.mongo;
+package com.gettimhired.model.dto;
 
 public enum EducationLevel {
     NONE,

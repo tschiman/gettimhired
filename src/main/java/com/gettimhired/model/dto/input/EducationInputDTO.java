@@ -1,7 +1,7 @@
 package com.gettimhired.model.dto.input;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gettimhired.model.mongo.EducationLevel;
+import com.gettimhired.model.dto.EducationLevel;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

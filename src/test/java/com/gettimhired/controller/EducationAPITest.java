@@ -2,8 +2,8 @@ package com.gettimhired.controller;
 
 import com.gettimhired.error.APIUpdateException;
 import com.gettimhired.model.dto.EducationDTO;
+import com.gettimhired.model.dto.EducationLevel;
 import com.gettimhired.model.dto.update.EducationUpdateDTO;
-import com.gettimhired.model.mongo.EducationLevel;
 import com.gettimhired.service.EducationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
