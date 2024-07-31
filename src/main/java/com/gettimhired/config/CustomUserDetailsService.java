@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         var userOpt = userService.findUserById(id);
-
+        log.info("user is found bool={}", userOpt.isPresent());
         if (userOpt.isPresent()) {
             log.info("User from user service user={}", userOpt.get());
             return new CustomUserDetails(
