@@ -268,13 +268,41 @@ public class EducationService {
     }
 
     public boolean deleteEducation(String id, String userId) {
+        Map<String, Object> variables = Map.of(
+                "userId", userId,
+                "id", id);
+
+        String query = """
+                mutation ($id: String!, $userId: String!) {
+                  deleteEducation(id: $id, userId: $userId) 
+                }
+                """;
+        Map<String, Object> body = Map.of("query", query, "variables", variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBasicAuth(username, password);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<Map> responseEntity = null;
         try {
-            educationRepository.deleteByIdAndUserId(id, userId);
-            return true;
+            responseEntity = restTemplate.exchange(
+                    educationServiceHost + "/graphql",
+                    HttpMethod.POST,
+                    requestEntity,
+                    Map.class
+            );
         } catch (Exception e) {
-            log.error("deleteEducation userId={} id={}", userId, id, e);
+            log.error("Failed create education by id userId={}", userId, e);
             return false;
         }
+
+        if (responseEntity.getBody() != null && responseEntity.getBody().containsKey("errors")) {
+            log.error("Error create educations from GQL endpoint userId={}", userId);
+            return false;
+        }
+
+        return (boolean) ((LinkedHashMap) ((LinkedHashMap) responseEntity.getBody()).get("data")).get("deleteEducation");
     }
 
     public List<EducationDTO> findAllEducationsByCandidateId(String candidateId) {
