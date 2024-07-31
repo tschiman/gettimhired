@@ -88,7 +88,7 @@ class JobResolverIT {
 
         graphQlTester.document("""
                         query {
-                           getJobById(id: "1") {
+                           getJobById(id: "1", candidateId: "candidateId") {
                              id
                              userId
                              candidateId
@@ -120,7 +120,7 @@ class JobResolverIT {
 
         graphQlTester.document("""
                         query {
-                           getJobById(id: "1") {
+                           getJobById(id: "1", candidateId: "candidateId") {
                              id
                              userId
                              candidateId
@@ -332,7 +332,7 @@ class JobResolverIT {
 
         graphQlTester.document("""
                         mutation {
-                            deleteJob(id: "1")
+                            deleteJob(id: "1", candidateId: "candidateId")
                         }
                         """)
                 .execute();
@@ -349,7 +349,7 @@ class JobResolverIT {
 
         graphQlTester.document("""
                         mutation {
-                            deleteJob(id: "1")
+                            deleteJob(id: "1", candidateId: "candidateId")
                         }
                         """)
                 .execute();
