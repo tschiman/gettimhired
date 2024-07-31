@@ -13,7 +13,8 @@ import org.springframework.http.HttpStatus;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static com.gettimhired.TestHelper.*;
+import static com.gettimhired.TestHelper.ID;
+import static com.gettimhired.TestHelper.USER_ID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -197,13 +198,13 @@ class CandidateServiceTest {
     public void testDeleteCandidateHappy() {
         doNothing().when(candidateRepository).deleteByIdAndUserId(ID, USER_ID);
         doNothing().when(jobService).deleteJobsByCandidateIdAndUserId(ID, USER_ID);
-        doNothing().when(educationService).deleteEducationByCandidateIdAndUserId(CANDIDATE_ID, USER_ID);
+        when(educationService.deleteEducationByCandidateIdAndUserId(ID, USER_ID)).thenReturn(true);
 
         var result = candidateService.deleteCandidate(ID, USER_ID);
 
         verify(candidateRepository, times(1)).deleteByIdAndUserId(ID, USER_ID);
         verify(jobService, times(1)).deleteJobsByCandidateIdAndUserId(ID, USER_ID);
-        verify(educationService, times(1)).deleteEducationByCandidateIdAndUserId(CANDIDATE_ID, USER_ID);
+        verify(educationService, times(1)).deleteEducationByCandidateIdAndUserId(ID, USER_ID);
         assertTrue(result);
     }
 
