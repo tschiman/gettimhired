@@ -5,7 +5,6 @@ import com.gettimhired.model.dto.CandidateDTO;
 import com.gettimhired.model.dto.update.CandidateUpdateDTO;
 import com.gettimhired.model.mongo.Candidate;
 import com.gettimhired.repository.CandidateRepository;
-import com.gettimhired.repository.EducationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,12 +19,12 @@ public class CandidateService {
     Logger log = LoggerFactory.getLogger(CandidateService.class);
     private final CandidateRepository candidateRepository;
     private final JobService jobService;
-    private final EducationRepository educationRepository;
+    private final EducationService educationService;
 
-    public CandidateService(CandidateRepository candidateRepository, JobService jobService, EducationRepository educationRepository) {
+    public CandidateService(CandidateRepository candidateRepository, JobService jobService, EducationService educationService) {
         this.candidateRepository = candidateRepository;
         this.jobService = jobService;
-        this.educationRepository = educationRepository;
+        this.educationService = educationService;
     }
 
     public List<CandidateDTO> findAllCandidatesForUser(String userId) {
@@ -90,7 +89,7 @@ public class CandidateService {
             candidateRepository.deleteByIdAndUserId(id, userId);
             jobService.deleteJobsByCandidateIdAndUserId(id, userId);
             //This is a bug, need to delete by UserId and CandidateId
-            educationRepository.deleteByUserId(userId);
+            educationService.deleteEducationByCandidateIdAndUserId(id, userId);
             return true;
         } catch (Exception e) {
             log.error("deleteCandidate userId={} id={}", userId, id, e);

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gettimhired.model.dto.EducationDTO;
 import com.gettimhired.model.dto.update.EducationUpdateDTO;
-import com.gettimhired.repository.EducationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,19 +19,16 @@ public class EducationService {
     private final String username;
     private final String password;
     Logger log = LoggerFactory.getLogger(EducationService.class);
-    private final EducationRepository educationRepository;
     private final String educationServiceHost;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
     public EducationService(
-            EducationRepository educationRepository,
             @Value("${resumesite.educationservice.host}") String educationServiceHost,
             RestTemplate restTemplate,
             @Value("${resumesite.userservice.username}") String username,
             @Value("${resumesite.userservice.password}") String password,
             ObjectMapper objectMapper) {
-        this.educationRepository = educationRepository;
         this.educationServiceHost = educationServiceHost;
         this.restTemplate = restTemplate;
         this.username = username;
@@ -150,9 +146,20 @@ public class EducationService {
     }
 
     public Optional<EducationDTO> createEducation(String userId, String candidateId, EducationDTO educationDTO) {
+        EducationDTO withCandidateId = new EducationDTO(
+                educationDTO.id(),
+                educationDTO.userId(),
+                educationDTO.candidateId() == null ? candidateId : educationDTO.candidateId(),
+                educationDTO.name(),
+                educationDTO.startDate(),
+                educationDTO.endDate(),
+                educationDTO.graduated(),
+                educationDTO.areaOfStudy(),
+                educationDTO.educationLevel()
+        );
         Map<String, Object> variables = null;
         try {
-            variables = Map.of("education", objectMapper.readValue(objectMapper.writeValueAsString(educationDTO), Map.class) , "userId", userId);
+            variables = Map.of("education", objectMapper.readValue(objectMapper.writeValueAsString(withCandidateId), Map.class) , "userId", userId);
         } catch (JsonProcessingException e) {
             return Optional.empty();
         }
@@ -362,9 +369,41 @@ public class EducationService {
         return educations;
     }
 
-    public List<EducationDTO> migrateEducations() {
-        return educationRepository.findAll().stream()
-                .map(EducationDTO::new)
-                .toList();
+    public boolean deleteEducationByCandidateIdAndUserId(String candidateId, String userId) {
+        Map<String, Object> variables = Map.of(
+                "userId", userId,
+                "candidateId", candidateId);
+
+        String query = """
+                mutation ($userId: String!, $candidateId: String!) {
+                  deleteEducationByCandidateAndUser(userId: $userId, candidateId: $candidateId) 
+                }
+                """;
+        Map<String, Object> body = Map.of("query", query, "variables", variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBasicAuth(username, password);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<Map> responseEntity = null;
+        try {
+            responseEntity = restTemplate.exchange(
+                    educationServiceHost + "/graphql",
+                    HttpMethod.POST,
+                    requestEntity,
+                    Map.class
+            );
+        } catch (Exception e) {
+            log.error("Failed create education by id userId={}", userId, e);
+            return false;
+        }
+
+        if (responseEntity.getBody() != null && responseEntity.getBody().containsKey("errors")) {
+            log.error("Error create educations from GQL endpoint userId={}", userId);
+            return false;
+        }
+
+        return (boolean) ((LinkedHashMap) ((LinkedHashMap) responseEntity.getBody()).get("data")).get("deleteEducationByCandidateAndUser");
     }
 }
