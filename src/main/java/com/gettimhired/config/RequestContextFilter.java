@@ -6,13 +6,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class RequestContextFilter extends HttpFilter {
-    Logger log = LoggerFactory.getLogger(RequestContextFilter.class);
 
     private static final ThreadLocal<HttpServletRequest> requestHolder = new ThreadLocal<>();
 
@@ -20,7 +17,6 @@ public class RequestContextFilter extends HttpFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         try {
-            log.info("Test to see if this comes through");
             requestHolder.set(request);
             chain.doFilter(request, response);
         } finally {
