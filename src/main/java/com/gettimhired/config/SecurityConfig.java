@@ -22,6 +22,7 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Order(0)
     @Profile("!local")
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
