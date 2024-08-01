@@ -121,6 +121,6 @@ public class MainController {
     @GetMapping("/login")
     public String login() {
         log.info("GET /login login");
-        return "logins";
+        return "login";
     }
 }
